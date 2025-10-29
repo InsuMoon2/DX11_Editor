@@ -1,0 +1,120 @@
+## ===============================
+##  Visual Studio C++ / DirectX Project .gitignore (필터 추적 버전)
+## ===============================
+
+# Visual Studio temporary folders
+.vs/
+*.VC.db
+*.VC.opendb
+*.user
+*.suo
+*.cache
+*.log
+*.tlog
+
+# Build output directories
+Debug/
+Release/
+x64/
+x86/
+ARM/
+ARM64/
+[Bb]in/
+[Oo]bj/
+ipch/
+
+# Intermediate files
+*.obj
+*.pch
+*.pdb
+*.ilk
+*.aps
+*.idb
+*.sbr
+*.res
+*.tmp
+*.tmp_proj
+*.lastbuildstate
+*.iobj
+*.ipdb
+
+# Linker and compiler outputs
+*.exe
+*.dll
+*.exp
+*.appx
+*.out
+*.msi
+*.msm
+*.msp
+
+# DirectX shader compiler outputs
+*.cso
+*.hlsl.h
+*.hlsl.obj
+
+# Logs and profiling
+*.log
+*.wrn
+*.err
+*.sdf
+*.opensdf
+*.opendb
+
+#!*.filters
+
+# Auto-generated project files (단, 필터 제외)
+*.userprefs
+
+# CMake / Build system artifacts
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# NuGet / Packages
+packages/
+*.nupkg
+*.snupkg
+*.nuspec
+
+# Temporary files
+*.tmp
+*.bak
+*.old
+*.orig
+
+# Backup and autosave
+*~
+*.autosave
+*.bak
+*.sav
+
+# Crash dumps
+*.dmp
+
+# Editor-specific
+.vscode/
+.idea/
+
+# System files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Test output / profiler
+TestResults/
+BenchmarkDotNet.Artifacts/
+
+# Other ignored folders
+[Bb]uild/
+[Oo]ut/
+GeneratedFiles/
+
+# Ignore large IntelliSense cache
+*.ipch
+
+# Ignore local settings for performance
+*.suo
+*.userosscache
+*.userprefs
