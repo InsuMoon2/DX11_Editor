@@ -24,15 +24,15 @@ void ConstBufferDemo::Update()
     {
         _translation.x -= 3.f * dt;
     }
-    else if (INPUT->GetButton(KEY_TYPE::D))
+    if (INPUT->GetButton(KEY_TYPE::D))
     {
         _translation.x += 3.f * dt;
     }
-    else if (INPUT->GetButton(KEY_TYPE::W))
+    if (INPUT->GetButton(KEY_TYPE::W))
     {
         _translation.y += 3.f * dt;
     }
-    else if (INPUT->GetButton(KEY_TYPE::S))
+    if (INPUT->GetButton(KEY_TYPE::S))
     {
         _translation.y -= 3.f * dt;
     }
