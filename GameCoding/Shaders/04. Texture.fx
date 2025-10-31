@@ -2,16 +2,18 @@ matrix World;
 matrix View;
 matrix Projection;
 
+Texture2D Texture0;
+
 struct VertexInput
 {
     float4 position : POSITION;
-    float4 color : COLOR;
+    float2 uv : TEXTCOORD;
 };
 
 struct VertexOutput
 {
     float4 position : SV_POSITION;
-    float4 color : COLOR;
+    float2 uv : TEXTCOORD;
 };
 
 VertexOutput VS(VertexInput input)
@@ -21,15 +23,18 @@ VertexOutput VS(VertexInput input)
     output.position = mul(output.position, View);
     output.position = mul(output.position, Projection);
 
-    output.color = input.color;
+    output.uv = input.uv;
 
     return output;
-
 }
+
+SamplerState Smapler0;
+
+
 
 float4 PS(VertexOutput input) : SV_TARGET
 {
-    return input.color;
+    return Texture0.Sample(Smapler0, input.uv);
 }
 
 RasterizerState FillModeWireFrame
