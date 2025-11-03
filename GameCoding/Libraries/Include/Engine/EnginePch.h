@@ -33,11 +33,11 @@ using namespace std;
 using namespace DirectX;
 using namespace Microsoft::WRL;
 
-#include <FX11/d3dx11effect.h>
 
 // Libs
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "d3dcompiler.lib")
+#include <FX11/d3dx11effect.h>
 
 #ifdef _DEBUG
 #pragma comment(lib, "DirectXTex/DirectXTex_debug.lib")
@@ -75,4 +75,4 @@ using namespace Microsoft::WRL;
 #include "GameObject.h"
 #include "Transform.h"
 #include "Texture.h"
-//#include "Mesh.h"
+#include "Mesh.h"

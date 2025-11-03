@@ -1,8 +1,9 @@
 matrix World;
 matrix View;
 matrix Projection;
-
 Texture2D Texture0;
+
+uint Address;
 
 struct VertexInput
 {
@@ -28,11 +29,15 @@ VertexOutput VS(VertexInput input)
     return output;
 }
 
-SamplerState Smapler0;
+SamplerState Sampler0
+{
+    AddressU = Wrap;
+    AddressV = Wrap;
+};
 
 float4 PS(VertexOutput input) : SV_TARGET
 {
-    return Texture0.Sample(Smapler0, input.uv);
+    return Texture0.Sample(Sampler0, input.uv);
 }
 
 RasterizerState FillModeWireFrame
