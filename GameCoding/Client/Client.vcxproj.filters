@@ -72,6 +72,21 @@
     <ClCompile Include="11. DepthStencilDemo.cpp">
       <Filter>Game\Weak2</Filter>
     </ClCompile>
+    <ClCompile Include="12. AmbientDemo.cpp">
+      <Filter>Game\Weak2</Filter>
+    </ClCompile>
+    <ClCompile Include="13. DiffuseDemo.cpp">
+      <Filter>Game\Weak2</Filter>
+    </ClCompile>
+    <ClCompile Include="14. SpecularDemo.cpp">
+      <Filter>Game\Weak2</Filter>
+    </ClCompile>
+    <ClCompile Include="15. EmissiveDemo.cpp">
+      <Filter>Game\Weak2</Filter>
+    </ClCompile>
+    <ClCompile Include="16. LightingDemo.cpp">
+      <Filter>Game\Weak2</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -116,6 +131,21 @@
     <ClInclude Include="11. DepthStencilDemo.h">
       <Filter>Game\Weak2</Filter>
     </ClInclude>
+    <ClInclude Include="12. AmbientDemo.h">
+      <Filter>Game\Weak2</Filter>
+    </ClInclude>
+    <ClInclude Include="13. DiffuseDemo.h">
+      <Filter>Game\Weak2</Filter>
+    </ClInclude>
+    <ClInclude Include="14. SpecularDemo.h">
+      <Filter>Game\Weak2</Filter>
+    </ClInclude>
+    <ClInclude Include="15. EmissiveDemo.h">
+      <Filter>Game\Weak2</Filter>
+    </ClInclude>
+    <ClInclude Include="16. LightingDemo.h">
+      <Filter>Game\Weak2</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Shaders\01. Triangle.fx">
@@ -144,6 +174,24 @@
     </FxCompile>
     <FxCompile Include="..\Shaders\08. GlobalTest.fx">
       <Filter>Shader\Weak2</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Shaders\09. AmbientLight.fx">
+      <Filter>Shader\Weak2</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Shaders\10. LightingDiffuse.fx">
+      <Filter>Shader\Weak2</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Shaders\11. Lightning_Specular.fx">
+      <Filter>Shader\Weak2</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Shaders\12. Lightning_Emissive.fx">
+      <Filter>Shader\Weak2</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Shaders\13. Lighting.fx">
+      <Filter>Shader\Weak2</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Shaders\00. Light.fx">
+      <Filter>Shader\Common</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

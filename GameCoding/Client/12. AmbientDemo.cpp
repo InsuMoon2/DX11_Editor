@@ -1,5 +1,5 @@
 ﻿#include "pch.h"
-#include "11. DepthStencilDemo.h"
+#include "12. AmbientDemo.h"
 #include "GeometryHelper.h"
 #include "Camera.h"
 #include "GameObject.h"
@@ -8,9 +8,9 @@
 #include "Mesh.h"
 #include "RenderManager.h"
 
-void DepthStencilDemo::Init()
+void AmbientDemo::Init()
 {
-    _shader = make_shared<Shader>(L"08. GlobalTest.fx");
+    _shader = make_shared<Shader>(L"09. AmbientLight.fx");
 
     // Camera
     _camera = make_shared<GameObject>();
@@ -31,7 +31,7 @@ void DepthStencilDemo::Init()
         _obj->GetMeshRenderer()->SetMesh(mesh);
     }
     {
-        auto texture = RESOURCES->Load<Texture>(L"Zerath", L"..\\Resources\\Textures\\Zerath.png");
+        auto texture = RESOURCES->Load<Texture>(L"Veigar", L"..\\Resources\\Textures\\veigar.jpg");
         _obj->GetMeshRenderer()->SetTexture(texture);
     }
 
@@ -55,17 +55,32 @@ void DepthStencilDemo::Init()
     RenderManager::GetInstance()->Init(_shader);
 }
 
-void DepthStencilDemo::Update()
+void AmbientDemo::Update()
 {
     _camera->Update();
 
     RenderManager::GetInstance()->Update();
 
-    _obj->Update();
-    _obj2->Update();
+    //
+    Vec4 lightAmbient(1.f, 1.f, 1.f, 1.f);
+    _shader->GetVector("LightAmbient")->SetFloatVector((float*)&lightAmbient);
+
+    {
+        Vec4 materialAmbient(1.f);
+        _shader->GetVector("MaterialAmbient")->SetFloatVector((float*)&materialAmbient);
+
+        _obj->Update();
+
+    }
+
+    {
+        Vec4 materialAmbient(1.f);
+        _shader->GetVector("MaterialAmbient")->SetFloatVector((float*)&materialAmbient);
+        _obj2->Update();
+    }
 }
 
-void DepthStencilDemo::Render()
+void AmbientDemo::Render()
 {
 
 }

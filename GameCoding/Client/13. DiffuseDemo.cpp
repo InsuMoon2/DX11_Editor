@@ -1,5 +1,5 @@
 ﻿#include "pch.h"
-#include "11. DepthStencilDemo.h"
+#include "13. DiffuseDemo.h"
 #include "GeometryHelper.h"
 #include "Camera.h"
 #include "GameObject.h"
@@ -8,13 +8,14 @@
 #include "Mesh.h"
 #include "RenderManager.h"
 
-void DepthStencilDemo::Init()
+void DiffuseDemo::Init()
 {
-    _shader = make_shared<Shader>(L"08. GlobalTest.fx");
+    RESOURCES->Init();
+    _shader = make_shared<Shader>(L"10. LightingDiffuse.fx");
 
     // Camera
     _camera = make_shared<GameObject>();
-    _camera->GetOrAddTransform()->SetPosition(Vec3(0.f, 0.f, -10.f));
+    _camera->GetOrAddTransform()->SetPosition(Vec3{ 0.f, 0.f, -10.f });
     _camera->AddComponent(make_shared<Camera>());
     _camera->AddComponent(make_shared<CameraScript>());
 
@@ -26,24 +27,22 @@ void DepthStencilDemo::Init()
         _obj->GetMeshRenderer()->SetShader(_shader);
     }
     {
-        RESOURCES->Init();
         auto mesh = RESOURCES->Get<Mesh>(L"Sphere");
         _obj->GetMeshRenderer()->SetMesh(mesh);
     }
     {
-        auto texture = RESOURCES->Load<Texture>(L"Zerath", L"..\\Resources\\Textures\\Zerath.png");
+        auto texture = RESOURCES->Load<Texture>(L"Veigar", L"..\\Resources\\Textures\\veigar.jpg");
         _obj->GetMeshRenderer()->SetTexture(texture);
     }
 
     // Object2
     _obj2 = make_shared<GameObject>();
-    _obj2->GetOrAddTransform()->SetPosition(Vec3(0.5f, 0.f, 2.f));
+    _obj2->GetOrAddTransform()->SetPosition(Vec3{ 0.5f, 0.f, 2.f });
     _obj2->AddComponent(make_shared<MeshRenderer>());
     {
         _obj2->GetMeshRenderer()->SetShader(_shader);
     }
     {
-        RESOURCES->Init();
         auto mesh = RESOURCES->Get<Mesh>(L"Cube");
         _obj2->GetMeshRenderer()->SetMesh(mesh);
     }
@@ -55,17 +54,33 @@ void DepthStencilDemo::Init()
     RenderManager::GetInstance()->Init(_shader);
 }
 
-void DepthStencilDemo::Update()
+void DiffuseDemo::Update()
 {
     _camera->Update();
-
     RenderManager::GetInstance()->Update();
 
-    _obj->Update();
-    _obj2->Update();
+    //
+    Vec4 lightDiffuse(1.f, 1.f, 1.f, 1.f);
+    _shader->GetVector("LightDiffuse")->SetFloatVector((float*)&lightDiffuse);
+
+    Vec4 lightDir(1.f, 0.f, 0.f, 1.f);
+    lightDir.Normalize();
+    _shader->GetVector("LightDir")->SetFloatVector((float*)&lightDir);
+
+    {
+        Vec4 material(1.f);
+        _shader->GetVector("MaterialDiffuse")->SetFloatVector((float*)&material);
+        _obj->Update();
+    }
+
+    {
+        Vec4 material(1.f);
+        _shader->GetVector("MaterialDiffuse")->SetFloatVector((float*)&material);
+        _obj2->Update();
+    }
 }
 
-void DepthStencilDemo::Render()
+void DiffuseDemo::Render()
 {
 
 }
