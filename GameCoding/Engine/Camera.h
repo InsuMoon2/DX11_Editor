@@ -1,10 +1,10 @@
-ï»¿#pragma once
+#pragma once
 #include "Component.h"
 
 enum class ProjectionType
 {
-	Perspective, // ì›ê·¼ íˆ¬ì˜
-	Orthographic, // ì§êµ íˆ¬ì˜
+	Perspective, // ¿ø±Ù Åõ¿µ
+	Orthographic, // Á÷±³ Åõ¿µ
 };
 
 class Camera :  public Component
@@ -34,7 +34,7 @@ private:
 	float _near = 1.f;
 	float _far = 1000.f;
 	float _fov = XM_PI / 4.f;
-	float  _width = 0.f;
+	float _width = 0.f;
 	float _height = 0.f;
 
 public:

@@ -24,4 +24,3 @@ technique11 T0
 {
 	PASS_VP(P0, VS, PS)
 };
-

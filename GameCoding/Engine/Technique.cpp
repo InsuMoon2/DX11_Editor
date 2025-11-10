@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "Technique.h"
 
 void Technique::Draw(UINT pass, UINT vertexCount, UINT startVertexLocation)
@@ -19,7 +19,7 @@ void Technique::DrawInstanced(UINT pass, UINT vertexCountPerInstance, UINT insta
 void Technique::DrawIndexedInstanced(UINT pass, UINT indexCountPerInstance, UINT instanceCount, UINT startIndexLocation, INT baseVertexLocation, UINT startInstanceLocation)
 {
 	passes[pass].DrawIndexedInstanced(indexCountPerInstance, instanceCount, startIndexLocation, baseVertexLocation, startInstanceLocation);
-} 
+}
 
 void Technique::Dispatch(UINT pass, UINT x, UINT y, UINT z)
 {

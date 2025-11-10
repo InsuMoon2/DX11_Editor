@@ -7,14 +7,14 @@
 
 cbuffer GlobalBuffer
 {
-    matrix V;
-    matrix P;
-    matrix VP;
+	matrix V;
+	matrix P;
+	matrix VP;
 };
 
 cbuffer TransformBuffer
 {
-    matrix W;
+	matrix W;
 };
 
 ////////////////
@@ -23,34 +23,34 @@ cbuffer TransformBuffer
 
 struct Vertex
 {
-    float4 position : POSITION;
+	float4 position : POSITION;
 };
 
 struct VertexTexture
 {
-    float4 position : POSITION;
-    float2 uv : TEXCOORD;
+	float4 position : POSITION;
+	float2 uv : TEXCOORD;
 };
 
 struct VertexColor
 {
-    float4 Position : POSITION;
-    float4 Color : COLOR;
+	float4 Position : POSITION;
+	float4 Color : COLOR;
 };
 
 struct VertexTextureNormal
 {
-    float4 position : POSITION;
-    float2 uv : TEXCOORD;
-    float3 normal : NORMAL;
+	float4 position : POSITION;
+	float2 uv : TEXCOORD;
+	float3 normal : NORMAL;
 };
 
 struct VertexTextureNormalTangent
 {
-    float4 position : POSITION;
-    float2 uv : TEXCOORD;
-    float3 normal : NORMAL;
-    float3 tangent : TANGENT;
+	float4 position : POSITION;
+	float2 uv : TEXCOORD;
+	float3 normal : NORMAL;
+	float3 tangent : TANGENT;
 };
 
 //////////////////
@@ -59,18 +59,18 @@ struct VertexTextureNormalTangent
 
 struct VertexOutput
 {
-    float4 position : SV_POSITION;
-    float2 uv : TEXCOORD;
-    float3 normal : NORMAL;
+	float4 position : SV_POSITION;
+	float2 uv : TEXCOORD;
+	float3 normal : NORMAL;
 };
 
 struct MeshOutput
 {
-    float4 position : SV_POSITION;
-    float3 worldPosition : POSITION1;
-    float2 uv : TEXCOORD;
-    float3 normal : NORMAL;
-    float3 tangent : TANGENT;
+	float4 position : SV_POSITION;
+	float3 worldPosition : POSITION1;
+	float2 uv : TEXCOORD;
+	float3 normal : NORMAL;
+	float3 tangent : TANGENT;
 };
 
 //////////////////
@@ -79,16 +79,16 @@ struct MeshOutput
 
 SamplerState LinearSampler
 {
-    Filter = MIN_MAG_MIP_LINEAR;
-    AddressU = Wrap;
-    AddressV = Wrap;
+	Filter = MIN_MAG_MIP_LINEAR;
+	AddressU = Wrap;
+	AddressV = Wrap;
 };
 
 SamplerState PointSampler
 {
-    Filter = MIN_MAG_MIP_POINT;
-    AddressU = Wrap;
-    AddressV = Wrap;
+	Filter = MIN_MAG_MIP_POINT;
+	AddressU = Wrap;
+	AddressV = Wrap;
 };
 
 /////////////////////
@@ -97,7 +97,7 @@ SamplerState PointSampler
 
 RasterizerState FillModeWireFrame
 {
-    FillMode = WireFrame;
+	FillMode = WireFrame;
 };
 
 ///////////
@@ -117,7 +117,7 @@ pass name											\
 
 float3 CameraPosition()
 {
-    return -V._41_42_43;
+	return -V._41_42_43;
 }
 
 #endif

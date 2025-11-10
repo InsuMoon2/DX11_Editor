@@ -1,16 +1,12 @@
-﻿#pragma once
+#pragma once
+#include "MonoBehaviour.h"
 
-#include "MonoBehavior.h"
-
-class CameraScript : public MonoBehavior
+class CameraScript : public MonoBehaviour
 {
 public:
-    CameraScript() = default;
-    virtual ~CameraScript() {}
+	virtual void Start() override;
+	virtual void Update() override;
 
-    void Start() override;
-    void Update() override;
-
-    float _speed = 10.f;
+	float _speed = 10.f;
 };
 

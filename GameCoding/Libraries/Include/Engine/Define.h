@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #define DECLARE_SINGLE(classname)			\
 private:									\
@@ -21,4 +21,4 @@ public:										\
 #define TIME		GET_SINGLE(TimeManager)
 #define DT			TIME->GetDeltaTime()
 #define RESOURCES	GET_SINGLE(ResourceManager)
-#define RENDER      GET_SINGLE(RenderManager)
+#define RENDER		GET_SINGLE(RenderManager)
