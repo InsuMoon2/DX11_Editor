@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Component.h"
 class MonoBehaviour;
 class Transform;
@@ -18,9 +18,9 @@ public:
 	void LateUpdate();
 	void FixedUpdate();
 
-	shared_ptr<Component> GetFixedComponent(ComponentType type);
-	shared_ptr<Transform> GetTransform();
-	shared_ptr<Camera> GetCamera();
+	shared_ptr<Component>   GetFixedComponent(ComponentType type);
+	shared_ptr<Transform>   GetTransform();
+	shared_ptr<Camera>      GetCamera();
 	shared_ptr<MeshRenderer> GetMeshRenderer();
 	//shared_ptr<Animator> GetAnimator();
 

@@ -10,6 +10,7 @@ cbuffer GlobalBuffer
 	matrix V;
 	matrix P;
 	matrix VP;
+    matrix VInv;
 };
 
 cbuffer TransformBuffer
@@ -117,7 +118,7 @@ pass name											\
 
 float3 CameraPosition()
 {
-	return -V._41_42_43;
+    return VInv._41_42_43;
 }
 
 #endif
