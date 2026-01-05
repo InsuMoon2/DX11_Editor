@@ -7,6 +7,9 @@
     <Filter Include="Main">
       <UniqueIdentifier>{1260ab62-95f9-4f72-bda1-3d5c83069a61}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{5cfc974e-608c-4fe0-a680-8515192e7743}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Main.h">
@@ -21,6 +24,12 @@
     <ClInclude Include="Converter.h">
       <Filter>Utils</Filter>
     </ClInclude>
+    <ClInclude Include="AssimpTool.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="AsTypes.h">
+      <Filter>Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -34,6 +43,12 @@
     </ClCompile>
     <ClCompile Include="Converter.cpp">
       <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="AssimpTool.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="AsTypes.cpp">
+      <Filter>Game</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

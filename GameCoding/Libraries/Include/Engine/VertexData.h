@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 struct VertexData
 {
@@ -30,4 +30,14 @@ struct VertexTextureNormalTangentData
 	Vec2 uv = { 0, 0 };
 	Vec3 normal = { 0, 0, 0 };
 	Vec3 tangent = { 0, 0, 0 };
+};
+
+struct VertexTextureNormalTangentBlendData
+{
+    Vec3 position = { 0, 0, 0 };
+    Vec2 uv = { 0, 0 };
+    Vec3 normal = { 0, 0, 0 };
+    Vec3 tangent = { 0, 0, 0 };
+    Vec4 blendIndices = { 0,0,0,0 };
+    Vec4 blendWeight = { 0,0,0,0 };
 };
