@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 class GameObject;
 class Transform;
@@ -7,6 +7,7 @@ enum class ComponentType : uint8
 {
 	Transform,
 	MeshRenderer,
+    ModelRenderer,
 	Camera,
 	Animator,
 	// ...

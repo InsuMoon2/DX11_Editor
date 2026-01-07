@@ -14,7 +14,7 @@ struct asMesh
 {
     string name;
     aiMesh* mesh;
-    vector<VertexType> verticies;
+    vector<VertexType> vertices;
     vector<uint32> indices;
 
     int32 boneIndex;
@@ -24,10 +24,10 @@ struct asMesh
 struct asMaterial
 {
     string name;
-    Color ambient;
-    Color diffuse;
-    Color specular;
-    Color emissive;
+    Color  ambient;
+    Color  diffuse;
+    Color  specular;
+    Color  emissive;
     string diffuseFile;
     string specularFile;
     string normalFile;
