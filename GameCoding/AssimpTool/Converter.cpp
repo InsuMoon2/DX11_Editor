@@ -44,6 +44,41 @@ void Converter::ExportModelData(wstring savePath)
     // 최상위 루트는 -1, -1이라고 번호를 지정해주고 그 다음에 타고 가서
     // 다음 자식들을 0, 1, 2 이렇게 계층적인 번호를 만들어주도록 할 것이다.
     ReadModelData(_scene->mRootNode, -1, -1);
+    ReadSkinData();
+
+    // Write CSV File
+    {
+        FILE* file;
+        ::fopen_s(&file, "../Vertices.csv", "w");
+
+        for (shared_ptr<asBone>& bone : _bones)
+        {
+            string name = bone->name;
+            ::fprintf(file, "%d,%s\n", bone->index, bone->name.c_str());
+        }
+
+        ::fprintf(file, "\n");
+
+        for (shared_ptr<asMesh>& mesh : _meshes)
+        {
+            string name = mesh->name;
+            ::printf("%s\n", name.c_str());
+
+            for (UINT i = 0; i < mesh->vertices.size(); i++)
+            {
+                Vec3 p = mesh->vertices[i].position;
+                Vec4 indices = mesh->vertices[i].blendIndices;
+                Vec4 weights = mesh->vertices[i].blendWeight;
+
+                ::fprintf(file, "%f,%f,%f,", p.x, p.y, p.z);
+                ::fprintf(file, "%f,%f,%f,%f,", indices.x, indices.y, indices.z, indices.w);
+                ::fprintf(file, "%f,%f,%f,%f\n", weights.x, weights.y, weights.z, weights.w);
+            }
+        }
+
+        ::fclose(file);
+    }
+
     // 메모리에 있는 데이터를 최종 파일로 만들기
     WriteModelFile(finalPath);
 }
@@ -138,6 +173,48 @@ void Converter::ReadMeshData(aiNode* node, int32 bone)
 
     _meshes.push_back(mesh);
 
+}
+
+void Converter::ReadSkinData()
+{
+    for (uint32 i = 0; i < _scene->mNumMeshes; i++)
+    {
+        aiMesh* srcMesh = _scene->mMeshes[i];
+        if (srcMesh->HasBones() == false)
+            continue; // Bone이 없으면 스킵
+        
+        shared_ptr<asMesh> mesh = _meshes[i];
+
+        // 가중치와 관련된 부분들을 파싱해서 가지고 있어야 하기 때문에
+        vector<asBoneWeight> tempVertexBoneWeights;
+        tempVertexBoneWeights.resize(mesh->vertices.size());
+
+        // Bone을 하나씩 하나씩 순회하면서 연관된 정점과 가중치 정보를 가져올건데
+        // Vertex에 있는게 아니라 뼈에 있기 때문에 추출해서 정점에 붙여넣는 작업을 진행한다.
+        for (uint32 b = 0; b < srcMesh->mNumBones; b++)
+        {
+            aiBone* srcMeshBone = srcMesh->mBones[b];
+            uint32 boneIndex = GetBoneIndex(srcMeshBone->mName.C_Str());
+
+            for (uint32 w = 0; w < srcMeshBone->mNumWeights; w++)
+            {
+                uint32 index = srcMeshBone->mWeights[w].mVertexId;
+                float weight = srcMeshBone->mWeights[w].mWeight;
+
+                tempVertexBoneWeights[index].AddWeights(boneIndex, weight);
+            }
+        }
+
+        // 최종 결과 계산
+        for (uint32 v = 0; v < tempVertexBoneWeights.size(); v++)
+        {
+            tempVertexBoneWeights[v].Normalize();
+
+            asBlendWeight blendWeight = tempVertexBoneWeights[v].GetBlendWeight();
+            mesh->vertices[v].blendIndices = blendWeight.indices;
+            mesh->vertices[v].blendWeight  = blendWeight.weights;
+        }
+    }
 }
 
 void Converter::WriteModelFile(wstring finalPath)
@@ -359,4 +436,17 @@ string Converter::WriteTexture(string saveFolder, string file)
     }
 
     return fileName;
+}
+
+uint32 Converter::GetBoneIndex(const string& name)
+{
+    for (shared_ptr<asBone>& bone : _bones)
+    {
+        if (bone->name == name)
+            return bone->index;
+    }
+
+    assert(false);
+
+    return 0;
 }

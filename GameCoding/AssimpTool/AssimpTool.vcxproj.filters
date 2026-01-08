@@ -24,13 +24,16 @@
     <ClInclude Include="Converter.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="AsTypes.h">
-      <Filter>Game</Filter>
-    </ClInclude>
     <ClInclude Include="StaticMeshDemo.h">
       <Filter>Game</Filter>
     </ClInclude>
+    <ClInclude Include="ImGuiDemo.h">
+      <Filter>Game</Filter>
+    </ClInclude>
     <ClInclude Include="AssimpTool.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="AsTypes.h">
       <Filter>Main</Filter>
     </ClInclude>
   </ItemGroup>
@@ -47,13 +50,16 @@
     <ClCompile Include="Converter.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
-    <ClCompile Include="AsTypes.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
     <ClCompile Include="StaticMeshDemo.cpp">
       <Filter>Game</Filter>
     </ClCompile>
+    <ClCompile Include="ImGuiDemo.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
     <ClCompile Include="AssimpTool.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="AsTypes.cpp">
       <Filter>Main</Filter>
     </ClCompile>
   </ItemGroup>

@@ -16,12 +16,16 @@ public:
 private:
     void ReadModelData(aiNode* node, int32 index, int32 parent);
     void ReadMeshData(aiNode* node, int32 bone);
+    void ReadSkinData();
     void WriteModelFile(wstring finalPath);
 
 private:
     void ReadMaterialData();
     void WriteMaterialData(wstring finalPath);
     string WriteTexture(string saveFolder, string file);
+
+private:
+    uint32 GetBoneIndex(const string& name);
 
 private:
     wstring _assetPath   = L"../Resources/Assets/";
