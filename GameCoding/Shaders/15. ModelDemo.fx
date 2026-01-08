@@ -1,10 +1,21 @@
 #include "00. Global.fx"
 #include "00. Light.fx"
 
+#define MAX_MODEL_TRANSFORMS 50
+
+cbuffer BoneBuffer
+{
+    matrix BoneTransforms[MAX_MODEL_TRANSFORMS];
+}
+
+uint BoneIndex; // 현재 렌더링하고 있는 물체의 인덱스
+
 MeshOutput VS(VertexTextureNormalTangent input)
 {
 	MeshOutput output;
-	output.position = mul(input.position, W);
+    output.position = mul(input.position, BoneTransforms[BoneIndex]);
+	output.position = mul(output.position, W);
+
     output.worldPosition = output.position.xyz;
 	output.position = mul(output.position, VP);	
 	output.uv = input.uv;
@@ -31,6 +42,6 @@ float4 PS_RED(MeshOutput input) : SV_TARGET
 
 technique11 T0
 {
-	//PASS_VP(P0, VS, PS)
+	PASS_VP(P0, VS, PS)
     PASS_RS_VP(P1, FillModeWireFrame, VS, PS_RED)
 };

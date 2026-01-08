@@ -21,6 +21,10 @@ void RenderManager::Init(shared_ptr<Shader> shader)
 	_materialBuffer = make_shared<ConstantBuffer<MaterialDesc>>();
 	_materialBuffer->Create();
 	_materialEffectBuffer = _shader->GetConstantBuffer("MaterialBuffer");
+
+    _boneBuffer = make_shared<ConstantBuffer<BoneDesc>>();
+    _boneBuffer->Create();
+    _boneEffectBuffer = _shader->GetConstantBuffer("BoneBuffer");
 }
 
 void RenderManager::Update()
