@@ -140,6 +140,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AnimationDemo.h" />
     <ClInclude Include="AssimpTool.h" />
     <ClInclude Include="AsTypes.h" />
     <ClInclude Include="CameraScript.h" />
@@ -147,9 +148,12 @@
     <ClInclude Include="ImGuiDemo.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="SkyDemo.h" />
     <ClInclude Include="StaticMeshDemo.h" />
+    <ClInclude Include="TweenDemo.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AnimationDemo.cpp" />
     <ClCompile Include="AssimpTool.cpp" />
     <ClCompile Include="AsTypes.cpp" />
     <ClCompile Include="CameraScript.cpp" />
@@ -160,7 +164,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="SkyDemo.cpp" />
     <ClCompile Include="StaticMeshDemo.cpp" />
+    <ClCompile Include="TweenDemo.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

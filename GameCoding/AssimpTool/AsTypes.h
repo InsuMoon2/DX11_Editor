@@ -112,3 +112,34 @@ struct asBoneWeight
     vector<Pair> boneWeights;
 };
 
+struct asKeyframeData
+{
+    float       time;
+    Vec3        scale;
+    Quaternion  rotation;
+    Vec3        translation;
+};
+
+struct asKeyframe
+{
+    string boneName;
+    vector<asKeyframeData> transforms;
+};
+
+struct asAnimation
+{
+    // 재생했을 때의 정보
+    string  name;
+    uint32  frameCount;
+    float   frameRate;
+    float   duration;
+
+    vector<shared_ptr<asKeyframe>> keyframes;
+};
+
+// Cache 임시
+struct asAnimationNode
+{
+    aiString name;
+    vector<asKeyframeData> keyframe;
+};

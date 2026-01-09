@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+struct ModelAnimation;
 struct ModelBone;
 struct ModelMesh;
 
@@ -12,6 +13,7 @@ public:
 public:
     void ReadMaterial(wstring filename);
     void ReadModel(wstring filename);
+    void ReadAnimation(wstring filename);
 
     uint32 GetMaterialCount() { return static_cast<uint32>(_materials.size()); }
     vector<shared_ptr<Material>>& GetMaterials() { return _materials; }
@@ -28,6 +30,11 @@ public:
     shared_ptr<ModelBone> GetBoneByIndex(uint32 index) { return (index < 0 || index >= _bones.size() ? nullptr : _bones[index]); }
     shared_ptr<ModelBone> GetBoneByName(const wstring& name);
 
+    uint32 GetAnimationCount() { return _animations.size(); }
+    vector<shared_ptr<ModelAnimation>>& GetAnimations() { return _animations; }
+    shared_ptr<ModelAnimation> GetAnimationByIndex(UINT index) { return (index < 0 || index >= _animations.size()) ? nullptr : _animations[index]; }
+    shared_ptr<ModelAnimation> GetAnimationByName(wstring name);
+
 private:
     void BindCacheInfo();
 
@@ -37,8 +44,10 @@ private:
 
 private:
     shared_ptr<ModelBone> _root;
-    vector<shared_ptr<Material>> _materials;
-    vector<shared_ptr<ModelBone>> _bones;
-    vector<shared_ptr<ModelMesh>> _meshes;
+    vector<shared_ptr<Material>>        _materials;
+    vector<shared_ptr<ModelBone>>       _bones;
+    vector<shared_ptr<ModelMesh>>       _meshes;
+    vector<shared_ptr<ModelAnimation>>  _animations;
+
 };
 

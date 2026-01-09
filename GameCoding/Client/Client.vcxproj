@@ -94,6 +94,9 @@
     <FxCompile Include="..\Shaders\13. Lighting.fx" />
     <FxCompile Include="..\Shaders\14. NormalMapping.fx" />
     <FxCompile Include="..\Shaders\15. ModelDemo.fx" />
+    <FxCompile Include="..\Shaders\16. AnimationDemo.fx" />
+    <FxCompile Include="..\Shaders\17. TweenDemo.fx" />
+    <FxCompile Include="..\Shaders\18. SkyDemo.fx" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
