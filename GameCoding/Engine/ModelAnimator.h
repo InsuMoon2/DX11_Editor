@@ -27,6 +27,16 @@ public:
     void SetModel(shared_ptr<Model> model);
     void SetPass(uint8 pass) { _pass = pass; }
 
+public:
+    int32 GetCurrentAnimIndex() { return _tweenDesc.curr.animIndex; }
+    void SetNextAnimation(int32 animIndex);
+
+    bool IsPlaying(int32 animIndex);
+    bool IsTransitioning() { return _tweenDesc.next.animIndex >= 0; }
+
+    // 현재 애니메이션이 마지막 프레임에 도달했는지
+    bool IsAnimationEnd();
+
 private:
     void CreateTexture();
     void CreateAnimationTransform(uint32 index);

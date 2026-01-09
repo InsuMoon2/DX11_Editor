@@ -15,12 +15,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	desc.hInstance = hInstance;
 	desc.vsync = false;
 	desc.hWnd = NULL;
-	desc.width = 800;
-	desc.height = 600;
-	desc.clearColor = Color(0.f, 0.f, 0.f, 0.f);
+	desc.width = 1280;
+	desc.height = 720;
+	desc.clearColor = Color(0.2f, 0.2f, 0.2f, 0.2f);
 
 	//desc.app = make_shared<AssimpTool>();
-	desc.app = make_shared<SkyDemo>();
+	desc.app = make_shared<TweenDemo>();
 
 	GAME->Run(desc);
 

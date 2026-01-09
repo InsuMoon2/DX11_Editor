@@ -271,6 +271,36 @@ void ModelAnimator::SetModel(shared_ptr<Model> model)
     }
 }
 
+void ModelAnimator::SetNextAnimation(int32 animIndex)
+{
+    if (_tweenDesc.next.animIndex >= 0)  // 이미 예약된 게 있으면
+        return;
+
+    _tweenDesc.next.animIndex = animIndex;
+    _tweenDesc.next.currFrame = 0;
+    _tweenDesc.next.nextFrame = 0;
+    _tweenDesc.next.sumTime = 0;
+    _tweenDesc.next.ratio = 0;
+    _tweenDesc.tweenSumTime = 0;
+    _tweenDesc.tweenRatio = 0;
+}
+
+bool ModelAnimator::IsPlaying(int32 animIndex)
+{
+    return _tweenDesc.curr.animIndex == animIndex && _tweenDesc.next.animIndex < 0;
+}
+
+bool ModelAnimator::IsAnimationEnd()
+{
+    if (_model == nullptr) return false;
+
+    auto anim = _model->GetAnimationByIndex(_tweenDesc.curr.animIndex);
+    if (anim == nullptr) return false;
+
+    // 현재 프레임이 (전체 프레임 - 2) 이상이면 거의 끝난 것
+    return _tweenDesc.curr.currFrame >= anim->frameCount - 2;
+}
+
 void ModelAnimator::CreateTexture()
 {
     if (_model->GetAnimationCount() == 0)

@@ -1,5 +1,7 @@
 ﻿#include "pch.h"
 #include "SkyDemo.h"
+#include "MeshRenderer.h"
+#include "Material.h"
 #include "GeometryHelper.h"
 #include "Camera.h"
 #include "GameObject.h"
@@ -13,6 +15,34 @@ void SkyDemo::Init()
 {
     RESOURCES->Init();
     _shader = make_shared<Shader>(L"18. SkyDemo.fx");
+
+    // Material
+    {
+        shared_ptr<Material> material = make_shared<Material>();
+        material->SetShader(_shader);
+        auto texture = RESOURCES->Load<Texture>(L"Sky", L"..\\Resources\\Textures\\Sky02.jpg");
+        material->SetDiffuseMap(texture);
+        MaterialDesc& desc = material->GetMaterialDesc();
+        desc.ambient = Vec4(1.f);
+        desc.diffuse = Vec4(1.f);
+        desc.specular = Vec4(1.f);
+        RESOURCES->Add(L"Sky", material);
+    }
+
+    {
+        // Object
+        _obj = make_shared<GameObject>();
+        _obj->GetOrAddTransform();
+        _obj->AddComponent(make_shared<MeshRenderer>());
+        {
+            auto mesh = RESOURCES->Get<Mesh>(L"Sphere");
+            _obj->GetMeshRenderer()->SetMesh(mesh);
+        }
+        {
+            auto material = RESOURCES->Get<Material>(L"Sky");
+            _obj->GetMeshRenderer()->SetMaterial(material);
+        }
+    }
 
     // Camera
     _camera = make_shared<GameObject>();
