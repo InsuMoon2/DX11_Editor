@@ -12,13 +12,12 @@
 void EditorDemo::Init()
 {
     RESOURCES->Init();
-    _shader = make_shared<Shader>(L"17. EditorDemo.fx");
+    _shader = make_shared<Shader>(L"17. TweenDemo.fx");
 
     // Camera
     _camera = make_shared<GameObject>();
     _camera->GetOrAddTransform()->SetPosition(Vec3{ 0.f, 0.f, -5.f });
     _camera->AddComponent(make_shared<Camera>());
-    //_camera->AddComponent(make_shared<CameraScript>());
 
     CreateKachujin();
 
