@@ -202,23 +202,23 @@ void ModelAnimator::Update()
     }
 
     // Anim Update
-    ImGui::InputInt("AnimIndex", &desc.curr.animIndex);
-    desc.curr.animIndex %= _model->GetAnimationCount();
-    ImGui::InputInt("CurrFrame", (int*)&desc.curr.currFrame);
-
-    // 다른 애니메이션 선택
-    static int32 nextAnimIndex = 0;
-    if (ImGui::InputInt("NextAnimIndex", &nextAnimIndex))
-    {
-        nextAnimIndex %= _model->GetAnimationCount();
-        desc.ClearNextAnim(); // 기존꺼 밀어주기
-        desc.next.animIndex = nextAnimIndex;
-    }
-
-    if (_model->GetAnimationCount() > 0)
-        desc.curr.animIndex %= _model->GetAnimationCount();
-
-    ImGui::InputFloat("Speed", &desc.curr.speed, 0.5f, 4.f);
+    //ImGui::InputInt("AnimIndex", &desc.curr.animIndex);
+    //desc.curr.animIndex %= _model->GetAnimationCount();
+    //ImGui::InputInt("CurrFrame", (int*)&desc.curr.currFrame);
+    //
+    //// 다른 애니메이션 선택
+    //static int32 nextAnimIndex = 0;
+    //if (ImGui::InputInt("NextAnimIndex", &nextAnimIndex))
+    //{
+    //    nextAnimIndex %= _model->GetAnimationCount();
+    //    desc.ClearNextAnim(); // 기존꺼 밀어주기
+    //    desc.next.animIndex = nextAnimIndex;
+    //}
+    //
+    //if (_model->GetAnimationCount() > 0)
+    //    desc.curr.animIndex %= _model->GetAnimationCount();
+    //
+    //ImGui::InputFloat("Speed", &desc.curr.speed, 0.5f, 4.f);
 
     // 애니메이션 현재 프레임 정보
     RENDER->PushTweenData(desc);

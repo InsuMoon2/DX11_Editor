@@ -145,6 +145,7 @@
     <ClInclude Include="AsTypes.h" />
     <ClInclude Include="CameraScript.h" />
     <ClInclude Include="Converter.h" />
+    <ClInclude Include="EditorDemo.h" />
     <ClInclude Include="ImGuiDemo.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="pch.h" />
@@ -158,6 +159,7 @@
     <ClCompile Include="AsTypes.cpp" />
     <ClCompile Include="CameraScript.cpp" />
     <ClCompile Include="Converter.cpp" />
+    <ClCompile Include="EditorDemo.cpp" />
     <ClCompile Include="ImGuiDemo.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="pch.cpp">

@@ -1,5 +1,5 @@
 ﻿#include "pch.h"
-#include "TweenDemo.h"
+#include "EditorDemo.h"
 #include "GeometryHelper.h"
 #include "Camera.h"
 #include "GameObject.h"
@@ -9,10 +9,10 @@
 #include "ModelRenderer.h"
 #include "ModelAnimator.h"
 
-void TweenDemo::Init()
+void EditorDemo::Init()
 {
     RESOURCES->Init();
-    _shader = make_shared<Shader>(L"17. TweenDemo.fx");
+    _shader = make_shared<Shader>(L"17. EditorDemo.fx");
 
     // Camera
     _camera = make_shared<GameObject>();
@@ -25,7 +25,7 @@ void TweenDemo::Init()
     RENDER->Init(_shader);
 }
 
-void TweenDemo::Update()
+void EditorDemo::Update()
 {
     _camera->Update();
     RENDER->Update();
@@ -47,12 +47,12 @@ void TweenDemo::Update()
     }
 }
 
-void TweenDemo::Render()
+void EditorDemo::Render()
 {
     
 }
 
-void TweenDemo::CreateKachujin()
+void EditorDemo::CreateKachujin()
 {
     shared_ptr<Model> m1 = make_shared<Model>();
     m1->ReadModel(L"Kachujin/Kachujin");
@@ -73,7 +73,7 @@ void TweenDemo::CreateKachujin()
     }
 }
 
-void TweenDemo::UpdateInput()
+void EditorDemo::UpdateInput()
 {
 
     auto animator = _obj->GetModelAnimator();
@@ -159,7 +159,7 @@ void TweenDemo::UpdateInput()
 
 }
 
-void TweenDemo::UpdateCamera()
+void EditorDemo::UpdateCamera()
 {
     Vec3 playerPos = _obj->GetTransform()->GetPosition();
 
