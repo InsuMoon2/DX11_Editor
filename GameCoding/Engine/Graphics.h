@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 class Graphics
 {
@@ -12,6 +12,8 @@ public:
 
 	ComPtr<ID3D11Device> GetDevice() { return _device; }
 	ComPtr<ID3D11DeviceContext> GetDeviceContext() { return _deviceContext; }
+
+    void BindBackBuffer();
 
 private:
 	void CreateDeviceAndSwapChain();

@@ -64,19 +64,39 @@ ATOM Game::MyRegisterClass()
 
 BOOL Game::InitInstance(int cmdShow)
 {
-	RECT windowRect = { 0, 0, _desc.width, _desc.height };
-	::AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, false);
+    RECT windowRect = { 0, 0, _desc.width, _desc.height };
+    ::AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, false);
+    int windowWidth = windowRect.right - windowRect.left;
+    int windowHeight = windowRect.bottom - windowRect.top;
 
-	_desc.hWnd = CreateWindowW(_desc.appName.c_str(), _desc.appName.c_str(), WS_OVERLAPPEDWINDOW,
-		CW_USEDEFAULT, 0, windowRect.right - windowRect.left, windowRect.bottom - windowRect.top, nullptr, nullptr, _desc.hInstance, nullptr);
+    // ─────────────────────────────────────────────
+    // 화면 가운데 계산
+    // ─────────────────────────────────────────────
+    int screenWidth = GetSystemMetrics(SM_CXSCREEN);
+    int screenHeight = GetSystemMetrics(SM_CYSCREEN);
+    int posX = (screenWidth - windowWidth) / 2;
+    int posY = (screenHeight - windowHeight) / 2;
 
-	if (!_desc.hWnd)
-		return FALSE;
+    // ─────────────────────────────────────────────
+    // 윈도우 생성 (가운데 위치)
+    // ─────────────────────────────────────────────
+    _desc.hWnd = CreateWindowW(
+        _desc.appName.c_str(),
+        _desc.appName.c_str(),
+        WS_OVERLAPPEDWINDOW,
+        posX, posY,              // ← CW_USEDEFAULT 대신 계산된 위치
+        windowWidth, windowHeight,
+        nullptr, nullptr,
+        _desc.hInstance,
+        nullptr
+    );
+    if (!_desc.hWnd)
+        return FALSE;
 
-	::ShowWindow(_desc.hWnd, cmdShow);
-	::UpdateWindow(_desc.hWnd);
-
-	return TRUE;
+    ::ShowWindow(_desc.hWnd, SW_SHOWNORMAL);
+    //::ShowWindow(_desc.hWnd, SW_SHOWMAXIMIZED);
+    ::UpdateWindow(_desc.hWnd);
+    return TRUE;
 }
 
 // Forward declare message handler from imgui_impl_win32.cpp

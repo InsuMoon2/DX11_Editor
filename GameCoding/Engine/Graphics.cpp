@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Graphics.h"
 
 void Graphics::Init(HWND hwnd)
@@ -24,6 +24,13 @@ void Graphics::RenderEnd()
 	HRESULT hr = _swapChain->Present(1, 0);
 	CHECK(hr);
 }
+
+void Graphics::BindBackBuffer()
+{
+    _deviceContext->OMSetRenderTargets(1, _renderTargetView.GetAddressOf(), _depthStencilView.Get());
+    _deviceContext->RSSetViewports(1, &_viewport);
+}
+
 void Graphics::CreateDeviceAndSwapChain()
 {
 	DXGI_SWAP_CHAIN_DESC desc;

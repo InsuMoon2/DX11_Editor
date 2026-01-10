@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Default">
+      <UniqueIdentifier>{f7eb8675-0fcf-46b1-bd5d-f3c2250af774}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor">
+      <UniqueIdentifier>{9494edcf-2d80-43e8-96a4-7ec17348f1bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main">
+      <UniqueIdentifier>{724cf837-9043-46a4-9af2-cfa3293c5c83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Viewport">
+      <UniqueIdentifier>{e3dd209b-e262-46ff-8979-8c2e5e307b1a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="EditorTool.cpp">
+      <Filter>Default</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>Default</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorToolApp.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorWindow.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorManager.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneView.cpp">
+      <Filter>Viewport</Filter>
+    </ClCompile>
+    <ClCompile Include="GameView.cpp">
+      <Filter>Viewport</Filter>
+    </ClCompile>
+    <ClCompile Include="HierarchyView.cpp">
+      <Filter>Viewport</Filter>
+    </ClCompile>
+    <ClCompile Include="InspectorView.cpp">
+      <Filter>Viewport</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h">
+      <Filter>Default</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorToolApp.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorWindow.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorManager.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneView.h">
+      <Filter>Viewport</Filter>
+    </ClInclude>
+    <ClInclude Include="GameView.h">
+      <Filter>Viewport</Filter>
+    </ClInclude>
+    <ClInclude Include="HierarchyView.h">
+      <Filter>Viewport</Filter>
+    </ClInclude>
+    <ClInclude Include="InspectorView.h">
+      <Filter>Viewport</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
