@@ -82,3 +82,17 @@ void FileUtils::Read(OUT string& data)
     data = temp;
     delete[] temp;
 }
+
+wstring FileUtils::PathToAnimName(const wstring& path)
+{
+	wstring result = path;
+
+	// '/' -> '_'
+	for (auto& c : result)
+	{
+		if (c == L'/')
+			c = L'_';
+	}
+
+	return result;
+}

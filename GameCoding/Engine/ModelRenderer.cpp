@@ -87,8 +87,8 @@ void ModelRenderer::Update()
         uint32 stride = mesh->vertexBuffer->GetStride();
         uint32 offset = mesh->vertexBuffer->GetOffset();
 
-        DC->IASetVertexBuffers(0, 1, mesh->vertexBuffer->GetComPtr().GetAddressOf(), &stride, &offset);
-        DC->IASetIndexBuffer(mesh->indexBuffer->GetComPtr().Get(), DXGI_FORMAT_R32_UINT, 0);
+        ENGINE_DC->IASetVertexBuffers(0, 1, mesh->vertexBuffer->GetComPtr().GetAddressOf(), &stride, &offset);
+        ENGINE_DC->IASetIndexBuffer(mesh->indexBuffer->GetComPtr().Get(), DXGI_FORMAT_R32_UINT, 0);
 
         _shader->DrawIndexed(0, _pass, mesh->indexBuffer->GetCount(), 0, 0);
     }

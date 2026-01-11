@@ -13,12 +13,12 @@ public:
 
 public:
     const string& GetName() const { return _name; }
-    bool IsActive() const { return _active; }
-    void SetActive(bool active) { _active = active; }
+    bool IsActive() const { return _isActive; }
+    void SetActive(bool active) { _isActive = active; }
 
 protected:
     string _name;
-    bool _active = true;
+    bool _isActive = true;
 
 };
 

@@ -1,10 +1,11 @@
 ﻿#include "pch.h"
 #include "EditorManager.h"
+#include "ContentBrowserView.h"
 #include "GameView.h"
 #include "SceneView.h"
 #include "HierarchyView.h"
 #include "InspectorView.h"
-
+#include "AnimationView.h"
 
 void EditorManager::Init()
 {
@@ -15,6 +16,9 @@ void EditorManager::Init()
     AddWindow(L"Game", make_shared<GameView>());
     AddWindow(L"Hierarchy", make_shared<HierarchyView>());
     AddWindow(L"Inspector", make_shared<InspectorView>());
+    AddWindow(L"ContentBrowser", make_shared<ContentBrowserView>());
+    AddWindow(L"Animation", make_shared<AnimationView>());
+
 }
 
 void EditorManager::Update()

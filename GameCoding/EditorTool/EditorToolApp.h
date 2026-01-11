@@ -2,6 +2,8 @@
 
 #include "Engine/IExecute.h"
 
+class Model;
+
 class EditorToolApp : public IExecute
 {
 public:
@@ -10,10 +12,16 @@ public:
     void Render() override;
 
     void CreatePlayer();
+
     void RegisterHierarchy();
+    void RegisterContentBrowser();
 
 private:
     shared_ptr<Shader>       _shader;
-    shared_ptr<GameObject>  _player;
+    shared_ptr<Model>        _model;
+
+    shared_ptr<GameObject>   _player;
+
+    vector<wstring>         _animPaths;
 };
 

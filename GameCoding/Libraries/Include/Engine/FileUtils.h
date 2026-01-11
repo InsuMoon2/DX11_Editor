@@ -48,6 +48,8 @@ public:
     void Read(void** data, uint32 dataSize);
     void Read(OUT string& data);
 
+    static wstring PathToAnimName(const wstring& path);
+
 private:
     HANDLE _handle = INVALID_HANDLE_VALUE;
 };

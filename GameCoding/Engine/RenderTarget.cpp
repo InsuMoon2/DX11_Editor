@@ -119,8 +119,8 @@ void RenderTarget::BindAsTarget()
     // ─────────────────────────────────────────────
     // 이 RenderTarget을 렌더링 대상으로 설정
     // ─────────────────────────────────────────────
-    DC->OMSetRenderTargets(1, _renderTargetView.GetAddressOf(), _depthStencilView.Get());
-    DC->RSSetViewports(1, &_viewport);
+    ENGINE_DC->OMSetRenderTargets(1, _renderTargetView.GetAddressOf(), _depthStencilView.Get());
+    ENGINE_DC->RSSetViewports(1, &_viewport);
 }
 
 void RenderTarget::Clear(const Color& color)
@@ -128,8 +128,8 @@ void RenderTarget::Clear(const Color& color)
     // ─────────────────────────────────────────────
     // RenderTarget 클리어
     // ─────────────────────────────────────────────
-    DC->ClearRenderTargetView(_renderTargetView.Get(), (float*)&color);
-    DC->ClearDepthStencilView(_depthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+    ENGINE_DC->ClearRenderTargetView(_renderTargetView.Get(), (float*)&color);
+    ENGINE_DC->ClearDepthStencilView(_depthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 }
 
 void RenderTarget::UnbindAll()
@@ -139,7 +139,7 @@ void RenderTarget::UnbindAll()
     // 이후 기본 백버퍼로 복원 필요
     // ─────────────────────────────────────────────
     ID3D11RenderTargetView* nullRTV = nullptr;
-    DC->OMSetRenderTargets(1, &nullRTV, nullptr);
+    ENGINE_DC->OMSetRenderTargets(1, &nullRTV, nullptr);
 
     GRAPHICS->BindBackBuffer();  // 백버퍼로 복원
 }

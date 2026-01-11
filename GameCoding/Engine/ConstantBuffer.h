@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 template<typename T>
 class ConstantBuffer
@@ -27,9 +27,9 @@ public:
 		D3D11_MAPPED_SUBRESOURCE subResource;
 		ZeroMemory(&subResource, sizeof(subResource));
 
-		DC->Map(_constantBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &subResource);
+        ENGINE_DC->Map(_constantBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &subResource);
 		::memcpy(subResource.pData, &data, sizeof(data));
-		DC->Unmap(_constantBuffer.Get(), 0);
+        ENGINE_DC->Unmap(_constantBuffer.Get(), 0);
 	}
 
 private:

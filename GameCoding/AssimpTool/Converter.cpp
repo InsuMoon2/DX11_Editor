@@ -426,7 +426,7 @@ string Converter::WriteTexture(string saveFolder, string file)
             CHECK(hr);
 
             DirectX::ScratchImage img;
-            ::CaptureTexture(DEVICE.Get(), DC.Get(), texture.Get(), img);
+            ::CaptureTexture(DEVICE.Get(), ENGINE_DC.Get(), texture.Get(), img);
 
             // Save To File
             hr = DirectX::SaveToDDSFile(*img.GetImages(), DirectX::DDS_FLAGS_NONE, Utils::ToWString(fileName).c_str());

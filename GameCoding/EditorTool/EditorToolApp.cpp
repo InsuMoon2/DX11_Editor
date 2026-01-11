@@ -1,12 +1,17 @@
 ﻿#include "pch.h"
 #include "EditorToolApp.h"
-#include "HierarchyView.h"
+
+#include "AnimationView.h"
 #include "Camera.h"
 #include "Model.h"
 #include "EditorManager.h"
-#include "SceneView.h"
 #include "Engine/RenderTarget.h"
 #include "ModelAnimator.h"
+#include "ModelAnimation.h"
+#include "SceneView.h"
+#include "HierarchyView.h"
+#include "ContentBrowserView.h"
+#include "FileUtils.h"
 
 void EditorToolApp::Init()
 {
@@ -20,6 +25,7 @@ void EditorToolApp::Init()
     GET_SINGLE(EditorManager)->Init();
 
     RegisterHierarchy();
+    RegisterContentBrowser();
 
 }
 
@@ -68,8 +74,16 @@ void EditorToolApp::Render()
         // ─────────────────────────────────────────────
         // 플레이어 렌더링
         // ─────────────────────────────────────────────
-        if (_player)
+        auto animView = dynamic_pointer_cast<AnimationView>(
+            GET_SINGLE(EditorManager)->GetWindow(L"Animation"));
+
+        bool animViewActive = animView && animView->IsActive();
+
+        // Animation View가 비활성화일 때만 자동 재생
+        if (!animViewActive && _player)
+        {
             _player->Update();
+        }
 
         // RenderTarget 해제 (백버퍼로 복원은 Graphics에서)
         RenderTarget::UnbindAll();
@@ -83,17 +97,23 @@ void EditorToolApp::Render()
 
 void EditorToolApp::CreatePlayer()
 {
-    shared_ptr<Model> model = make_shared<Model>();
-    model->ReadModel(L"Kachujin/Kachujin");
-    model->ReadMaterial(L"Kachujin/Kachujin");
-    model->ReadAnimation(L"Kachujin/Idle");
+    _model = make_shared<Model>();
+    _model->ReadModel(L"Kachujin/Kachujin");
+    _model->ReadMaterial(L"Kachujin/Kachujin");
+
+    _animPaths.push_back(L"Kachujin/Idle");
+    _animPaths.push_back(L"Kachujin/Run");
+    _animPaths.push_back(L"Kachujin/Slash");
+
+    for (auto& path : _animPaths)
+        _model->ReadAnimation(path);
 
     _player = make_shared<GameObject>();
     _player->GetOrAddTransform()->SetPosition(Vec3(0, 0, 10));
     _player->GetOrAddTransform()->SetScale(Vec3(0.04f));
 
     _player->AddComponent(make_shared<ModelAnimator>(_shader));
-    _player->GetModelAnimator()->SetModel(model);
+    _player->GetModelAnimator()->SetModel(_model);
 
 }
 
@@ -106,4 +126,27 @@ void EditorToolApp::RegisterHierarchy()
     {
         hierarchy->AddObject(_player);
     }
+}
+
+void EditorToolApp::RegisterContentBrowser()
+{
+    auto contentBrowser = dynamic_pointer_cast<ContentBrowserView>(
+        GET_SINGLE(EditorManager)->GetWindow(L"ContentBrowser"));
+
+    if (contentBrowser && _model)
+    {
+        // 모든 애니메이션을 ContentBrowser에 등록
+        auto& animations = _model->GetAnimations();
+        for (int i = 0; i < animations.size(); i++)
+        {
+            wstring name = FileUtils::PathToAnimName(_animPaths[i]);
+            contentBrowser->AddAnimation(
+                name,
+                _model,
+                _player->GetModelAnimator(),
+                _animPaths,
+                i);
+        }
+    }
+
 }

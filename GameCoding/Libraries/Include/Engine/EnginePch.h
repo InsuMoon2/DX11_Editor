@@ -14,6 +14,9 @@
 #include <map>
 #include <unordered_map>
 #include <algorithm>
+#include <set>
+#include <functional>
+
 using namespace std;
 
 // WIN
@@ -66,6 +69,7 @@ using namespace Microsoft::WRL;
 #include "TimeManager.h"
 #include "ResourceManager.h"
 #include "RenderManager.h"
+#include "AnimNotifyManager.h"
 
 // Engine
 #include "VertexData.h"
@@ -79,3 +83,6 @@ using namespace Microsoft::WRL;
 #include "Transform.h"
 #include "Texture.h"
 #include "Mesh.h"
+
+#include "AnimNotifyData.h"
+#include "IAnimNotify.h"

@@ -138,12 +138,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AnimationView.cpp" />
+    <ClCompile Include="ContentBrowserView.cpp" />
     <ClCompile Include="EditorManager.cpp" />
     <ClCompile Include="EditorTool.cpp" />
     <ClCompile Include="EditorToolApp.cpp" />
     <ClCompile Include="EditorWindow.cpp" />
     <ClCompile Include="GameView.cpp" />
     <ClCompile Include="HierarchyView.cpp" />
+    <ClCompile Include="ImSequencer.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="InspectorView.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -154,11 +159,14 @@
     <ClCompile Include="SceneView.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AnimationView.h" />
+    <ClInclude Include="ContentBrowserView.h" />
     <ClInclude Include="EditorManager.h" />
     <ClInclude Include="EditorToolApp.h" />
     <ClInclude Include="EditorWindow.h" />
     <ClInclude Include="GameView.h" />
     <ClInclude Include="HierarchyView.h" />
+    <ClInclude Include="ImSequencer.h" />
     <ClInclude Include="InspectorView.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="SceneView.h" />

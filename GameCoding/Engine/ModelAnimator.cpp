@@ -4,6 +4,7 @@
 #include "ModelMesh.h"
 #include "Model.h"
 #include "ModelAnimation.h"
+#include "AnimNotifyManager.h"
 
 ModelAnimator::ModelAnimator(shared_ptr<Shader> shader)
     : Super(ComponentType::Animator), _shader(shader)
@@ -160,9 +161,13 @@ void ModelAnimator::Update()
             float timePerFrame = 1 / (currentAnim->frameRate * desc.curr.speed);
             if (desc.curr.sumTime >= timePerFrame)
             {
+                int prevFrame = desc.curr.currFrame;
+
                 desc.curr.sumTime = 0;
                 desc.curr.currFrame = (desc.curr.currFrame + 1) % currentAnim->frameCount;
                 desc.curr.nextFrame = (desc.curr.currFrame + 1) % currentAnim->frameCount;
+
+                CheckNotifies(prevFrame, desc.curr.currFrame);
             }
 
             desc.curr.ratio = (desc.curr.sumTime / timePerFrame);
@@ -253,8 +258,8 @@ void ModelAnimator::Update()
         uint32 stride = mesh->vertexBuffer->GetStride();
         uint32 offset = mesh->vertexBuffer->GetOffset();
 
-        DC->IASetVertexBuffers(0, 1, mesh->vertexBuffer->GetComPtr().GetAddressOf(), &stride, &offset);
-        DC->IASetIndexBuffer(mesh->indexBuffer->GetComPtr().Get(), DXGI_FORMAT_R32_UINT, 0);
+        ENGINE_DC->IASetVertexBuffers(0, 1, mesh->vertexBuffer->GetComPtr().GetAddressOf(), &stride, &offset);
+        ENGINE_DC->IASetIndexBuffer(mesh->indexBuffer->GetComPtr().Get(), DXGI_FORMAT_R32_UINT, 0);
 
         _shader->DrawIndexed(0, _pass, mesh->indexBuffer->GetCount(), 0, 0);
     }
@@ -299,6 +304,83 @@ bool ModelAnimator::IsAnimationEnd()
 
     // 현재 프레임이 (전체 프레임 - 2) 이상이면 거의 끝난 것
     return _tweenDesc.curr.currFrame >= anim->frameCount - 2;
+}
+
+wstring ModelAnimator::GetCurrentAnimationName()
+{
+    if (!_model)
+    {
+        return L"";
+    }
+
+    auto anim = _model->GetAnimationByIndex(_tweenDesc.curr.animIndex);
+    if (anim)
+    {
+        return anim->name;
+    }
+
+    return L"";
+}
+
+void ModelAnimator::CheckNotifies(int prevFrame, int currFrame)
+{
+    wstring animName = GetCurrentAnimationName();
+    if (animName.empty())
+        return;
+
+    auto* container = GET_SINGLE(AnimNotifyManager)->GetContainer(animName);
+    if (!container)
+        return;
+
+    // ─────────────────────────────────────────────
+    // 단일 프레임 Notify 체크
+    // ─────────────────────────────────────────────
+    for (auto& notify : container->notifies)
+    {
+        bool triggered = false;
+        if (prevFrame <= currFrame)
+        {
+            // 일반 진행
+            triggered = (notify.frame > prevFrame && notify.frame <= currFrame);
+        }
+        else
+        {
+            // 루프 : prevFrame -> 끝 -> 0 -> currFrame
+            triggered = (notify.frame > prevFrame || notify.frame <= currFrame);
+        }
+
+        if (triggered && _notifyCallback)
+        {
+            _notifyCallback(notify.name);
+        }
+    }
+
+    // ─────────────────────────────────────────────
+    // NotifyState 체크 (시작/종료)
+    // ─────────────────────────────────────────────
+    for (int i = 0; i < (int)container->notifyStates.size(); i++)
+    {
+        auto& state = container->notifyStates[i];
+        bool wasActive = _activeNotifyStates.count(i) > 0;
+        bool isActive = (currFrame >= state.startFrame && currFrame <= state.endFrame);
+
+        if (isActive && !wasActive)
+        {
+            // 시작
+            _activeNotifyStates.insert(i);
+            if (_notifyStateCallback)
+                _notifyStateCallback(state.name, true);
+        }
+        else if (!isActive && wasActive)
+        {
+            // 종료
+            _activeNotifyStates.erase(i);
+            if (_notifyStateCallback)
+                _notifyStateCallback(state.name, false);
+        }
+
+    }
+
 }
 
 void ModelAnimator::CreateTexture()

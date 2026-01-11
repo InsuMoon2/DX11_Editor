@@ -37,6 +37,9 @@
     <Filter Include="98. Utils\ImGui">
       <UniqueIdentifier>{f78ba2dc-5094-47d7-aa38-d2807b4a7b0e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05. Notify">
+      <UniqueIdentifier>{70fe7314-5263-4f87-a776-696b6ea22ba8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -163,6 +166,18 @@
       <Filter>04. Component</Filter>
     </ClInclude>
     <ClInclude Include="RenderTarget.h" />
+    <ClInclude Include="AnimNotifyData.h">
+      <Filter>05. Notify</Filter>
+    </ClInclude>
+    <ClInclude Include="IAnimNotify.h">
+      <Filter>05. Notify</Filter>
+    </ClInclude>
+    <ClInclude Include="IAnimNotifyState.h">
+      <Filter>05. Notify</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimNotifyManager.h">
+      <Filter>05. Notify</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -280,6 +295,18 @@
       <Filter>04. Component</Filter>
     </ClCompile>
     <ClCompile Include="RenderTarget.cpp" />
+    <ClCompile Include="AnimNotifyData.cpp">
+      <Filter>05. Notify</Filter>
+    </ClCompile>
+    <ClCompile Include="IAnimNotify.cpp">
+      <Filter>05. Notify</Filter>
+    </ClCompile>
+    <ClCompile Include="IAnimNotifyState.cpp">
+      <Filter>05. Notify</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimNotifyManager.cpp">
+      <Filter>05. Notify</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">

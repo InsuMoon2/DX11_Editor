@@ -1,0 +1,10 @@
+{
+    "animationName": "Kachujin_Slash",
+    "notifies": [
+        {
+            "frame": 60,
+            "name": "TestAnimation"
+        }
+    ],
+    "notifyStates": []
+}

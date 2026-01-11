@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Shader.h"
 #include "Utils.h"
 
@@ -6,9 +6,9 @@ Shader::Shader(wstring file) : _file(L"..\\Shaders\\" + file)
 {
 	_initialStateBlock = make_shared<StateBlock>();
 	{
-		DC->RSGetState(_initialStateBlock->RSRasterizerState.GetAddressOf());
-		DC->OMGetBlendState(_initialStateBlock->OMBlendState.GetAddressOf(), _initialStateBlock->OMBlendFactor, &_initialStateBlock->OMSampleMask);
-		DC->OMGetDepthStencilState(_initialStateBlock->OMDepthStencilState.GetAddressOf(), &_initialStateBlock->OMStencilRef);
+		ENGINE_DC->RSGetState(_initialStateBlock->RSRasterizerState.GetAddressOf());
+		ENGINE_DC->OMGetBlendState(_initialStateBlock->OMBlendState.GetAddressOf(), _initialStateBlock->OMBlendFactor, &_initialStateBlock->OMSampleMask);
+		ENGINE_DC->OMGetDepthStencilState(_initialStateBlock->OMDepthStencilState.GetAddressOf(), &_initialStateBlock->OMStencilRef);
 	}
 
 	CreateEffect();
