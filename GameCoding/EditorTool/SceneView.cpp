@@ -33,12 +33,12 @@ void SceneView::Init()
 
 void SceneView::Update()
 {
-    if (_isFocused)
-    {
-        UpdateCameraInput();
-    }
+    UpdateCameraInput();
+    
     if (_editorCamera)
         _editorCamera->Update();
+
+    UpdateCameraLerp();
 }
 
 void SceneView::OnGui()
@@ -86,9 +86,40 @@ void SceneView::OnGui()
 
 }
 
+void SceneView::FocusOnPosition(const Vec3& targetPos)
+{
+    _isCameraLerping = true;
+    _lerpTargetPos = targetPos;
+}
+
+void SceneView::UpdateCameraLerp()
+{
+    if (!_isCameraLerping || !_editorCamera)
+        return;
+
+    auto transform = _editorCamera->GetTransform();
+    Vec3 currentPos = transform->GetPosition();
+
+    // 타겟 뒤쪽에서 바라보는 위치 계산
+    Vec3 targetCamPos = _lerpTargetPos - transform->GetLook() * _lerpDistance;
+    targetCamPos.y = _lerpTargetPos.y + 4.f;
+
+    // Lerp 이동
+    Vec3 newPos = Vec3::Lerp(currentPos, targetCamPos, DT * 5.f);
+    transform->SetPosition(newPos);
+
+    // 거의 도착하면 종료
+    float distance = (newPos - targetCamPos).Length();
+    if (distance < 0.1f)
+    {
+        _isCameraLerping = false;
+    }
+
+}
+
 void SceneView::UpdateCameraInput()
 {
-    if (!_editorCamera)
+    if (!_editorCamera || !_isFocused)
         return;
 
     auto transform = _editorCamera->GetTransform();

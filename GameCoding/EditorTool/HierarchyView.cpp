@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "InspectorView.h"
 #include "EditorManager.h"
+#include "SceneView.h"
 
 HierarchyView::HierarchyView()
     : EditorWindow("Hierarchy")
@@ -61,6 +62,20 @@ void HierarchyView::OnGui()
 
             if (inspector)
                 inspector->SetTarget(obj);
+        }
+
+        // === 더블 클릭 시 카메라 이동 ===
+        if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0))
+        {
+            // 카메라 Lerp 이동
+            auto sceneView = dynamic_pointer_cast<SceneView>(
+                GET_SINGLE(EditorManager)->GetWindow(L"Scene"));
+
+            if (sceneView && obj->GetTransform())
+            {
+                Vec3 targetPos = obj->GetTransform()->GetPosition();
+                sceneView->FocusOnPosition(targetPos);
+            }
         }
     }
 

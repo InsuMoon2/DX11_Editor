@@ -27,6 +27,10 @@ public:
     shared_ptr<RenderTarget> GetRenderTarget() const { return _renderTarget; }
     shared_ptr<GameObject> GetEditorCamera() const { return _editorCamera; }  // 추가
 
+    // 카메라 Lerp 이동
+    void FocusOnPosition(const Vec3& targetPos);
+    void UpdateCameraLerp();
+
 private:
     void UpdateCameraInput();
     void UpdateImGuiZmo();
@@ -53,6 +57,10 @@ private:
     float _rotSpeed = 0.003f;
 
     POINT _lastMousePos = {};
+
+    bool _isCameraLerping = false;
+    Vec3 _lerpTargetPos;
+    float _lerpDistance = 15; // 타겟으로의 거리
 
 private:
     // ─────────────────────────────────────────────

@@ -178,6 +178,9 @@
     <ClInclude Include="AnimNotifyManager.h">
       <Filter>05. Notify</Filter>
     </ClInclude>
+    <ClInclude Include="Logger.h">
+      <Filter>98. Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -306,6 +309,9 @@
     </ClCompile>
     <ClCompile Include="AnimNotifyManager.cpp">
       <Filter>05. Notify</Filter>
+    </ClCompile>
+    <ClCompile Include="Logger.cpp">
+      <Filter>98. Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
