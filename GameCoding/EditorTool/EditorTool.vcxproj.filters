@@ -57,6 +57,7 @@
     <ClCompile Include="ImSequencer.cpp">
       <Filter>98. Utils</Filter>
     </ClCompile>
+    <ClCompile Include="ConsoleView.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -92,5 +93,6 @@
     <ClInclude Include="ImSequencer.h">
       <Filter>98. Utils</Filter>
     </ClInclude>
+    <ClInclude Include="ConsoleView.h" />
   </ItemGroup>
 </Project>

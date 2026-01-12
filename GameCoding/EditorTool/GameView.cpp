@@ -23,6 +23,9 @@ void GameView::Update()
     // Game View는 보통 입력을 직접 처리하지 않음
     // (게임 로직에서 처리)
     // ─────────────────────────────────────────────
+
+    //LOG_INFO("Test Logging");
+
 }
 
 void GameView::OnGui()

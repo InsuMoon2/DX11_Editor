@@ -135,5 +135,7 @@ void Game::Update()
     GUI->Render();
 
 	GRAPHICS->RenderEnd();
+
+    EVENTS->ProcessEvents();
 }
 

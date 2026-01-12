@@ -17,7 +17,21 @@ HierarchyView::~HierarchyView()
 
 void HierarchyView::Init()
 {
-    
+    // GameObject 생성 이벤트 구독
+    EVENTS->Subscribe(EventType::GameObject_Created, [this](Event& e)
+        {
+            auto& event = static_cast<GameObjectCreateEvent&>(e);
+            AddObject(event.GetGameObject());
+            LOG_WARNING("GameObject Created !");
+        });
+
+    // GameObject 삭제 이벤트 구독
+    EVENTS->Subscribe(EventType::GameObject_Destroyed, [this](Event& e)
+        {
+            auto& event = static_cast<GameObjectCreateEvent&>(e);
+            RemoveObject(event.GetGameObject());
+            LOG_WARNING("GameObject Destroyed!");
+        });
 }
 
 void HierarchyView::Update()
@@ -28,6 +42,25 @@ void HierarchyView::Update()
 void HierarchyView::OnGui()
 {
     ImGui::Begin("Hierarchy");
+
+    if (ImGui::Button("Create Object"))
+    {
+        auto obj = make_shared<GameObject>();
+        obj->GetOrAddTransform();
+        EVENTS->Publish(make_shared<GameObjectCreateEvent>(obj));
+    }
+
+    ImGui::Separator();
+
+    // 삭제 Delete 처리
+    if (_selectedObject && ImGui::IsWindowFocused())
+    {
+        if (INPUT->GetButtonDown(KEY_TYPE::DEL))
+        {
+            EVENTS->Publish(make_shared<GameObjectDestroyedEvent>(_selectedObject));
+            _selectedObject = nullptr;
+        }
+    }
 
     // ─────────────────────────────────────────────
     // 오브젝트 목록 표시

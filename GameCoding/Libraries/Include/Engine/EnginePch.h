@@ -16,6 +16,7 @@
 #include <algorithm>
 #include <set>
 #include <functional>
+#include <queue>
 
 using namespace std;
 
@@ -70,6 +71,11 @@ using namespace Microsoft::WRL;
 #include "ResourceManager.h"
 #include "RenderManager.h"
 #include "AnimNotifyManager.h"
+#include "Logger.h"
+
+#include "Event.h"
+#include "GameObjectEvent.h"
+#include "EventManager.h"
 
 // Engine
 #include "VertexData.h"
@@ -86,3 +92,4 @@ using namespace Microsoft::WRL;
 
 #include "AnimNotifyData.h"
 #include "IAnimNotify.h"
+

@@ -139,6 +139,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AnimationView.cpp" />
+    <ClCompile Include="ConsoleView.cpp" />
     <ClCompile Include="ContentBrowserView.cpp" />
     <ClCompile Include="EditorManager.cpp" />
     <ClCompile Include="EditorTool.cpp" />
@@ -160,6 +161,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationView.h" />
+    <ClInclude Include="ConsoleView.h" />
     <ClInclude Include="ContentBrowserView.h" />
     <ClInclude Include="EditorManager.h" />
     <ClInclude Include="EditorToolApp.h" />

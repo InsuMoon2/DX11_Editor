@@ -8,6 +8,7 @@ enum class KEY_TYPE
     RIGHT = VK_RIGHT,
     SHIFT = VK_SHIFT,
     SPACE = VK_SPACE,
+    DEL = VK_DELETE,
 
 	W = 'W',
 	A = 'A',

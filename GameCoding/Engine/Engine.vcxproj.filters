@@ -40,6 +40,9 @@
     <Filter Include="05. Notify">
       <UniqueIdentifier>{70fe7314-5263-4f87-a776-696b6ea22ba8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="97. Event">
+      <UniqueIdentifier>{25349056-f3fa-43c3-8f64-38479c0078bd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -181,6 +184,15 @@
     <ClInclude Include="Logger.h">
       <Filter>98. Utils</Filter>
     </ClInclude>
+    <ClInclude Include="Event.h">
+      <Filter>97. Event</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjectEvent.h">
+      <Filter>97. Event</Filter>
+    </ClInclude>
+    <ClInclude Include="EventManager.h">
+      <Filter>97. Event</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -312,6 +324,15 @@
     </ClCompile>
     <ClCompile Include="Logger.cpp">
       <Filter>98. Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Event.cpp">
+      <Filter>97. Event</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjectEvent.cpp">
+      <Filter>97. Event</Filter>
+    </ClCompile>
+    <ClCompile Include="EventManager.cpp">
+      <Filter>97. Event</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

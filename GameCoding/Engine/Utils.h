@@ -10,6 +10,6 @@ public:
     static void Replace(OUT wstring& str, wstring comp, wstring rep);
 
 	static wstring ToWString(string value);
-	static string ToString(wstring value);
+	static string  ToString(wstring value);
 };
 

@@ -6,6 +6,7 @@
 #include "HierarchyView.h"
 #include "InspectorView.h"
 #include "AnimationView.h"
+#include "ConsoleView.h"
 
 void EditorManager::Init()
 {
@@ -18,6 +19,7 @@ void EditorManager::Init()
     AddWindow(L"Inspector", make_shared<InspectorView>());
     AddWindow(L"ContentBrowser", make_shared<ContentBrowserView>());
     AddWindow(L"Animation", make_shared<AnimationView>());
+    AddWindow(L"Console", make_shared<ConsoleView>());
 
 }
 
