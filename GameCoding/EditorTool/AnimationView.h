@@ -15,16 +15,19 @@ struct AnimSequence : public ImSequencer::SequenceInterface
     int frameMin = 0;
     int frameMax = 0;
 
-	AnimNotifyContainer* notifyContainer = nullptr;
+    AnimNotifyContainer* notifyContainer = nullptr;
+
+    int selectedNotifyIndex = -1;
+    int selectedNotifyStateIndex = -1;
 
     // 필수 구현 요소
     int GetFrameMin() const override { return frameMin; }
     int GetFrameMax() const override { return frameMax; }
-    int GetItemCount() const override { return 1; } // 애니메이션 트랙 1개
+    int GetItemCount() const override { return 3; } // 애니메이션 트랙 개수
 
-	void Get(int index, int** start, int** end, int* type, unsigned int* color) override;
+    void Get(int index, int** start, int** end, int* type, unsigned int* color) override;
 
-    const char* GetItemLabel(int index) const override { return "Animation"; }
+    const char* GetItemLabel(int index) const override;
 
 	void CustomDraw(int index, ImDrawList* draw_list,
 		const ImRect& rc, const ImRect& legendRect,
@@ -103,11 +106,14 @@ private:
     bool _isHovered = false;
 
 private:
-	// 노티파이 편집용
+	// Notify
 	int _selectedNotifyIndex = -1;
 	int _selectedNotifyStateIndex = -1;
 	char _newNotifyName[128] = "";
 	int _newNotifyFrame = 0;
+
+    // Notify State
+    char _newNotifyStateName[128] = "";
 	int _newNotifyStateStartFrame = 0;
 	int _newNotifyStateEndFrame = 0;
 

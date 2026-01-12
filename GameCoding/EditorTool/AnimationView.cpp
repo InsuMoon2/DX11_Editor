@@ -19,22 +19,58 @@ void AnimSequence::Get(int index, int** start, int** end, int* type, unsigned* c
     if (!start || !end)
         return;
 
-    static int _start = 0;
-    static int _end = 100;
-    _end = frameMax;
-    *start = &_start;
-    *end = &_end;
+    static int animStart = 0;
+    static int animEnd = 100;
+
+    static int notifyStart = 0;
+    static int notifyEnd = 100;
+
+    static int stateStart = 0;
+    static int stateEnd = 100;
+
+    animEnd = frameMax;
+    notifyEnd = frameMax;
+    stateEnd = frameMax;
+
+    switch (index)
+    {
+    case 0:
+        *start = &animStart;
+        *end = &animEnd;
+
+        if (color)
+            *color = 0xFF4488AA; // 파란색 계열
+        break;
+
+    case 1:
+        *start = &notifyStart;
+        *end = &notifyEnd;
+        break;
+
+    case 2:
+        *start = &stateStart;
+        *end = &stateEnd;
+        break;
+    }
 
     if (type)
         *type = 0;
 
-    if (color)
-        *color = 0xFF4488AA;
 }
 
+const char* AnimSequence::GetItemLabel(int index) const
+{
+    switch (index)
+    {
+    case 0:  return "Animation";
+    case 1:  return "Notifies";
+    case 2:  return "States";
+    default: return "";
+    }
+}
 
 void AnimSequence::CustomDraw(int index, ImDrawList* draw_list, const ImRect& rc, const ImRect& legendRect,
-    const ImRect& clippingRect, const ImRect& legendClippingRect)
+                              const ImRect& clippingRect, const ImRect& legendClippingRect)
 {
     if (!notifyContainer)
         return;
@@ -45,44 +81,75 @@ void AnimSequence::CustomDraw(int index, ImDrawList* draw_list, const ImRect& rc
 
     float pixelPerFrame = (rc.Max.x - rc.Min.x) / frameCount;
 
-    // 단일 Notify - 빨간 사각형 마커 (언리얼 스타일)
-    for (auto& notify : notifyContainer->notifies)
+    // ─────────────────────────────────────────────
+    // index == 0: Animation 트랙
+    // ─────────────────────────────────────────────
+    if (index == 0)
+        return;
+
+    // ─────────────────────────────────────────────
+    // index == 1: Notifies 트랙
+    // ─────────────────────────────────────────────
+    if (index == 1)
     {
-        float x = rc.Min.x + (notify.frame - frameMin) * pixelPerFrame;
-        float markerWidth = 6.f;
-        float markerHeight = rc.Max.y - rc.Min.y - 4.f;
+        for (int i = 0; i < notifyContainer->notifies.size(); i++)
+        {
+            auto& notify = notifyContainer->notifies[i];
+                
+            float x = rc.Min.x + (notify.frame - frameMin) * pixelPerFrame;
+            float markerWidth = 40.f;
+            float markerHeight = rc.Max.y - rc.Min.y - 4.f;
 
-        // 배경 사각형
-        draw_list->AddRectFilled(
-            ImVec2(x - markerWidth * 0.5f, rc.Min.y + 2),
-            ImVec2(x + markerWidth * 0.5f, rc.Min.y + 2 + markerHeight),
-            0xFF2222DD);  // 빨간색 (ABGR)
+            // 배경 사각형
+            draw_list->AddRectFilled(
+                ImVec2(x, rc.Min.y + 2),
+                ImVec2(x + markerWidth, rc.Min.y + 2 + markerHeight),
+                0xFF33CC33); // 연한 초록?
 
-        // 테두리
-        draw_list->AddRect(
-            ImVec2(x - markerWidth * 0.5f, rc.Min.y + 2),
-            ImVec2(x + markerWidth * 0.5f, rc.Min.y + 2 + markerHeight),
-            0xFFFFFFFF);  // 흰색 테두리
+            unsigned int borderColor = (i == selectedNotifyIndex) ? 0xFF000000 : 0xFFFFFFFF;
+
+            // 테두리
+            draw_list->AddRect(
+                ImVec2(x, rc.Min.y + 2),
+                ImVec2(x + markerWidth, rc.Min.y + 2 + markerHeight),
+                borderColor); 
+
+            string name = Utils::ToString(notify.name);
+            ImVec2 textPos(x + 2.f, rc.Min.y + 2);
+            draw_list->AddText(textPos, 0xFFFFFFFF, name.c_str());
+        }
+        return;
     }
 
-    // NotifyState - 주황 바 (구간)
-    for (auto& state : notifyContainer->notifyStates)
+    // ─────────────────────────────────────────────
+    // index == 2: States 트랙
+    // ─────────────────────────────────────────────
+    if (index == 2)
     {
-        float x1 = rc.Min.x + (state.startFrame - frameMin) * pixelPerFrame;
-        float x2 = rc.Min.x + (state.endFrame - frameMin) * pixelPerFrame;
+        for (int i = 0; i < notifyContainer->notifyStates.size(); i++)
+        {
+            auto& state = notifyContainer->notifyStates[i];
 
-        // 구간 배경
-        draw_list->AddRectFilled(
-            ImVec2(x1, rc.Max.y - 10),
-            ImVec2(x2, rc.Max.y - 2),
-            0xFFFF8822);  // 주황색 (ABGR)
+            float x1 = rc.Min.x + (state.startFrame - frameMin) * pixelPerFrame;
+            float x2 = rc.Min.x + (state.endFrame - frameMin) * pixelPerFrame;
 
-        // 테두리
-        draw_list->AddRect(
-            ImVec2(x1, rc.Max.y - 10),
-            ImVec2(x2, rc.Max.y - 2),
-            0xFFFFFFFF);  // 흰색 테두리
+            // 구간 배경 (트랙 전체 높이 사용)
+            draw_list->AddRectFilled(
+                ImVec2(x1, rc.Min.y + 2),
+                ImVec2(x2, rc.Max.y - 2),
+                0xFFFFAA44);  // 하늘색
+
+            unsigned int borderColor = (i == selectedNotifyIndex) ? 0xFF000000 : 0xFFFFFFFF;
+
+            // 테두리
+            draw_list->AddRect(
+                ImVec2(x1, rc.Min.y + 2),
+                ImVec2(x2, rc.Max.y - 2),
+                borderColor); 
+        }
+        return;
     }
+
 }
 
 AnimationView::AnimationView()
@@ -248,7 +315,8 @@ void AnimationView::DrawPreview()
         tweenDesc.curr.nextFrame = tweenDesc.curr.currFrame;
         tweenDesc.curr.ratio = 0.f;
         tweenDesc.curr.sumTime = 0.f; 
-        tweenDesc.curr.speed = 0.f;   
+        tweenDesc.curr.speed = 0.f;
+
         _modelAnimator->SetTweenDesc(tweenDesc);
         _modelAnimator->Update();
 
@@ -308,6 +376,9 @@ void AnimationView::DrawSequencer()
 
     wstring animName = (_animNames.size() > _animIndex) ? _animNames[_animIndex] : L"";
     _sequence.notifyContainer = GET_SINGLE(AnimNotifyManager)->GetContainer(animName);
+
+    _sequence.selectedNotifyIndex = _selectedNotifyIndex;
+    _sequence.selectedNotifyStateIndex = _selectedNotifyStateIndex;
 
     _firstFrame = 0;
 
@@ -446,18 +517,21 @@ void AnimationView::DrawNotifyPanel()
     }
 
     // NotifyState 추가 UI
+    ImGui::InputText("Name##State", _newNotifyStateName, 128);
     ImGui::InputInt("Start##State", &_newNotifyStateStartFrame);
     ImGui::InputInt("End##State", &_newNotifyStateEndFrame);
 
     if (ImGui::Button("Add NotifyState"))
     {
-        if (strlen(_newNotifyName) > 0)
+        if (strlen(_newNotifyStateName) > 0)
         {
             AnimNotifyStateData state;
-            state.name = Utils::ToWString(string(_newNotifyName));
+            state.name = Utils::ToWString(string(_newNotifyStateName));
             state.startFrame = _newNotifyStateStartFrame;
             state.endFrame = _newNotifyStateEndFrame;
             GET_SINGLE(AnimNotifyManager)->AddNotifyState(animName, state);
+
+            memset(_newNotifyStateName, 0, 128);
         }
     }
     ImGui::SameLine();
@@ -502,14 +576,19 @@ void AnimationView::UpdateCameraInput()
 
         if (INPUT->GetButton(KEY_TYPE::W))
             pos += transform->GetLook() * currentSpeed * DT;
+
         if (INPUT->GetButton(KEY_TYPE::S))
             pos -= transform->GetLook() * currentSpeed * DT;
+
         if (INPUT->GetButton(KEY_TYPE::A))
             pos -= transform->GetRight() * currentSpeed * DT;
+
         if (INPUT->GetButton(KEY_TYPE::D))
             pos += transform->GetRight() * currentSpeed * DT;
+
         if (INPUT->GetButton(KEY_TYPE::Q))
             pos.y -= currentSpeed * DT;
+
         if (INPUT->GetButton(KEY_TYPE::E))
             pos.y += currentSpeed * DT;
     }
