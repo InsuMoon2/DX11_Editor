@@ -7,6 +7,7 @@
 #include "InspectorView.h"
 #include "AnimationView.h"
 #include "ConsoleView.h"
+#include "SceneSerializer.h"
 
 void EditorManager::Init()
 {
@@ -83,6 +84,30 @@ void EditorManager::ShowMenuBar()
     {
         if (ImGui::BeginMenu("File"))
         {
+            // === Save/Load 추가 ===
+            if (ImGui::MenuItem("Save Scene", "Ctrl+S"))
+            {
+                auto hierarchy = dynamic_pointer_cast<HierarchyView>(GetWindow(L"Hierarchy"));
+                if (hierarchy)
+                {
+                    SceneSerializer::SaveScene(L"../Scenes/Scene.json", hierarchy->GetSceneObjects());
+                    LOG_INFO("Scene Saved!");
+                }
+            }
+
+            if (ImGui::MenuItem("Load Scene", "Ctrl+O"))
+            {
+                auto hierarchy = dynamic_pointer_cast<HierarchyView>(GetWindow(L"Hierarchy"));
+                if (hierarchy)
+                {
+                    auto objects = SceneSerializer::LoadScene(L"../Scenes/Scene.json");
+                    hierarchy->ClearSceneObjects();  // 기존 오브젝트 삭제
+                    for (auto& obj : objects)
+                        hierarchy->AddObject(obj);
+                    LOG_INFO("Scene Loaded!");
+                }
+            }
+
             if (ImGui::MenuItem("Exit"))
                 PostQuitMessage(0);
 

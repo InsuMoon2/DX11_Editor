@@ -33,11 +33,18 @@ public:
 	virtual void LateUpdate() { }
 	virtual void FixedUpdate() { }
 
+    virtual shared_ptr<Component> Clone() const { return nullptr; }
+
 public:
 	ComponentType GetType() { return _type; }
 
 	shared_ptr<GameObject> GetGameObject();
-	shared_ptr<Transform> GetTransform();
+	shared_ptr<Transform>  GetTransform();
+
+public:
+    // 직렬화
+    virtual json ToJson() const { return json{}; }
+    virtual void FromJson(const json& j) { }
 
 private:
 	friend class GameObject;

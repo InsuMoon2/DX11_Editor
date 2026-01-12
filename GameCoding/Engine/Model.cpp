@@ -139,6 +139,8 @@ void Model::ReadMaterial(wstring filename)
 
 void Model::ReadModel(wstring filename)
 {
+    _fileName = filename;
+
     wstring fullPath = _modelPath + filename + L".mesh";
 
     shared_ptr<FileUtils> file = make_shared<FileUtils>();

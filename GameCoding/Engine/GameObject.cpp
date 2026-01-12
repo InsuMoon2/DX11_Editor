@@ -149,3 +149,22 @@ void GameObject::AddComponent(shared_ptr<Component> component)
 		_scripts.push_back(dynamic_pointer_cast<MonoBehaviour>(component));
 	}
 }
+
+shared_ptr<GameObject> GameObject::Clone() const
+{
+    auto clone = make_shared<GameObject>();
+
+    for (auto& component : _components)
+    {
+        if (!component)
+            continue;
+
+        auto clonedComp = component->Clone();
+        if (clonedComp)
+        {
+            clone->AddComponent(clonedComp);
+        }
+    }
+
+    return clone;
+}

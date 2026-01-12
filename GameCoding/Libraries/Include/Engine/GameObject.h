@@ -30,6 +30,15 @@ public:
 	shared_ptr<Transform> GetOrAddTransform();
 	void AddComponent(shared_ptr<Component> component);
 
+    // 컴포넌트 배열 (복제용)
+    const array<shared_ptr<Component>, FIXED_COMPONENT_COUNT>& GetComponents() const
+    {
+        return _components;
+    }
+
+    // 게임 오브젝트 복제
+    shared_ptr<GameObject> Clone() const;
+
 protected:
 	array<shared_ptr<Component>, FIXED_COMPONENT_COUNT> _components;
 	vector<shared_ptr<MonoBehaviour>> _scripts;

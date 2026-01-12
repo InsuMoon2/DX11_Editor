@@ -39,6 +39,9 @@ using namespace Microsoft::WRL;
 
 #include <FX11/d3dx11effect.h>
 
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
+
 // Assimp
 #include <Assimp/Importer.hpp>
 #include <Assimp/scene.h>

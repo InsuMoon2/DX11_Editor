@@ -1,0 +1,143 @@
+{
+    "gameObjects": [
+        {
+            "components": [
+                {
+                    "position": [
+                        -1.1199041604995728,
+                        0.0,
+                        10.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        0.03999999910593033,
+                        0.03999999910593033,
+                        0.03999999910593033
+                    ],
+                    "type": "Transform"
+                }
+            ],
+            "name": "GameObject"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Transform"
+                }
+            ],
+            "name": "GameObject"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Transform"
+                }
+            ],
+            "name": "GameObject"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Transform"
+                }
+            ],
+            "name": "GameObject"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Transform"
+                }
+            ],
+            "name": "GameObject"
+        },
+        {
+            "components": [
+                {
+                    "position": [
+                        3.892218828201294,
+                        0.0,
+                        10.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        0.03999999910593033,
+                        0.03999999910593033,
+                        0.03999999910593033
+                    ],
+                    "type": "Transform"
+                }
+            ],
+            "name": "GameObject"
+        }
+    ],
+    "sceneName": "EditorScene"
+}

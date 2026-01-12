@@ -3,6 +3,7 @@
 #include "Material.h"
 #include "ModelMesh.h"
 #include "Model.h"
+#include "Utils.h"
 
 ModelRenderer::ModelRenderer(shared_ptr<Shader> shader)
     : Super(ComponentType::ModelRenderer), _shader(shader)
@@ -103,5 +104,55 @@ void ModelRenderer::SetModel(shared_ptr<Model> model)
     for (auto& material : materials)
     {
         material->SetShader(_shader);
+    }
+}
+
+shared_ptr<Component> ModelRenderer::Clone() const
+{
+    auto clone = make_shared<ModelRenderer>(_shader);
+
+    clone->SetModel(_model);
+    clone->SetPass(_pass);
+
+    return clone;
+}
+
+json ModelRenderer::ToJson() const
+{
+    json j;
+    j["type"] = "ModelRenderer";
+    j["pass"] = _pass;
+
+    if (_model)
+        j["modelFile"] = Utils::ToString(_model->GetFileName());
+
+    // 셰이더 경로도 저장
+    if (_shader)
+        j["shaderFile"] = "17. TweenDemo.fx";
+
+    return j;
+}
+
+void ModelRenderer::FromJson(const json& j)
+{
+    // 셰이더 먼저 로드
+    wstring shaderFile = L"17. TweenDemo.fx";
+
+    if (j.contains("shaderFile"))
+        shaderFile = Utils::ToWString(j["shaderFile"].get<string>());
+
+    _shader = make_shared<Shader>(shaderFile);
+
+    if (j.contains("pass"))
+        _pass = j["pass"];
+
+    if (j.contains("modelFile"))
+    {
+        wstring fileName = Utils::ToWString(j["modelFile"].get<string>());
+
+        auto model = make_shared<Model>();
+        model->ReadModel(fileName);
+        model->ReadMaterial(fileName);
+        SetModel(model);
     }
 }

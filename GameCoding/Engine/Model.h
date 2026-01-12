@@ -35,12 +35,16 @@ public:
     shared_ptr<ModelAnimation> GetAnimationByIndex(UINT index) { return (index < 0 || index >= _animations.size()) ? nullptr : _animations[index]; }
     shared_ptr<ModelAnimation> GetAnimationByName(wstring name);
 
+    wstring GetFileName() const { return _fileName; }
+
 private:
     void BindCacheInfo();
 
 private:
     wstring _modelPath = L"../Resources/Models/";
     wstring _texturePath = L"../Resources/Textures/";
+
+    wstring _fileName;
 
 private:
     shared_ptr<ModelBone> _root;

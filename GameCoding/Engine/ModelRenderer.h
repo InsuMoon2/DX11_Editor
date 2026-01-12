@@ -19,6 +19,15 @@ public:
     void SetModel(shared_ptr<Model> model);
     void SetPass(uint8 pass) { _pass = pass; }
 
+    shared_ptr<Shader> GetShader() const { return _shader; }
+    shared_ptr<Model> GetModel() const { return _model; }
+
+    shared_ptr<Component> Clone() const override;
+
+    // 직렬화
+    json ToJson() const override;
+    void FromJson(const json& j) override;
+
 private:
     shared_ptr<Shader> _shader;
     uint8              _pass = 0;

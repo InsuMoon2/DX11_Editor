@@ -2,6 +2,7 @@
 #include "InspectorView.h"
 #include "GameObject.h"
 #include "Transform.h"
+#include "ModelRenderer.h"
 
 InspectorView::InspectorView()
     : EditorWindow("Inspector")
@@ -32,6 +33,27 @@ void InspectorView::OnGui()
         ImGui::Separator();
 
         DrawTransform();
+
+        ImGui::Separator();
+
+        // === Add Component ===
+        if (ImGui::Button("Add Component", ImVec2(-1, 30)))
+        {
+            ImGui::OpenPopup("AddComponentPopup");
+        }
+
+        // 팝업 메뉴
+        if (ImGui::BeginPopup("AddComponentPopup"))
+        {
+            if (ImGui::MenuItem("ModelRenderer"))
+            {
+                auto shader = make_shared<Shader>(L"17. TweenDemo.fx");
+                auto renderer = make_shared<ModelRenderer>(shader);
+                _target->AddComponent(renderer);
+            }
+
+            ImGui::EndPopup();
+        }
     }
     else
     {
@@ -72,6 +94,5 @@ void InspectorView::DrawTransform()
         // Scale
         if (ImGui::DragFloat3("Scale", (float*)&scale, 0.01f))
             transform->SetScale(scale);
-
     }
 }

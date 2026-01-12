@@ -19,6 +19,9 @@
     <Filter Include="03. Viewport">
       <UniqueIdentifier>{e3dd209b-e262-46ff-8979-8c2e5e307b1a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="97. Save/Load">
+      <UniqueIdentifier>{84ca4dd3-6dcf-4f32-bade-631385928c5b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EditorTool.cpp">
@@ -58,6 +61,9 @@
       <Filter>98. Utils</Filter>
     </ClCompile>
     <ClCompile Include="ConsoleView.cpp" />
+    <ClCompile Include="SceneSerializer.cpp">
+      <Filter>97. Save/Load</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -94,5 +100,8 @@
       <Filter>98. Utils</Filter>
     </ClInclude>
     <ClInclude Include="ConsoleView.h" />
+    <ClInclude Include="SceneSerializer.h">
+      <Filter>97. Save/Load</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

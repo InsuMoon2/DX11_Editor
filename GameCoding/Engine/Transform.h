@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Component.h"
 
 class Transform : public Component
@@ -35,7 +35,7 @@ public:
 
 	Matrix GetWorldMatrix() { return _matWorld; }
 
-	// ���� ����
+	// 계층 관계
 	bool HasParent() { return _parent != nullptr; }
 	
 	shared_ptr<Transform> GetParent() { return _parent; }
@@ -43,6 +43,23 @@ public:
 
 	const vector<shared_ptr<Transform>>& GetChildren() { return _children; }
 	void AddChild(shared_ptr<Transform> child) { _children.push_back(child); }
+
+public:
+    // 추가 기능
+    void LookAt(const Vec3& target);
+    void Translate(const Vec3& translation);
+    void TranslateLocal(const Vec3& translation);
+    void Rotate(const Vec3& euler);
+
+    // 앞 방향 (GetLook과 동일, 가독성)
+    Vec3 GetForward() { return GetLook(); }
+
+    shared_ptr<Component> Clone() const override;
+
+public:
+    // 직렬화
+    json ToJson() const override;
+    void FromJson(const json& j) override;
 
 private:
 	Vec3 _localScale = { 1.f, 1.f, 1.f }; 
@@ -61,4 +78,3 @@ private:
 	shared_ptr<Transform> _parent;
 	vector<shared_ptr<Transform>> _children;
 };
-

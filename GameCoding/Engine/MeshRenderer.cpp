@@ -76,3 +76,13 @@ void MeshRenderer::Update()
 
 	shader->DrawIndexed(0, 0, _mesh->GetIndexBuffer()->GetCount(), 0, 0);
 }
+
+shared_ptr<Component> MeshRenderer::Clone() const
+{
+    auto clone = make_shared<MeshRenderer>();
+
+    clone->SetMesh(_mesh);
+    clone->SetMaterial(_material);
+
+    return clone;
+}

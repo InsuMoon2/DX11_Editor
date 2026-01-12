@@ -9,6 +9,8 @@ enum class KEY_TYPE
     SHIFT = VK_SHIFT,
     SPACE = VK_SPACE,
     DEL = VK_DELETE,
+    CTRL = VK_CONTROL,
+    ENTER = VK_END,
 
 	W = 'W',
 	A = 'A',
@@ -19,6 +21,7 @@ enum class KEY_TYPE
 	E = 'E',
 	Z = 'Z',
 	C = 'C',
+    V = 'V',
     R = 'R',
 
 	KEY_1 = '1',

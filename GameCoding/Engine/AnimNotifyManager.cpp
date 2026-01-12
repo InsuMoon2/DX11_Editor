@@ -2,12 +2,9 @@
 #include "AnimNotifyManager.h"
 #include <fstream>
 #include <filesystem>
-#include <nlohmann/json.hpp>
 #include "Utils.h"
 
 namespace fs = std::filesystem;
-
-using json = nlohmann::json;
 
 AnimNotifyContainer& AnimNotifyManager::GetOrCreateContainer(const wstring& animName)
 {

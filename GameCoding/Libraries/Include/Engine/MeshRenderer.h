@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Component.h"
 
 class Mesh;
@@ -17,9 +17,14 @@ public:
 	void SetMesh(shared_ptr<Mesh> mesh) { _mesh = mesh; }
 	void SetMaterial(shared_ptr<Material> material) { _material = material; }
 
+    shared_ptr<Mesh> GetMesh() const { return _mesh; }
+    shared_ptr<Material> GetMaterial() const { return _material; }
+
 	// Legacy
 	void SetTexture(shared_ptr<Texture> texture) { }
 	void SetShader(shared_ptr<Shader> shader) {  }
+
+    shared_ptr<Component> Clone() const override;
 
 private:
 	shared_ptr<Mesh> _mesh;
