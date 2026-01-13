@@ -28,7 +28,7 @@ void HierarchyView::Init()
     // GameObject 삭제 이벤트 구독
     EVENTS->Subscribe(EventType::GameObject_Destroyed, [this](Event& e)
         {
-            auto& event = static_cast<GameObjectCreateEvent&>(e);
+            auto& event = static_cast<GameObjectDestroyedEvent&>(e);
             RemoveObject(event.GetGameObject());
             LOG_WARNING("GameObject Destroyed!");
         });
