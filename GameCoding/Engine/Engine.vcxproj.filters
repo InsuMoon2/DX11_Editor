@@ -193,6 +193,8 @@
     <ClInclude Include="EventManager.h">
       <Filter>97. Event</Filter>
     </ClInclude>
+    <ClInclude Include="InstancingManager.h" />
+    <ClInclude Include="InstancingBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -334,6 +336,8 @@
     <ClCompile Include="EventManager.cpp">
       <Filter>97. Event</Filter>
     </ClCompile>
+    <ClCompile Include="InstancingManager.cpp" />
+    <ClCompile Include="InstancingBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">

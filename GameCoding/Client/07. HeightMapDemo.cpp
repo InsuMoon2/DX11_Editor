@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "07. HeightMapDemo.h"
 #include "GeometryHelper.h"
 #include "Camera.h"
@@ -33,7 +33,7 @@ void HeightMapDemo::Init()
 			{
 				int32 idx = width * z + x;
 				uint8 height = pixelBuffer[idx] / 255.f * 25.f;
-				v[idx].position.y = height; // ³ôÀÌ º¸Á¤
+				v[idx].position.y = height; // ë†’ì´ ë³´ì •
 			}
 		}
 	}
@@ -68,8 +68,8 @@ void HeightMapDemo::Render()
 	uint32 stride = _vertexBuffer->GetStride();
 	uint32 offset = _vertexBuffer->GetOffset();
 
-	DC->IASetVertexBuffers(0, 1, _vertexBuffer->GetComPtr().GetAddressOf(), &stride, &offset);
-	DC->IASetIndexBuffer(_indexBuffer->GetComPtr().Get(), DXGI_FORMAT_R32_UINT, 0);
+	ENGINE_DC->IASetVertexBuffers(0, 1, _vertexBuffer->GetComPtr().GetAddressOf(), &stride, &offset);
+	ENGINE_DC->IASetIndexBuffer(_indexBuffer->GetComPtr().Get(), DXGI_FORMAT_R32_UINT, 0);
 
 	_shader->DrawIndexed(0, 1, _indexBuffer->GetCount(), 0, 0);
 }

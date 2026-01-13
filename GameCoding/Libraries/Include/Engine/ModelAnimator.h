@@ -25,10 +25,16 @@ public:
     ~ModelAnimator();
 
 public:
-    virtual void Update() override;
+    //virtual void Update() override;
 
     void SetModel(shared_ptr<Model> model);
     void SetPass(uint8 pass) { _pass = pass; }
+
+    virtual void Update() override;
+    void UpdateTweenData();
+
+    void RenderInstancing(shared_ptr<class InstancingBuffer>& buffer);
+    InstanceID GetInstanceID();
 
 public:
     int32 GetCurrentAnimIndex() { return _tweenDesc.curr.animIndex; }
@@ -66,21 +72,20 @@ private:
     ComPtr<ID3D11ShaderResourceView> _srv;
 
 private:
-    KeyframeDesc _keyframeDesc;
-    TweenDesc    _tweenDesc;
+    TweenDesc            _tweenDesc;
 
 private:
-    shared_ptr<Shader> _shader;
-    uint8              _pass = 0;
-    shared_ptr<Model>  _model;
+    shared_ptr<Shader>   _shader;
+    uint8                _pass = 0;
+    shared_ptr<Model>    _model;
 
 private:
     // ─────────────────────────────────────────────
     // 노티파이 콜백
     // ─────────────────────────────────────────────
-    NotifyCallback _notifyCallback;
+    NotifyCallback      _notifyCallback;
     NotifyStateCallback _notifyStateCallback;
-    set<int> _activeNotifyStates; // 현재 활성화된 NotifyState 인덱스
+    set<int>            _activeNotifyStates; // 현재 활성화된 NotifyState 인덱스
 
 };
 

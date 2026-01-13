@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "09. MeshDemo.h"
 #include "GeometryHelper.h"
 #include "Camera.h"
@@ -21,16 +21,16 @@ void MeshDemo::Init()
 	_obj->AddComponent(make_shared<MeshRenderer>());
 	{
 		auto shader = make_shared<Shader>(L"07. Normal.fx");
-		_obj->GetMeshRenderer()->SetShader(shader);
+		//_obj->GetMeshRenderer()->SetShader(shader);
 	}
 	{
 		RESOURCES->Init();
 		auto mesh = RESOURCES->Get<Mesh>(L"Sphere");
-		_obj->GetMeshRenderer()->SetMesh(mesh);
+		//_obj->GetMeshRenderer()->SetMesh(mesh);
 	}
 	{
 		auto texture = RESOURCES->Load<Texture>(L"Veigar", L"..\\Resources\\Textures\\veigar.jpg");
-		_obj->GetMeshRenderer()->SetTexture(texture);
+		//_obj->GetMeshRenderer()->SetTexture(texture);
 	}
 }
 

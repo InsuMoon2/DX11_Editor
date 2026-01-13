@@ -56,14 +56,65 @@ ModelRenderer::~ModelRenderer()
 //
 //}
 
-void ModelRenderer::Update()
+//void ModelRenderer::Update()
+//{
+//    if (_model == nullptr)
+//        return;
+//
+//    // Bones
+//    BoneDesc boneDesc;
+//    
+//    const uint32 boneCount = _model->GetBoneCount();
+//    for (uint32 i = 0; i < boneCount; i++)
+//    {
+//        shared_ptr<ModelBone> bone = _model->GetBoneByIndex(i);
+//        boneDesc.transforms[i] = bone->transform;
+//    }
+//    RENDER->PushBoneData(boneDesc);
+//
+//    // Transform
+//    auto world = GetTransform()->GetWorldMatrix();
+//    RENDER->PushTransformData(TransformDesc{ world });
+//
+//    const auto& meshes = _model->GetMeshes();
+//    for (auto& mesh : meshes)
+//    {
+//        if (mesh->material)
+//            mesh->material->Update();
+//
+//        // BoneIndex
+//        _shader->GetScalar("BoneIndex")->SetInt(mesh->boneIndex);
+//
+//        uint32 stride = mesh->vertexBuffer->GetStride();
+//        uint32 offset = mesh->vertexBuffer->GetOffset();
+//
+//        ENGINE_DC->IASetVertexBuffers(0, 1, mesh->vertexBuffer->GetComPtr().GetAddressOf(), &stride, &offset);
+//        ENGINE_DC->IASetIndexBuffer(mesh->indexBuffer->GetComPtr().Get(), DXGI_FORMAT_R32_UINT, 0);
+//
+//        _shader->DrawIndexed(0, _pass, mesh->indexBuffer->GetCount(), 0, 0);
+//    }
+//
+//}
+
+void ModelRenderer::SetModel(shared_ptr<Model> model)
+{
+    _model = model;
+
+    const auto& materials = model->GetMaterials();
+    for (auto& material : materials)
+    {
+        material->SetShader(_shader);
+    }
+}
+
+void ModelRenderer::RenderInstancing(shared_ptr<InstancingBuffer>& buffer)
 {
     if (_model == nullptr)
         return;
 
-    // Bones
+    // Bones 모두 동일한 구조를 사용하겠다고 가정.
     BoneDesc boneDesc;
-    
+
     const uint32 boneCount = _model->GetBoneCount();
     for (uint32 i = 0; i < boneCount; i++)
     {
@@ -71,10 +122,6 @@ void ModelRenderer::Update()
         boneDesc.transforms[i] = bone->transform;
     }
     RENDER->PushBoneData(boneDesc);
-
-    // Transform
-    auto world = GetTransform()->GetWorldMatrix();
-    RENDER->PushTransformData(TransformDesc{ world });
 
     const auto& meshes = _model->GetMeshes();
     for (auto& mesh : meshes)
@@ -88,23 +135,20 @@ void ModelRenderer::Update()
         uint32 stride = mesh->vertexBuffer->GetStride();
         uint32 offset = mesh->vertexBuffer->GetOffset();
 
-        ENGINE_DC->IASetVertexBuffers(0, 1, mesh->vertexBuffer->GetComPtr().GetAddressOf(), &stride, &offset);
-        ENGINE_DC->IASetIndexBuffer(mesh->indexBuffer->GetComPtr().Get(), DXGI_FORMAT_R32_UINT, 0);
+        // IA
+        mesh->vertexBuffer->PushData();
+        mesh->indexBuffer->PushData();
 
-        _shader->DrawIndexed(0, _pass, mesh->indexBuffer->GetCount(), 0, 0);
+        buffer->PushData();
+
+        _shader->DrawIndexedInstanced(0, _pass, mesh->indexBuffer->GetCount(), buffer->GetCount());
     }
-
 }
 
-void ModelRenderer::SetModel(shared_ptr<Model> model)
+InstanceID ModelRenderer::GetInstanceID()
 {
-    _model = model;
-
-    const auto& materials = model->GetMaterials();
-    for (auto& material : materials)
-    {
-        material->SetShader(_shader);
-    }
+    /* 같은 모델, 같은 셰이더를 쓰는지만 판단하면 된다. */
+    return make_pair((uint64)_model.get(), (uint64)_shader.get());
 }
 
 shared_ptr<Component> ModelRenderer::Clone() const

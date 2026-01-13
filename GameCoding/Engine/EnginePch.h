@@ -73,6 +73,7 @@ using json = nlohmann::json;
 #include "TimeManager.h"
 #include "ResourceManager.h"
 #include "RenderManager.h"
+#include "InstancingManager.h"
 #include "AnimNotifyManager.h"
 #include "Logger.h"
 

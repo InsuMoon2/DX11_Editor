@@ -299,6 +299,30 @@ void HierarchyView::HandleInput()
             _selectedObjects = clones;
             LOG_INFO("Duplicated " + to_string(clones.size()) + " objects");
         }
+
+        if (INPUT->GetButtonDown(KEY_TYPE::DEL))
+        {
+            // 선택된 오브젝트들 복사 (삭제 중 순회 문제 방지)
+            auto toDelete = _selectedObjects;
+
+            for (auto obj : toDelete)
+            {
+                if (obj)
+                {
+                    EVENTS->Publish(make_shared<GameObjectDestroyedEvent>(obj));
+                }
+            }
+
+            ClearSelection();
+
+            // Inspector 초기화
+            auto inspector = dynamic_pointer_cast<InspectorView>(
+                GET_SINGLE(EditorManager)->GetWindow(L"Inspector"));
+            if (inspector)
+                inspector->SetTarget(nullptr);
+
+            LOG_INFO("Deleted " + to_string(toDelete.size()) + " objects");
+        }
     }
 }
 

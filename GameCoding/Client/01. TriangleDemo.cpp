@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "01. TriangleDemo.h"
 
 void TriangleDemo::Init()
@@ -27,7 +27,7 @@ void TriangleDemo::Render()
 	uint32 stride = _buffer->GetStride();
 	uint32 offset = _buffer->GetOffset();
 
-	DC->IASetVertexBuffers(0, 1, _buffer->GetComPtr().GetAddressOf(), &stride, &offset);
+	ENGINE_DC->IASetVertexBuffers(0, 1, _buffer->GetComPtr().GetAddressOf(), &stride, &offset);
 
 	//_buffer->GetCount()
 	_shader->Draw(1, 0, 3);

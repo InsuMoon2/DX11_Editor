@@ -54,27 +54,54 @@ MeshRenderer::~MeshRenderer()
 //	_shader->DrawIndexed(0, 0, _mesh->GetIndexBuffer()->GetCount(), 0, 0);
 //}
 
-void MeshRenderer::Update()
+//void MeshRenderer::Update()
+//{
+//	if (_mesh == nullptr || _material == nullptr)
+//		return;
+//
+//	auto shader = _material->GetShader();
+//	if (shader == nullptr)
+//		return;
+//
+//	_material->Update();
+//
+//	auto world = GetTransform()->GetWorldMatrix();
+//	RENDER->PushTransformData(TransformDesc{ world });
+//
+//	uint32 stride = _mesh->GetVertexBuffer()->GetStride();
+//	uint32 offset = _mesh->GetVertexBuffer()->GetOffset();
+//
+//	ENGINE_DC->IASetVertexBuffers(0, 1, _mesh->GetVertexBuffer()->GetComPtr().GetAddressOf(), &stride, &offset);
+//	ENGINE_DC->IASetIndexBuffer(_mesh->GetIndexBuffer()->GetComPtr().Get(), DXGI_FORMAT_R32_UINT, 0);
+//
+//	shader->DrawIndexed(0, 0, _mesh->GetIndexBuffer()->GetCount(), 0, 0);
+//}
+
+void MeshRenderer::RenderInstancing(shared_ptr<InstancingBuffer>& buffer)
 {
-	if (_mesh == nullptr || _material == nullptr)
-		return;
+    if (_mesh == nullptr || _material == nullptr)
+        return;
 
-	auto shader = _material->GetShader();
-	if (shader == nullptr)
-		return;
+    auto shader = _material->GetShader();
+    if (shader == nullptr)
+        return;
 
-	_material->Update();
+    // Light
+    _material->Update();
 
-	auto world = GetTransform()->GetWorldMatrix();
-	RENDER->PushTransformData(TransformDesc{ world });
+    _mesh->GetVertexBuffer()->PushData();
+    _mesh->GetIndexBuffer()->PushData();
 
-	uint32 stride = _mesh->GetVertexBuffer()->GetStride();
-	uint32 offset = _mesh->GetVertexBuffer()->GetOffset();
+    /* 인스턴싱 데이터에서 PushData는 나의 월드가 아닌, 모든 객체의 월드를 한번에 밀어넣는 작업 */
+    buffer->PushData();
 
-	ENGINE_DC->IASetVertexBuffers(0, 1, _mesh->GetVertexBuffer()->GetComPtr().GetAddressOf(), &stride, &offset);
-	ENGINE_DC->IASetIndexBuffer(_mesh->GetIndexBuffer()->GetComPtr().Get(), DXGI_FORMAT_R32_UINT, 0);
+    shader->DrawIndexedInstanced(0, _pass, _mesh->GetIndexBuffer()->GetCount(), buffer->GetCount());
 
-	shader->DrawIndexed(0, 0, _mesh->GetIndexBuffer()->GetCount(), 0, 0);
+}
+
+InstanceID MeshRenderer::GetInstanceID()
+{
+    return make_pair((uint64)_mesh.get(), (uint64)_material.get());
 }
 
 shared_ptr<Component> MeshRenderer::Clone() const
