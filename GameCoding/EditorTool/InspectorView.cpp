@@ -47,7 +47,7 @@ void InspectorView::OnGui()
         {
             if (ImGui::MenuItem("ModelRenderer"))
             {
-                auto shader = make_shared<Shader>(L"17. TweenDemo.fx");
+                auto shader = make_shared<Shader>(L"23. RenderDemo.fx");
                 auto renderer = make_shared<ModelRenderer>(shader);
                 _target->AddComponent(renderer);
             }

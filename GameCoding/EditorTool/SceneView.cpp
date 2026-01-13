@@ -33,7 +33,10 @@ void SceneView::Init()
 
 void SceneView::Update()
 {
-    UpdateCameraInput();
+    if (!_isPlaying)
+    {
+        UpdateCameraInput();
+    }
     
     if (_editorCamera)
         _editorCamera->Update();
@@ -45,6 +48,34 @@ void SceneView::OnGui()
 {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
     ImGui::Begin("Scene");
+
+    // ─────────────────────────────────────────────
+    // Play/Pause/Stop 컨트롤 바
+    // ─────────────────────────────────────────────
+    if (!_isPlaying)
+    {
+        if (ImGui::Button("Play"))
+            Play();
+    }
+    else
+    {
+        if (_isPaused)
+        {
+            if (ImGui::Button("Resume"))
+                Pause();
+        }
+        else
+        {
+            if (ImGui::Button("Pause"))
+                Pause();
+        }
+
+        ImGui::SameLine();
+        if (ImGui::Button("Stop"))
+            Stop();
+    }
+
+    ImGui::Separator();
 
     auto viewportMin = ImGui::GetWindowContentRegionMin();  // 콘텐츠 영역 좌상단 (윈도우 로컬)
     auto viewportMax = ImGui::GetWindowContentRegionMax();  // 콘텐츠 영역 우하단 (윈도우 로컬)
@@ -115,6 +146,23 @@ void SceneView::UpdateCameraLerp()
         _isCameraLerping = false;
     }
 
+}
+
+void SceneView::Play()
+{
+    _isPlaying = true;
+    _isPaused = false;
+}
+
+void SceneView::Pause()
+{
+    _isPaused = !_isPaused;
+}
+
+void SceneView::Stop()
+{
+    _isPlaying = false;
+    _isPaused = false;
 }
 
 void SceneView::UpdateCameraInput()

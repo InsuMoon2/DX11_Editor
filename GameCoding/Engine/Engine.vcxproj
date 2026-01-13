@@ -190,6 +190,7 @@ xcopy /Y "$(SolutionDir)Engine\*.inl" "$(SolutionDir)Libraries\Include\Engine"</
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="InstancingBuffer.h" />
     <ClInclude Include="InstancingManager.h" />
+    <ClInclude Include="Light.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
@@ -206,6 +207,8 @@ xcopy /Y "$(SolutionDir)Engine\*.inl" "$(SolutionDir)Libraries\Include\Engine"</
     <ClInclude Include="RenderTarget.h" />
     <ClInclude Include="ResourceBase.h" />
     <ClInclude Include="ResourceManager.h" />
+    <ClInclude Include="Scene.h" />
+    <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SimpleMath.h" />
     <ClInclude Include="Technique.h" />
@@ -242,6 +245,7 @@ xcopy /Y "$(SolutionDir)Engine\*.inl" "$(SolutionDir)Libraries\Include\Engine"</
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="InstancingBuffer.cpp" />
     <ClCompile Include="InstancingManager.cpp" />
+    <ClCompile Include="Light.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
@@ -263,6 +267,8 @@ xcopy /Y "$(SolutionDir)Engine\*.inl" "$(SolutionDir)Libraries\Include\Engine"</
     <ClCompile Include="RenderTarget.cpp" />
     <ClCompile Include="ResourceBase.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
+    <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SimpleMath.cpp" />
     <ClCompile Include="Technique.cpp" />

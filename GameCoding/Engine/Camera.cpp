@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Camera.h"
 
 Matrix Camera::S_MatView = Matrix::Identity;
@@ -18,6 +18,8 @@ Camera::~Camera()
 void Camera::Update()
 {
 	UpdateMatrix();
+
+    RENDER->PushGlobalData(Camera::S_MatView, Camera::S_MatProjection);
 }
 
 void Camera::UpdateMatrix()

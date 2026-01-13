@@ -1,6 +1,5 @@
 ﻿#include "pch.h"
 #include "EditorToolApp.h"
-
 #include "AnimationView.h"
 #include "Camera.h"
 #include "Model.h"
@@ -16,11 +15,15 @@
 void EditorToolApp::Init()
 {
     RESOURCES->Init();
-    _shader = make_shared<Shader>(L"17. TweenDemo.fx"); 
-
+    _shader = make_shared<Shader>(L"23. RenderDemo.fx"); 
     RENDER->Init(_shader);
 
-    CreatePlayer();
+    if (_startScene)
+    {
+        //_startScene->Init(_shader);
+        SCENE->ChangeScene(_startScene);
+    }
+
 
     GET_SINGLE(EditorManager)->Init();
 
@@ -80,9 +83,28 @@ void EditorToolApp::Render()
         bool animViewActive = animView && animView->IsActive();
 
         // Animation View가 비활성화일 때만 자동 재생
-        if (!animViewActive && _player)
+        //if (!animViewActive && _player)
+        //{
+        //    _player->Update();
+        //}
+
+        if (sceneView->IsPlaying() && !sceneView->IsPaused())
         {
-            _player->Update();
+            CUR_SCENE->Update();
+        }
+        // Editor 모드이거나 Pause 상태 -> 수동 렌더링
+        else
+        {
+            auto hierarchy = dynamic_pointer_cast<HierarchyView>(
+                GET_SINGLE(EditorManager)->GetWindow(L"Hierarchy"));
+            if (hierarchy)
+            {
+                auto& objects = hierarchy->GetSceneObjects();
+                vector<shared_ptr<GameObject>> vec(objects.begin(), objects.end());
+                // Pause 상태일 때도 Transform은 갱신해줘야 할 수 있음 (선택 사항)
+                // for (auto& obj : vec) if (obj) obj->GetTransform()->UpdateTransform();
+                INSTANCING->Render(vec);
+            }
         }
 
         // RenderTarget 해제 (백버퍼로 복원은 Graphics에서)
@@ -114,6 +136,7 @@ void EditorToolApp::CreatePlayer()
 
     _player->AddComponent(make_shared<ModelAnimator>(_shader));
     _player->GetModelAnimator()->SetModel(_model);
+    _player->GetModelAnimator()->SetPass(2);
 
 }
 
@@ -124,7 +147,10 @@ void EditorToolApp::RegisterHierarchy()
 
     if (hierarchy)
     {
-        hierarchy->AddObject(_player);
+        for (auto& obj : CUR_SCENE->GetObjects())
+        {
+            hierarchy->AddObject(obj);
+        }
     }
 }
 

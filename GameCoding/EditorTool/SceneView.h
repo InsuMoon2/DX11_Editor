@@ -21,15 +21,21 @@ public:
     void Update() override;
     void OnGui() override;
 
-    /// <summary>
-    /// 이 RenderTarget에 씬을 렌더링해야 함
-    /// </summary>
+    /* 이 RenderTarget에 씬을 렌더링해야 함 */
     shared_ptr<RenderTarget> GetRenderTarget() const { return _renderTarget; }
     shared_ptr<GameObject> GetEditorCamera() const { return _editorCamera; }  // 추가
 
     // 카메라 Lerp 이동
     void FocusOnPosition(const Vec3& targetPos);
     void UpdateCameraLerp();
+
+public:
+    bool IsPlaying() const { return _isPlaying; }
+    bool IsPaused() const { return _isPaused; }
+
+    void Play();
+    void Pause();
+    void Stop();
 
 private:
     void UpdateCameraInput();
@@ -58,9 +64,13 @@ private:
 
     POINT _lastMousePos = {};
 
-    bool _isCameraLerping = false;
-    Vec3 _lerpTargetPos;
+    bool  _isCameraLerping = false;
+    Vec3  _lerpTargetPos;
     float _lerpDistance = 15; // 타겟으로의 거리
+
+    // Play
+    bool _isPlaying = false;
+    bool _isPaused = false;
 
 private:
     // ─────────────────────────────────────────────

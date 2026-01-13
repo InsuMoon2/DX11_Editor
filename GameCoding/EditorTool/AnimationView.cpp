@@ -167,7 +167,7 @@ void AnimationView::Init()
     // ─────────────────────────────────────────────
     // 셰이더 로드 (ModelAnimator에 필요)
     // ─────────────────────────────────────────────
-    _shader = make_shared<Shader>(L"17. TweenDemo.fx");
+    _shader = make_shared<Shader>(L"23. RenderDemo.fx");
 
     // 프리뷰용 RenderTarget 생성
     _previewRenderTarget = make_shared<RenderTarget>();
@@ -318,7 +318,12 @@ void AnimationView::DrawPreview()
         tweenDesc.curr.speed = 0.f;
 
         _modelAnimator->SetTweenDesc(tweenDesc);
-        _modelAnimator->Update();
+        // _modelAnimator->Update();
+
+        // 단일 오브젝트 렌더링
+        vector<shared_ptr<GameObject>> vec;
+        vec.push_back(owner);
+        INSTANCING->Render(vec);
 
         owner->GetTransform()->SetPosition(originalPos);
     }

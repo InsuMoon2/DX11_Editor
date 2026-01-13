@@ -6,6 +6,7 @@
 #include "MeshRenderer.h"
 #include "ModelRenderer.h"
 #include "ModelAnimator.h"
+#include "Light.h"
 
 GameObject::GameObject()
 {
@@ -122,6 +123,12 @@ shared_ptr<ModelAnimator> GameObject::GetModelAnimator()
 {
     shared_ptr<Component> component = GetFixedComponent(ComponentType::Animator);
     return static_pointer_cast<ModelAnimator>(component);
+}
+
+shared_ptr<Light> GameObject::GetLight()
+{
+    shared_ptr<Component> component = GetFixedComponent(ComponentType::Light);
+    return static_pointer_cast<Light>(component);
 }
 
 std::shared_ptr<Transform> GameObject::GetOrAddTransform()

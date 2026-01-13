@@ -40,7 +40,7 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
@@ -142,7 +142,9 @@
     <ClCompile Include="ConsoleView.cpp" />
     <ClCompile Include="ContentBrowserView.cpp" />
     <ClCompile Include="EditorManager.cpp" />
-    <ClCompile Include="EditorTool.cpp" />
+    <ClCompile Include="EditorTool.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="EditorToolApp.cpp" />
     <ClCompile Include="EditorWindow.cpp" />
     <ClCompile Include="GameView.cpp" />

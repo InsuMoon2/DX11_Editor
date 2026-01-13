@@ -23,5 +23,8 @@ public:										\
 #define RESOURCES	        GET_SINGLE(ResourceManager)
 #define RENDER		        GET_SINGLE(RenderManager)
 #define INSTANCING		    GET_SINGLE(InstancingManager)
+#define SCENE               GET_SINGLE(SceneManager)
+#define CUR_SCENE           SCENE->GetCurrentScene()
+
 #define GUI                 GET_SINGLE(ImGuiManager)
 #define EVENTS              GET_SINGLE(EventManager)

@@ -13,6 +13,7 @@
 #include <list>
 #include <map>
 #include <unordered_map>
+#include <unordered_set>
 #include <algorithm>
 #include <set>
 #include <functional>
@@ -74,9 +75,10 @@ using json = nlohmann::json;
 #include "ResourceManager.h"
 #include "RenderManager.h"
 #include "InstancingManager.h"
+#include "SceneManager.h"
+
 #include "AnimNotifyManager.h"
 #include "Logger.h"
-
 #include "Event.h"
 #include "GameObjectEvent.h"
 #include "EventManager.h"

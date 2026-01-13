@@ -15,7 +15,7 @@ void EditorManager::Init()
     // 에디터 윈도우들 생성 및 등록
     // ─────────────────────────────────────────────
     AddWindow(L"Scene", make_shared<SceneView>());
-    AddWindow(L"Game", make_shared<GameView>());
+    //AddWindow(L"Game", make_shared<GameView>());
     AddWindow(L"Hierarchy", make_shared<HierarchyView>());
     AddWindow(L"Inspector", make_shared<InspectorView>());
     AddWindow(L"ContentBrowser", make_shared<ContentBrowserView>());

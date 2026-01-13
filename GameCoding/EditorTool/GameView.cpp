@@ -2,7 +2,7 @@
 #include "GameView.h"
 
 GameView::GameView()
-    : EditorWindow("Gmme")
+    : EditorWindow("Game")
 {
 }
 

@@ -32,6 +32,8 @@ void InstancingManager::RenderMeshRenderer(vector<shared_ptr<GameObject>>& gameO
     // 분류 단계
     for (shared_ptr<GameObject>& gameObject : gameObjects)
     {
+        if (gameObject == nullptr) continue;
+
         if (gameObject->GetMeshRenderer() == nullptr)
             continue;
 
@@ -76,6 +78,8 @@ void InstancingManager::RenderModelRenderer(vector<shared_ptr<GameObject>>& game
     // 분류 단계
     for (shared_ptr<GameObject>& gameObject : gameObjects)
     {
+        if (gameObject == nullptr) continue;
+
         if (gameObject->GetModelRenderer() == nullptr)
             continue;
 
@@ -118,6 +122,8 @@ void InstancingManager::RenderAnimRenderer(vector<shared_ptr<GameObject>>& gameO
     // 분류 단계
     for (shared_ptr<GameObject>& gameObject : gameObjects)
     {
+        if (gameObject == nullptr) continue;
+
         if (gameObject->GetModelAnimator() == nullptr)
             continue;
 

@@ -172,7 +172,7 @@ json ModelRenderer::ToJson() const
 
     // 셰이더 경로도 저장
     if (_shader)
-        j["shaderFile"] = "17. TweenDemo.fx";
+        j["shaderFile"] = "23. RenderDemo.fx";
 
     return j;
 }
@@ -180,7 +180,7 @@ json ModelRenderer::ToJson() const
 void ModelRenderer::FromJson(const json& j)
 {
     // 셰이더 먼저 로드
-    wstring shaderFile = L"17. TweenDemo.fx";
+    wstring shaderFile = L"23. RenderDemo.fx";
 
     if (j.contains("shaderFile"))
         shaderFile = Utils::ToWString(j["shaderFile"].get<string>());

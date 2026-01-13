@@ -2,13 +2,8 @@
 #include "EditorToolApp.h"
 #include "Engine/Game.h"
 
-#include <ShellScalingApi.h>
-#pragma comment(lib, "Shcore.lib")
-
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 {
-    SetProcessDpiAwareness(PROCESS_PER_MONITOR_DPI_AWARE);
-
     GameDesc desc;
     desc.appName = L"EditorTool";
     desc.hInstance = hInstance;
