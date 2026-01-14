@@ -21,6 +21,7 @@ class ModelAnimator : public Component
     using Super = Component;
 
 public:
+    ModelAnimator();
     ModelAnimator(shared_ptr<Shader> shader);
     ~ModelAnimator();
 

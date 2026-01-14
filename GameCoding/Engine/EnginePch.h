@@ -85,6 +85,9 @@ using json = nlohmann::json;
 #include "EventManager.h"
 
 // Engine
+#include "GameObjectFactory.h"
+#include "ComponentFactory.h"
+
 #include "VertexData.h"
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"

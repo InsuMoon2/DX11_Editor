@@ -64,6 +64,6 @@ protected:
 	array<shared_ptr<Component>, FIXED_COMPONENT_COUNT> _components;
 	vector<shared_ptr<MonoBehavior>> _scripts;
 
-    wstring _name;
+    wstring _name = L"GameObject";
 };
 

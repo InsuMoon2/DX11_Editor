@@ -31,7 +31,9 @@ void ConsoleView::OnGui()
     // 로그 목록
     ImGui::BeginChild("LogScroll", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
 
-    for (auto& log : GET_SINGLE(Logger)->GetLogs())
+    vector<LogEntry> logs = GET_SINGLE(Logger)->GetLogsCopy();
+
+    for (auto& log : logs)
     {
         ImVec4 color;
         switch (log.level)

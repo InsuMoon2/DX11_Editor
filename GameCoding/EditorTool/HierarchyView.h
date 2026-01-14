@@ -50,6 +50,8 @@ private:
     void DrawToolbar();
     void DrawObjectList();
 
+    shared_ptr<GameObject> EnsureUniqueName(GameObjectCreateEvent event);
+
 private:
     // 씬의 모든 오브젝트 목록
     vector<shared_ptr<GameObject>> _sceneObjects;
@@ -66,4 +68,6 @@ private:
     float _keyRepeatDelay = 0.12f;
 
 };
+
+
 

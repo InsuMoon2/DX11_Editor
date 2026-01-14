@@ -1,6 +1,8 @@
 ﻿#include "pch.h"
 #include "Camera.h"
 
+REGISTER_COMPONENT(Camera, ComponentType::Camera);
+
 Matrix Camera::S_MatView = Matrix::Identity;
 Matrix Camera::S_MatProjection = Matrix::Identity;
 

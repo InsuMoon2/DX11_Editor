@@ -1,10 +1,11 @@
 ﻿#pragma once
 
 #include "GameObject.h"
+#include "magic_enum/magic_enum.hpp"
 
 class ModelAnimator;
 
-enum class AnimState
+enum class AnimState : uint8
 {
     IDLE = 0,
     RUN = 1,
@@ -13,18 +14,20 @@ enum class AnimState
 
 class Player : public GameObject
 {
-
 public:
     Player();
     virtual ~Player();
 
 public:
+    void Awake() override;
     void Start() override;  
     void Update() override; 
 
 private:
     void UpdateInput();
     void UpdateAnimation();
+
+    void OnAnimNotify(const wstring& name);
 
 private:
     // 이동 관련

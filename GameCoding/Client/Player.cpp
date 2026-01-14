@@ -4,6 +4,8 @@
 #include "ModelAnimator.h"
 #include "Camera.h"
 
+REGISTER_GAMEOBJECT(Player)
+
 Player::Player()
 {
     SetName(L"Player");
@@ -12,9 +14,9 @@ Player::Player()
 Player::~Player()
 { }
 
-void Player::Start()
+void Player::Awake()
 {
-    GameObject::Start();
+    GameObject::Awake();
 
     auto shader = GET_SINGLE(RenderManager)->GetShader();
 
@@ -49,6 +51,13 @@ void Player::Start()
     );
 }
 
+void Player::Start()
+{
+    GameObject::Start();
+
+    
+}
+
 void Player::Update()
 {
     UpdateInput();
@@ -58,6 +67,7 @@ void Player::Update()
 
     GameObject::Update();
 
+    LOG_INFO("playerState : " + string(magic_enum::enum_name(_currentState)), 1);
 }
 
 void Player::UpdateInput()
@@ -102,7 +112,8 @@ void Player::UpdateInput()
         _currentState = AnimState::IDLE;
     }
 
-    // 공격 애니메이션 종료 체크
+    // 공격 애니메이션 종료 체크 -> 이 부분을 노티파이로 변경시켜줘야함
+    // End_State 하고 디테일 창 추가해서 파싱으로 음.. 해결할 수 있으려나
     if (_currentState == AnimState::ATTACK)
     {
         if (GetModelAnimator()->IsAnimationEnd())
@@ -121,4 +132,9 @@ void Player::UpdateAnimation()
     GetModelAnimator()->SetNextAnimation((int32)_currentState);
 
     _prevState = _currentState;
+}
+
+void Player::OnAnimNotify(const wstring& name)
+{
+
 }

@@ -1,6 +1,8 @@
 ﻿#include "pch.h"
 #include "Transform.h"
 
+REGISTER_COMPONENT(Transform, ComponentType::Transform);
+
 Transform::Transform() : Super(ComponentType::Transform)
 {
 

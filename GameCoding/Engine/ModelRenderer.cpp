@@ -5,6 +5,14 @@
 #include "Model.h"
 #include "Utils.h"
 
+REGISTER_COMPONENT(ModelRenderer, ComponentType::ModelRenderer);
+
+ModelRenderer::ModelRenderer()
+    : Super(ComponentType::ModelRenderer)
+{
+
+}
+
 ModelRenderer::ModelRenderer(shared_ptr<Shader> shader)
     : Super(ComponentType::ModelRenderer), _shader(shader)
 {

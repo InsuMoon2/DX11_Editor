@@ -8,7 +8,7 @@ public:
     MainCamera();
     virtual ~MainCamera();
 
-    virtual void Start() override;
+    void Awake() override;
 
     void SetTarget(shared_ptr<GameObject> target) { _target = target; }
 

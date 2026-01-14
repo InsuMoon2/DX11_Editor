@@ -11,6 +11,7 @@ class ModelRenderer : public Component
     using Super = Component;
 
 public:
+    ModelRenderer();
     ModelRenderer(shared_ptr<Shader> shader);
     virtual ~ModelRenderer();
 

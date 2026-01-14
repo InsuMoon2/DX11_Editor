@@ -4,6 +4,10 @@
         {
             "frame": 15,
             "name": "TestAnim2"
+        },
+        {
+            "frame": 97,
+            "name": "Player_EndState"
         }
     ],
     "notifyStates": [

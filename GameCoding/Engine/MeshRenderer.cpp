@@ -6,6 +6,8 @@
 #include "Shader.h"
 #include "Material.h"
 
+REGISTER_COMPONENT(MeshRenderer, ComponentType::MeshRenderer);
+
 MeshRenderer::MeshRenderer() : Super(ComponentType::MeshRenderer)
 {
 

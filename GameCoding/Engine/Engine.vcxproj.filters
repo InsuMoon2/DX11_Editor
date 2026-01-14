@@ -209,6 +209,10 @@
     <ClInclude Include="InstancingManager.h">
       <Filter>02. Managers</Filter>
     </ClInclude>
+    <ClInclude Include="GameObjectFactory.h">
+      <Filter>98. Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentFactory.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -366,6 +370,10 @@
     <ClCompile Include="InstancingManager.cpp">
       <Filter>02. Managers</Filter>
     </ClCompile>
+    <ClCompile Include="GameObjectFactory.cpp">
+      <Filter>98. Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">

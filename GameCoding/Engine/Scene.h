@@ -18,6 +18,8 @@ public:
 
     unordered_set<shared_ptr<GameObject>>& GetObjects() { return _objects; }
 
+    virtual void Clear();
+
 private:
     unordered_set<shared_ptr<GameObject>> _objects;
 

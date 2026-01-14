@@ -2,10 +2,28 @@
 #include "CameraScript.h"
 #include "Transform.h"
 #include "Utils.h"
+#include "magic_enum/magic_enum.hpp"
 
 void CameraScript::LateUpdate()
 {
-    float delta = TIME->GetDeltaTime();
+    static bool hasTriedFind = false;
+
+    if (_target == nullptr && !hasTriedFind)
+    {
+        hasTriedFind = true;
+
+        auto& objects = GET_SINGLE(SceneManager)->GetCurrentScene()->GetObjects();
+        for (auto& obj : objects)
+        {
+            if (obj->GetName() == L"Player")
+            {
+                _target = obj;
+                break;
+            }
+        }
+    }
+
+    if (_target == nullptr) return;
 
     // F8
     if (INPUT->GetButtonDown(KEY_TYPE::F8))
@@ -31,10 +49,8 @@ void CameraScript::LateUpdate()
         UpdateFreeMode();
     }
 
-    //string modeName = (_mode == CameraMode::Follow) ? "Follow" : "Free";
-    //string msg = "Camera Mode Changed : " + modeName;
-    //
-    //LOG_INFO(msg);
+    string msg = "Camera Mode  : " + string(magic_enum::enum_name(_mode));
+    LOG_INFO(msg, 2);
 
 }
 

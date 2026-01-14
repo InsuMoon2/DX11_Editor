@@ -177,13 +177,20 @@ void EditorManager::ShowMenuBar()
 
             if (ImGui::MenuItem("Load Scene", "Ctrl+O"))
             {
-                auto hierarchy = dynamic_pointer_cast<HierarchyView>(GetWindow(L"Hierarchy"));
-                if (hierarchy)
+                if (GET_SINGLE(SceneManager)->GetCurrentScene())
                 {
+                    // 기존 씬 비우기
+                    CUR_SCENE->Clear();
+
+                    // 파일 로드
                     auto objects = SceneSerializer::LoadScene(L"../Scenes/Scene.json");
-                    hierarchy->ClearSceneObjects();  // 기존 오브젝트 삭제
+
+                    // 로드된 객체들 실제 씬에 추가
                     for (auto& obj : objects)
-                        hierarchy->AddObject(obj);
+                    {
+                        CUR_SCENE->Add_Scene(obj);
+                    }
+
                     LOG_INFO("Scene Loaded!");
                 }
             }

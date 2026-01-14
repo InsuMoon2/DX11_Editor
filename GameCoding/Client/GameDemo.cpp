@@ -15,6 +15,7 @@
 #include "ContentBrowserView.h"
 #include "Model.h"
 #include "FileUtils.h"
+#include "SceneSerializer.h"
 
 void GameDemo::Init()
 {
@@ -58,6 +59,7 @@ void GameDemo::Init()
             }
         }
     }
+
 }
 
 void GameDemo::Update()

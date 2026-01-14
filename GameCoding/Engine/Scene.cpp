@@ -68,3 +68,12 @@ void Scene::Remove_Scene(shared_ptr<GameObject> object)
     _lights.erase(object);
 
 }
+
+void Scene::Clear()
+{
+    _objects.clear();
+
+    _cameras.clear();
+
+    _lights.clear();
+}

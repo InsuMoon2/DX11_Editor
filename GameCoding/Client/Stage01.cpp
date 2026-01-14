@@ -36,6 +36,7 @@ void Stage01::Init()
     // Player
     {
         _player = make_shared<Player>();
+        _player->Awake();
         _player->GetOrAddTransform()->SetPosition(Vec3(0, 0, 0));
         Add_Scene(_player);
     }
@@ -43,6 +44,7 @@ void Stage01::Init()
     // Camera
     {
         auto mainCamera = make_shared<MainCamera>();
+        mainCamera->Awake();
         mainCamera->SetTarget(_player);
 
         Add_Scene(mainCamera);

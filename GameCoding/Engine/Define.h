@@ -10,6 +10,14 @@ public:										\
 		return &s_instance;					\
 	}
 
+#define REGISTER_GAMEOBJECT(TYPE) \
+    static struct Helper_##TYPE { \
+        Helper_##TYPE() { \
+            HierarchyView::RegisterCreationType(#TYPE, []() { return make_shared<TYPE>(); }); \
+        } \
+    } helper_##TYPE;
+
+
 #define GET_SINGLE(classname)	classname::GetInstance()
 
 #define CHECK(p)	        assert(SUCCEEDED(p))

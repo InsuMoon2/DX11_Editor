@@ -6,6 +6,14 @@
 #include "ModelAnimation.h"
 #include "AnimNotifyManager.h"
 
+REGISTER_COMPONENT(ModelAnimator, ComponentType::Animator);
+
+ModelAnimator::ModelAnimator()
+    : Super(ComponentType::Animator)
+{
+
+}
+
 ModelAnimator::ModelAnimator(shared_ptr<Shader> shader)
     : Super(ComponentType::Animator), _shader(shader)
 {

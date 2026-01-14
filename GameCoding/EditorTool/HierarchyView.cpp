@@ -22,7 +22,11 @@ void HierarchyView::Init()
     EVENTS->Subscribe(EventType::GameObject_Created, [this](Event& e)
         {
             auto& event = static_cast<GameObjectCreateEvent&>(e);
-            AddObject(event.GetGameObject());
+
+            // [이름 중복 체크 및 번호 부여]
+            auto obj = EnsureUniqueName(event);
+
+            CUR_SCENE->Add_Scene(obj);
             LOG_WARNING("GameObject Created !");
         });
 
@@ -30,7 +34,8 @@ void HierarchyView::Init()
     EVENTS->Subscribe(EventType::GameObject_Destroyed, [this](Event& e)
         {
             auto& event = static_cast<GameObjectDestroyedEvent&>(e);
-            RemoveObject(event.GetGameObject());
+
+            CUR_SCENE->Remove_Scene(event.GetGameObject());
             LOG_WARNING("GameObject Destroyed!");
         });
 }
@@ -42,7 +47,8 @@ void HierarchyView::Update()
 
 void HierarchyView::OnGui()
 {
-    ImGui::Begin("Hierarchy", nullptr, ImGuiWindowFlags_NoNavInputs);
+    string title = "Hierarchy";
+    ImGui::Begin(title.c_str(), nullptr, ImGuiWindowFlags_NoNavInputs);
 
     if (ImGui::IsWindowFocused())
         HandleInput();
@@ -332,9 +338,43 @@ void HierarchyView::DrawToolbar()
     // Create Object 버튼
     if (ImGui::Button("Create Object"))
     {
-        auto obj = make_shared<GameObject>();
-        obj->GetOrAddTransform();
-        EVENTS->Publish(make_shared<GameObjectCreateEvent>(obj));
+        ImGui::OpenPopup("CreateObjectPopup");
+    }
+
+    if (ImGui::BeginPopup("CreateObjectPopup"))
+    {
+        // 검색창
+        static char searchBuf[128] = "";
+        ImGui::InputTextWithHint("##Sarch", "Search Class...", searchBuf, IM_ARRAYSIZE(searchBuf));
+        ImGui::Separator();
+
+        string searchStr = searchBuf;
+
+        const auto& creators = GameObjectFactory::GetAllCreator();
+
+        for (const auto& [name, creator] : creators)
+        {
+            // 검색어 필터링
+            if (searchStr.empty() || name.find(searchStr) != string::npos)
+            {
+                if (ImGui::Selectable(name.c_str()))
+                {
+                    shared_ptr<GameObject> newObj = creator();
+                    if (newObj)
+                    {
+                        // 이름 세팅
+                        if (newObj->GetName() == L"GameObject")
+                            newObj->SetName(Utils::ToWString(name));
+
+                        newObj->GetOrAddTransform();
+
+                        EVENTS->Publish(make_shared<GameObjectCreateEvent>(newObj));
+                    }
+                    ImGui::CloseCurrentPopup();
+                }
+            }
+        }
+        ImGui::EndPopup();
     }
 
     ImGui::Separator();
@@ -342,13 +382,59 @@ void HierarchyView::DrawToolbar()
 
 void HierarchyView::DrawObjectList()
 {
+    // 오브젝트 정렬
+    sort(_sceneObjects.begin(), _sceneObjects.end(),
+        [](shared_ptr<GameObject>& first, shared_ptr<GameObject>& second)
+        {
+            if (!first || !second)
+                return false;
+
+            return first->GetName() < second->GetName();
+        });
+
     // ─────────────────────────────────────────────
     // 오브젝트 목록 표시
     // ─────────────────────────────────────────────
+
+    // 검색창 만들기
+    static char searchBuf[128] = "";
+    ImGui::InputTextWithHint("##SearchHierarchy", "Search...", searchBuf, IM_ARRAYSIZE(searchBuf));
+    ImGui::Separator();
+
+    string searchStr = searchBuf; // string 변환
+    int filteredCount = 0;
+
+    // 미리 카운팅
+    if (searchStr.empty())
+    {
+        filteredCount = _sceneObjects.size();
+    }
+    else
+    {
+        for (auto& obj : _sceneObjects)
+        {
+            string nameStr = Utils::ToString(obj->GetName());
+            if (nameStr.find(searchStr) != string::npos)
+                filteredCount++;
+        }
+    }
+
+    ImGui::Text("Objects : %d / %d", filteredCount, _sceneObjects.size());
+    ImGui::Separator();
+
     for (int i = 0; i < _sceneObjects.size(); i++)
     {
         auto& obj = _sceneObjects[i];
         if (!obj) continue;
+
+        // 검색어 필터링
+        string nameStr = Utils::ToString(obj->GetName());
+
+        // 검색어가 비어있지 않고(""), 이름에 검색어가 포함되어 있지 않으면
+        if (!searchStr.empty() && nameStr.find(searchStr) == string::npos)
+        {
+            continue; // 목록 안보여주기
+        }
 
         // 선택 상태 확인
         bool isSelected = IsSelected(obj);
@@ -438,3 +524,40 @@ void HierarchyView::DrawObjectList()
     }
 }
 
+shared_ptr<GameObject> HierarchyView::EnsureUniqueName(GameObjectCreateEvent event)
+{
+    auto obj = event.GetGameObject();
+
+    auto& sceneObjects = CUR_SCENE->GetObjects();
+    wstring baseName = obj->GetName();
+    wstring uniqueName = baseName;
+    int count = 1;
+
+    while (true)
+    {
+        bool isDuplicate = false;
+
+        for (auto& sceneObj : sceneObjects)
+        {
+            if (sceneObj == obj) continue;
+
+            if (sceneObj->GetName() == uniqueName)
+            {
+                isDuplicate = true;
+                break;
+            }
+        }
+
+        // 중복없으면 루프 탈출
+        if (!isDuplicate)
+            break;
+
+        // 중복이면 번호 증가해서
+        count++;
+        uniqueName = baseName + L"_" + to_wstring(count);
+    }
+
+    obj->SetName(uniqueName);
+
+    return obj;
+}

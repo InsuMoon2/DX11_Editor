@@ -161,6 +161,8 @@ shared_ptr<GameObject> GameObject::Clone() const
 {
     auto clone = make_shared<GameObject>();
 
+    clone->SetName(_name);
+
     for (auto& component : _components)
     {
         if (!component)

@@ -3,6 +3,8 @@
 #include "Camera.h"
 #include "CameraScript.h"
 
+REGISTER_GAMEOBJECT(MainCamera)
+
 MainCamera::MainCamera()
 {
     SetName(L"MainCamera");
@@ -12,9 +14,9 @@ MainCamera::~MainCamera()
 {
 }
 
-void MainCamera::Start()
+void MainCamera::Awake()
 {
-    GameObject::Start();
+    GameObject::Awake();
 
     GetOrAddTransform();
 
@@ -25,3 +27,4 @@ void MainCamera::Start()
 
     AddComponent(script);
 }
+
