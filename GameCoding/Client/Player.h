@@ -19,9 +19,8 @@ public:
     virtual ~Player();
 
 public:
-    void Init(shared_ptr<Shader> shader);
-    void Update();
-    void Render();
+    void Start() override;  
+    void Update() override; 
 
 private:
     void UpdateInput();
@@ -32,9 +31,9 @@ private:
     float _moveSpeed = 5.f;
     float _rotSpeed = 3.f;
 
+    shared_ptr<Shader> _shader;
+
     AnimState _currentState = AnimState::IDLE;
     AnimState _prevState = AnimState::IDLE;
 
-    shared_ptr<GameObject> _camera;
-    Vec3 _cameraOffset = Vec3(0, 5, -10);
 };

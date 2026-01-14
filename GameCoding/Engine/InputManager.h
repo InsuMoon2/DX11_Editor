@@ -12,6 +12,9 @@ enum class KEY_TYPE
     CTRL = VK_CONTROL,
     ENTER = VK_END,
 
+    F8 = VK_F8,
+    F9 = VK_F9,
+
 	W = 'W',
 	A = 'A',
 	S = 'S',

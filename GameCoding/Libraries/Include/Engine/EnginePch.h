@@ -76,6 +76,7 @@ using json = nlohmann::json;
 #include "RenderManager.h"
 #include "InstancingManager.h"
 #include "SceneManager.h"
+#include "ModelRegistry.h"
 
 #include "AnimNotifyManager.h"
 #include "Logger.h"

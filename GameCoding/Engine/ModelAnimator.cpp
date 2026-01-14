@@ -10,8 +10,8 @@ ModelAnimator::ModelAnimator(shared_ptr<Shader> shader)
     : Super(ComponentType::Animator), _shader(shader)
 {
     // TEST
-    _tweenDesc.next.animIndex = rand() % 3;
-    _tweenDesc.tweenSumTime += rand() % 100;
+    //_tweenDesc.next.animIndex = rand() % 3;
+    //_tweenDesc.tweenSumTime += rand() % 100;
 }
 
 ModelAnimator::~ModelAnimator()

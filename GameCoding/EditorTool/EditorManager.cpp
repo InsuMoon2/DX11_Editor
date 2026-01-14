@@ -8,6 +8,9 @@
 #include "AnimationView.h"
 #include "ConsoleView.h"
 #include "SceneSerializer.h"
+#include "Camera.h"
+#include "RenderTarget.h"
+
 
 void EditorManager::Init()
 {
@@ -30,6 +33,83 @@ void EditorManager::Update()
     {
         if (window && window->IsActive())
             window->Update();
+    }
+}
+
+void EditorManager::Render()
+{
+    auto sceneView = dynamic_pointer_cast<SceneView>(GetWindow(L"Scene"));
+
+    if (sceneView && sceneView->GetRenderTarget())
+    {
+        auto renderTarget = sceneView->GetRenderTarget();
+
+        renderTarget->BindAsTarget();
+        renderTarget->Clear(Color(0.1f, 0.1f, 0.1f, 1.f));
+
+        // 에디터 카메라
+        auto editorCam = sceneView->GetEditorCamera();
+        if (editorCam)
+        {
+            editorCam->GetCamera()->UpdateMatrix();
+            RENDER->PushGlobalData(Camera::S_MatView, Camera::S_MatProjection);
+        }
+
+        // 조명 설정 (기본값)
+        LightDesc lightDesc;
+        lightDesc.ambient = Vec4(0.4f);
+        lightDesc.diffuse = Vec4(1.f);
+        lightDesc.specular = Vec4(0.f);
+        lightDesc.direction = Vec3(1.f, 0.f, 1.f);
+        RENDER->PushLightData(lightDesc);
+
+        // 씬 렌더링
+        if (GET_SINGLE(SceneManager)->IsPlaying()) 
+        {
+            if (!GET_SINGLE(SceneManager)->IsPaused())
+                CUR_SCENE->Update();
+
+            CUR_SCENE->Render();
+        }
+        else
+        {
+            auto hierarchy = dynamic_pointer_cast<HierarchyView>(GetWindow(L"Hierarchy"));
+            if (hierarchy)
+            {
+                auto& objects = hierarchy->GetSceneObjects();
+                vector<shared_ptr<GameObject>> vec(objects.begin(), objects.end());
+
+                for (auto& obj : vec)
+                    if (obj) obj->GetTransform()->UpdateTransform();
+
+                INSTANCING->Render(vec);
+            }
+        }
+        // 에디터 모드: Hierarchy에 있는 애들만 직접 렌더링
+        UpdateHierarchy();
+
+        RenderTarget::UnbindAll();
+    }
+
+    OnGui();
+}
+
+void EditorManager::UpdateHierarchy()
+{
+    auto hierarchy = dynamic_pointer_cast<HierarchyView>(GetWindow(L"Hierarchy"));
+    if (hierarchy)
+    {
+        auto& sceneObjects = CUR_SCENE->GetObjects();
+        auto& viewObjects = hierarchy->GetSceneObjects();
+        
+        if (sceneObjects.size() == viewObjects.size())
+            return;
+        
+        hierarchy->ClearSceneObjects();
+        for (auto& obj : sceneObjects)
+        {
+            hierarchy->AddObject(obj);
+        }
     }
 }
 

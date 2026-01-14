@@ -130,7 +130,12 @@ void Game::Update()
 
 	GRAPHICS->RenderBegin();
 
-    SCENE->Update();
+    //SCENE->Update();
+
+    if (GET_SINGLE(SceneManager)->IsPlaying() && !GET_SINGLE(SceneManager)->IsPaused())
+    {
+        SCENE->Update();
+    }
 
     GUI->Update();
 	_desc.app->Update();

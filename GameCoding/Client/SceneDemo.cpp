@@ -22,7 +22,7 @@ void SceneDemo::Init()
         camera->AddComponent(make_shared<Camera>());
         camera->AddComponent(make_shared<CameraScript>());
 
-        CUR_SCENE->Add(camera);
+        CUR_SCENE->Add_Scene(camera);
     }
 
     // Light
@@ -37,36 +37,36 @@ void SceneDemo::Init()
         lightDesc.direction = Vec3(1.f, 0.f, 1.f);
         light->GetLight()->SetLightDesc(lightDesc);
 
-        CUR_SCENE->Add(light);
+        CUR_SCENE->Add_Scene(light);
     }
 
     // Animation
-    //shared_ptr<Model> m1 = make_shared<Model>();
-    //m1->ReadModel(L"Kachujin/Kachujin");
-    //m1->ReadMaterial(L"Kachujin/Kachujin");
-    //m1->ReadAnimation(L"Kachujin/Idle");
-    //m1->ReadAnimation(L"Kachujin/Run");
-    //m1->ReadAnimation(L"Kachujin/Slash");
-    //
-    //for (int32 i = 0; i < 1; i++)
-    //{
-    //    auto obj = make_shared<GameObject>();
-    //    obj->GetOrAddTransform()->SetPosition(Vec3(rand() % 10, 0, rand() % 10));
-    //    obj->GetOrAddTransform()->SetScale(Vec3(0.01f));
-    //    obj->AddComponent(make_shared<ModelAnimator>(_shader));
-    //    {
-    //        obj->GetModelAnimator()->SetModel(m1);
-    //        obj->GetModelAnimator()->SetPass(2);
-    //    }
-    //    CUR_SCENE->Add(obj);
-    //}
+    shared_ptr<Model> m1 = make_shared<Model>();
+    m1->ReadModel(L"Kachujin/Kachujin");
+    m1->ReadMaterial(L"Kachujin/Kachujin");
+    m1->ReadAnimation(L"Kachujin/Idle");
+    m1->ReadAnimation(L"Kachujin/Run");
+    m1->ReadAnimation(L"Kachujin/Slash");
+    
+    for (int32 i = 0; i < 10; i++)
+    {
+        auto obj = make_shared<GameObject>();
+        obj->GetOrAddTransform()->SetPosition(Vec3(rand() % 10, 0, rand() % 10));
+        obj->GetOrAddTransform()->SetScale(Vec3(0.01f));
+        obj->AddComponent(make_shared<ModelAnimator>(_shader));
+        {
+            obj->GetModelAnimator()->SetModel(m1);
+            obj->GetModelAnimator()->SetPass(2);
+        }
+        CUR_SCENE->Add_Scene(obj);
+    }
 
     // Model
     shared_ptr<Model> m2 = make_shared<Model>();
     m2->ReadModel(L"Tower/Tower");
     m2->ReadMaterial(L"Tower/Tower");
 
-    for (int32 i = 0; i < 1; i++)
+    for (int32 i = 0; i < 10; i++)
     {
         auto obj = make_shared<GameObject>();
         obj->GetOrAddTransform()->SetPosition(Vec3(rand() % 10, 0, rand() % 10));
@@ -76,7 +76,7 @@ void SceneDemo::Init()
             obj->GetModelRenderer()->SetModel(m2);
             obj->GetModelRenderer()->SetPass(1);
         }
-        CUR_SCENE->Add(obj);
+        CUR_SCENE->Add_Scene(obj);
     }
 
     // Mesh
@@ -94,7 +94,7 @@ void SceneDemo::Init()
 
     }
 
-    for (int32 i = 0; i < 1; i++)
+    for (int32 i = 0; i < 10; i++)
     {
         auto obj = make_shared<GameObject>();
         obj->GetOrAddTransform()->SetPosition(Vec3(rand() % 10, 0, rand() % 10));
@@ -108,7 +108,7 @@ void SceneDemo::Init()
             obj->GetMeshRenderer()->SetPass(0);
         }
 
-        CUR_SCENE->Add(obj);
+        CUR_SCENE->Add_Scene(obj);
     }
 
 

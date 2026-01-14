@@ -33,7 +33,7 @@ void SceneView::Init()
 
 void SceneView::Update()
 {
-    if (!_isPlaying)
+    if (!GET_SINGLE(SceneManager)->IsPlaying())
     {
         UpdateCameraInput();
     }
@@ -52,27 +52,29 @@ void SceneView::OnGui()
     // ─────────────────────────────────────────────
     // Play/Pause/Stop 컨트롤 바
     // ─────────────────────────────────────────────
-    if (!_isPlaying)
+    auto sceneManager = GET_SINGLE(SceneManager);
+
+    if (!sceneManager->IsPlaying())
     {
         if (ImGui::Button("Play"))
-            Play();
+            sceneManager->Play();
     }
     else
     {
-        if (_isPaused)
+        if (sceneManager->IsPaused())
         {
             if (ImGui::Button("Resume"))
-                Pause();
+                sceneManager->Pause();
         }
         else
         {
             if (ImGui::Button("Pause"))
-                Pause();
+                sceneManager->Pause();
         }
 
         ImGui::SameLine();
         if (ImGui::Button("Stop"))
-            Stop();
+            sceneManager->Stop();
     }
 
     ImGui::Separator();
@@ -146,23 +148,6 @@ void SceneView::UpdateCameraLerp()
         _isCameraLerping = false;
     }
 
-}
-
-void SceneView::Play()
-{
-    _isPlaying = true;
-    _isPaused = false;
-}
-
-void SceneView::Pause()
-{
-    _isPaused = !_isPaused;
-}
-
-void SceneView::Stop()
-{
-    _isPlaying = false;
-    _isPaused = false;
 }
 
 void SceneView::UpdateCameraInput()

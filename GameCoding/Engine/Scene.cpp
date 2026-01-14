@@ -24,9 +24,13 @@ void Scene::Update()
         object->Update();
     }
 
-    // INSTANCING
+}
+
+void Scene::Render()
+{
+    // Instancing
     vector<shared_ptr<GameObject>> temp;
-    temp.insert(temp.end(), objects.begin(), objects.end());
+    temp.insert(temp.end(), _objects.begin(), _objects.end());
     INSTANCING->Render(temp);
 }
 
@@ -40,7 +44,7 @@ void Scene::LateUpdate()
     }
 }
 
-void Scene::Add(shared_ptr<GameObject> object)
+void Scene::Add_Scene(shared_ptr<GameObject> object)
 {
     _objects.insert(object);
 
@@ -55,7 +59,7 @@ void Scene::Add(shared_ptr<GameObject> object)
     }
 }
 
-void Scene::Remove(shared_ptr<GameObject> object)
+void Scene::Remove_Scene(shared_ptr<GameObject> object)
 {
     _objects.erase(object);
 

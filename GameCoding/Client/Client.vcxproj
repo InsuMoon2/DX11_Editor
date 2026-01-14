@@ -19,65 +19,35 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="02. QuadDemo.h" />
-    <ClInclude Include="03. ConstBufferDemo.h" />
-    <ClInclude Include="04. CameraDemo.h" />
-    <ClInclude Include="05. TextureDemo.h" />
-    <ClInclude Include="06. SamplerDemo.h" />
-    <ClInclude Include="07. HeightMapDemo.h" />
-    <ClInclude Include="08. NormalDemo.h" />
-    <ClInclude Include="09. MeshDemo.h" />
-    <ClInclude Include="10. GlobalTestDemo.h" />
-    <ClInclude Include="11. DepthStencilDemo.h" />
-    <ClInclude Include="12. AmbientDemo.h" />
-    <ClInclude Include="13. DiffuseDemo.h" />
-    <ClInclude Include="14. SpecularDemo.h" />
-    <ClInclude Include="15. EmissiveDemo.h" />
-    <ClInclude Include="16. LightingDemo.h" />
-    <ClInclude Include="17. MaterialDemo.h" />
-    <ClInclude Include="18. NormalMappingDemo.h" />
     <ClInclude Include="AnimInstancingDemo.h" />
     <ClInclude Include="CameraScript.h" />
+    <ClInclude Include="FollowCamera.h" />
+    <ClInclude Include="GameDemo.h" />
     <ClInclude Include="InstancingDemo.h" />
     <ClInclude Include="Main.h" />
+    <ClInclude Include="MainCamera.h" />
     <ClInclude Include="MeshInstancingDemo.h" />
     <ClInclude Include="ModelInstancingDemo.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="01. TriangleDemo.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="RenderDemo.h" />
     <ClInclude Include="SceneDemo.h" />
     <ClInclude Include="Stage01.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="02. QuadDemo.cpp" />
-    <ClCompile Include="03. ConstBufferDemo.cpp" />
-    <ClCompile Include="04. CameraDemo.cpp" />
-    <ClCompile Include="05. TextureDemo.cpp" />
-    <ClCompile Include="06. SamplerDemo.cpp" />
-    <ClCompile Include="07. HeightMapDemo.cpp" />
-    <ClCompile Include="08. NormalDemo.cpp" />
-    <ClCompile Include="09. MeshDemo.cpp" />
-    <ClCompile Include="10. GlobalTestDemo.cpp" />
-    <ClCompile Include="11. DepthStencilDemo.cpp" />
-    <ClCompile Include="12. AmbientDemo.cpp" />
-    <ClCompile Include="13. DiffuseDemo.cpp" />
-    <ClCompile Include="14. SpecularDemo.cpp" />
-    <ClCompile Include="15. EmissiveDemo.cpp" />
-    <ClCompile Include="16. LightingDemo.cpp" />
-    <ClCompile Include="17. MaterialDemo.cpp" />
-    <ClCompile Include="18. NormalMappingDemo.cpp" />
     <ClCompile Include="AnimInstancingDemo.cpp" />
     <ClCompile Include="CameraScript.cpp" />
+    <ClCompile Include="FollowCamera.cpp" />
+    <ClCompile Include="GameDemo.cpp" />
     <ClCompile Include="InstancingDemo.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="MainCamera.cpp" />
     <ClCompile Include="MeshInstancingDemo.cpp" />
     <ClCompile Include="ModelInstancingDemo.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="01. TriangleDemo.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="RenderDemo.cpp" />
     <ClCompile Include="SceneDemo.cpp" />

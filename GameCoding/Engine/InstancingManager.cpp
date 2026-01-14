@@ -93,7 +93,7 @@ void InstancingManager::RenderModelRenderer(vector<shared_ptr<GameObject>>& game
 
         /*if (vec.size() == 1)
         {
-
+            
         }
         else*/
         {
@@ -117,6 +117,13 @@ void InstancingManager::RenderModelRenderer(vector<shared_ptr<GameObject>>& game
 
 void InstancingManager::RenderAnimRenderer(vector<shared_ptr<GameObject>>& gameObjects)
 {
+    int animatorCount = 0;
+    for (auto& obj : gameObjects)
+    {
+        if (obj && obj->GetModelAnimator())
+            animatorCount++;
+    }
+
     map<InstanceID, vector<shared_ptr<GameObject>>> cache;
 
     // 분류 단계

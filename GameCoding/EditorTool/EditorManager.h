@@ -9,11 +9,14 @@ class EditorManager
 public:
     void Init();
     void Update();
+    void Render();
     void OnGui();
     void Release();
 
     void AddWindow(const wstring& key, shared_ptr<EditorWindow> window);
     shared_ptr<EditorWindow> GetWindow(const wstring& key);
+
+    void UpdateHierarchy();
 
 private:
     void BeginDockSpace();

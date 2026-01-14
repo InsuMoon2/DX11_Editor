@@ -1,7 +1,7 @@
-#pragma once
-#include "MonoBehaviour.h"
+﻿#pragma once
+#include "MonoBehavior.h"
 
-class CameraScript : public MonoBehaviour
+class CameraScript : public MonoBehavior
 {
 public:
 	virtual void Start() override;

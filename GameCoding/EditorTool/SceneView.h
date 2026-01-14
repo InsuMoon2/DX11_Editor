@@ -29,14 +29,6 @@ public:
     void FocusOnPosition(const Vec3& targetPos);
     void UpdateCameraLerp();
 
-public:
-    bool IsPlaying() const { return _isPlaying; }
-    bool IsPaused() const { return _isPaused; }
-
-    void Play();
-    void Pause();
-    void Stop();
-
 private:
     void UpdateCameraInput();
     void UpdateImGuiZmo();
@@ -67,10 +59,6 @@ private:
     bool  _isCameraLerping = false;
     Vec3  _lerpTargetPos;
     float _lerpDistance = 15; // 타겟으로의 거리
-
-    // Play
-    bool _isPlaying = false;
-    bool _isPaused = false;
 
 private:
     // ─────────────────────────────────────────────

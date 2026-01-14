@@ -1,57 +1,90 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CameraScript.h"
 #include "Transform.h"
+#include "Utils.h"
 
-void CameraScript::Start()
+void CameraScript::LateUpdate()
 {
+    float delta = TIME->GetDeltaTime();
+
+    // F8
+    if (INPUT->GetButtonDown(KEY_TYPE::F8))
+    {
+        if (_mode == CameraMode::Follow)
+        {
+            _mode = CameraMode::Free;
+            _lastMousePos = Vec3(INPUT->GetMousePos().x, INPUT->GetMousePos().y, 0);
+        }
+        else
+        {
+            _mode = CameraMode::Follow;
+        }
+    }
+
+    // 모드별 실행
+    if (_mode == CameraMode::Follow)
+    {
+        UpdateFollowMode();
+    }
+    else if (_mode == CameraMode::Free)
+    {
+        UpdateFreeMode();
+    }
+
+    //string modeName = (_mode == CameraMode::Follow) ? "Follow" : "Free";
+    //string msg = "Camera Mode Changed : " + modeName;
+    //
+    //LOG_INFO(msg);
 
 }
 
-void CameraScript::Update()
+void CameraScript::UpdateFollowMode()
 {
-	float dt = TIME->GetDeltaTime();
+    auto target = _target;
+    if (target == nullptr) return;
 
-	Vec3 pos = GetTransform()->GetPosition();
+    Vec3 targetPos = target->GetTransform()->GetPosition();
+    Vec3 finalPos = targetPos + _offset;
 
-	if (INPUT->GetButton(KEY_TYPE::W))
-		pos += GetTransform()->GetLook() * _speed * dt;
-
-	if (INPUT->GetButton(KEY_TYPE::S))
-		pos -= GetTransform()->GetLook() * _speed * dt;
-
-	if (INPUT->GetButton(KEY_TYPE::A))
-		pos -= GetTransform()->GetRight() * _speed * dt;
-
-	if (INPUT->GetButton(KEY_TYPE::D))
-		pos += GetTransform()->GetRight() * _speed * dt;
-
-	GetTransform()->SetPosition(pos);
-
-	if (INPUT->GetButton(KEY_TYPE::Q))
-	{
-		Vec3 rotation = GetTransform()->GetLocalRotation();
-		rotation.x += dt * 0.5f;
-		GetTransform()->SetLocalRotation(rotation);
-	}
-
-	if (INPUT->GetButton(KEY_TYPE::E))
-	{
-		Vec3 rotation = GetTransform()->GetLocalRotation();
-		rotation.x -= dt * 0.5f;
-		GetTransform()->SetLocalRotation(rotation);
-	}
-
-	if (INPUT->GetButton(KEY_TYPE::Z))
-	{
-		Vec3 rotation = GetTransform()->GetLocalRotation();
-		rotation.y += dt * 0.5f;
-		GetTransform()->SetLocalRotation(rotation);
-	}
-
-	if (INPUT->GetButton(KEY_TYPE::C))
-	{
-		Vec3 rotation = GetTransform()->GetLocalRotation();
-		rotation.y -= dt * 0.5f;
-		GetTransform()->SetLocalRotation(rotation);
-	}
+    GetTransform()->SetPosition(finalPos);
+    GetTransform()->LookAt(targetPos);
 }
+
+void CameraScript::UpdateFreeMode()
+{
+    float dt = TIME->GetDeltaTime();
+
+    Vec3 pos = GetTransform()->GetPosition();
+
+    // WASD 이동
+    float speed = _speed;
+
+    if (INPUT->GetButton(KEY_TYPE::SHIFT)) speed *= 2.f;
+    if (INPUT->GetButton(KEY_TYPE::W)) pos += GetTransform()->GetLook() * speed * dt;
+    if (INPUT->GetButton(KEY_TYPE::S)) pos -= GetTransform()->GetLook() * speed * dt;
+    if (INPUT->GetButton(KEY_TYPE::A)) pos -= GetTransform()->GetRight() * speed * dt;
+    if (INPUT->GetButton(KEY_TYPE::D)) pos += GetTransform()->GetRight() * speed * dt;
+    if (INPUT->GetButton(KEY_TYPE::Q)) pos += GetTransform()->GetUp() * speed * dt;
+    if (INPUT->GetButton(KEY_TYPE::E)) pos -= GetTransform()->GetUp() * speed * dt;
+
+    GetTransform()->SetPosition(pos);
+
+    // 마우스 우클릭 회전
+    if (INPUT->GetButton(KEY_TYPE::RBUTTON))
+    {
+        const POINT& currentMouse = INPUT->GetMousePos();
+        float deltaX = (float)(currentMouse.x - _lastMousePos.x) * 0.5f;
+        float deltaY = (float)(currentMouse.y - _lastMousePos.y) * 0.5f;
+        Vec3 rot = GetTransform()->GetLocalRotation();
+        rot.y += deltaX * dt; 
+        rot.x += deltaY * dt; 
+        GetTransform()->SetLocalRotation(rot);
+
+        _lastMousePos = Vec3(currentMouse.x, currentMouse.y, 0);
+    }
+    else
+    {
+        _lastMousePos = Vec3(INPUT->GetMousePos().x, INPUT->GetMousePos().y, 0);
+    }
+}
+

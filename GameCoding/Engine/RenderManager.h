@@ -110,6 +110,8 @@ public:
     void PushKeyframeData(const KeyframeDesc& desc);
     void PushTweenData(const InstancedTweenDesc& desc);
 
+    shared_ptr<Shader> GetShader() { return _shader; }
+
 private:
 	shared_ptr<Shader> _shader;
 

@@ -9,3 +9,11 @@ void SceneManager::Update()
     _currentScene->Update();
     _currentScene->LateUpdate();
 }
+
+void SceneManager::Render()
+{
+    if (_currentScene == nullptr)
+        return;
+
+    _currentScene->Render();
+}

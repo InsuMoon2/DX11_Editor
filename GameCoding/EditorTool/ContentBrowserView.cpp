@@ -3,6 +3,9 @@
 #include "EditorManager.h"
 #include "AnimationView.h"
 #include "Engine/Utils.h"
+#include "ModelAnimation.h"
+#include "Model.h"
+#include "FileUtils.h"
 
 ContentBrowserView::ContentBrowserView()
     : EditorWindow("Content Browser")
@@ -16,6 +19,8 @@ ContentBrowserView::~ContentBrowserView()
 void ContentBrowserView::Init()
 {
     EditorWindow::Init();
+
+    
 }
 
 void ContentBrowserView::Update()
@@ -30,33 +35,43 @@ void ContentBrowserView::OnGui()
     ImGui::Text("Animations");
     ImGui::Separator();
 
-    // 애니메이션 목록 표시
-    for (int i = 0; i < _animations.size(); i++)
+    auto& entries = GET_SINGLE(ModelRegistry)->GetAll();
+
+    for (auto& [modelName, entry] : entries)
     {
-        auto& anim = _animations[i];
+        string modelNameStr = Utils::ToString(modelName);
 
-        string name = Utils::ToString(anim.name);
-
-        bool isSelected = (_selectedIndex == i);
-
-        if (ImGui::Selectable(name.c_str(), isSelected))
+        if (ImGui::TreeNode(modelNameStr.c_str()))
         {
-            _selectedIndex = i;
-        }
+            auto& animations = entry.model->GetAnimations();
 
-        // 더블클릭 -> AnimatinoView 열기
-        if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0))
-        {
-            auto animView = dynamic_pointer_cast<AnimationView>(
-                GET_SINGLE(EditorManager)->GetWindow(L"Animation"));
-
-            if (animView)
+            for (size_t i = 0; i < animations.size(); i++)
             {
-                animView->SetAnimation(anim.model, anim.animIndex, anim.animPaths);
-                animView->SetModelAnimator(anim.animator);
+                wstring animNameW = FileUtils::PathToAnimName(entry.animPaths[i]);
+                string animName = Utils::ToString(animNameW);
 
-                animView->SetActive(true);
+                bool isSelected = (_selectedIndex == (int)i);
+
+                if (ImGui::Selectable(animName.c_str(), isSelected))
+                {
+                    _selectedIndex = (int)i;
+                }
+
+                // 더블 클릭 -> Animation View
+                if (ImGui::IsItemHovered && ImGui::IsMouseDoubleClicked(0))
+                {
+                    auto animView = dynamic_pointer_cast<AnimationView>(
+                        GET_SINGLE(EditorManager)->GetWindow(L"Animation"));
+
+                    if (animView)
+                    {
+                        animView->SetAnimation(entry.model, (int)i, entry.animPaths);
+                        //animView->SetModelAnimator(entry.animator);
+                        animView->SetActive(true);
+                    }
+                }
             }
+            ImGui::TreePop();
         }
     }
 

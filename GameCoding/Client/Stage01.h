@@ -11,7 +11,10 @@ public:
     ~Stage01();
 
 public:
-    void Init(shared_ptr<Shader> shader);
+    void Init() override;
+    void Update() override;
+
+    shared_ptr<Player> GetPlayer() { return _player; }
 
 private:
     shared_ptr<Player> _player;

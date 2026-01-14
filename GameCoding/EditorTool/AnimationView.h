@@ -55,7 +55,7 @@ public:
 
     // Content Browser에서 호출
     void SetAnimation(shared_ptr<Model> model, int animIndex, vector<wstring>& animPaths);
-    void SetModelAnimator(shared_ptr<ModelAnimator> animator) { _modelAnimator = animator; };
+    void SetModelAnimator(shared_ptr<ModelAnimator> animator) { _previewAnimator = animator; };
 
 private:
     void UpdateCameraInput();
@@ -70,10 +70,10 @@ private:
     vector<wstring> _animNames;
     vector<wstring> _animPaths;
 
-    shared_ptr<Model> _model;
-    shared_ptr<ModelAnimator> _modelAnimator;
+    shared_ptr<GameObject>      _previewCharacter;  
+    shared_ptr<Model>           _previewModel;
+    shared_ptr<ModelAnimator>   _previewAnimator;
 
-    shared_ptr<GameObject>   _previewCharacter;  
     shared_ptr<Shader> _shader;
 
     int _animIndex = 0;

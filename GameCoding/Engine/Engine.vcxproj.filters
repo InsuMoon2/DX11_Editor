@@ -126,7 +126,7 @@
     <ClInclude Include="Transform.h">
       <Filter>04. Component</Filter>
     </ClInclude>
-    <ClInclude Include="MonoBehaviour.h">
+    <ClInclude Include="MonoBehavior.h">
       <Filter>04. Component</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
@@ -193,7 +193,6 @@
     <ClInclude Include="EventManager.h">
       <Filter>97. Event</Filter>
     </ClInclude>
-    <ClInclude Include="InstancingManager.h" />
     <ClInclude Include="InstancingBuffer.h" />
     <ClInclude Include="Light.h">
       <Filter>04. Component</Filter>
@@ -202,6 +201,12 @@
       <Filter>02. Managers</Filter>
     </ClInclude>
     <ClInclude Include="Scene.h">
+      <Filter>02. Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelRegistry.h">
+      <Filter>02. Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="InstancingManager.h">
       <Filter>02. Managers</Filter>
     </ClInclude>
   </ItemGroup>
@@ -278,7 +283,7 @@
     <ClCompile Include="Transform.cpp">
       <Filter>04. Component</Filter>
     </ClCompile>
-    <ClCompile Include="MonoBehaviour.cpp">
+    <ClCompile Include="MonoBehavior.cpp">
       <Filter>04. Component</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
@@ -345,7 +350,6 @@
     <ClCompile Include="EventManager.cpp">
       <Filter>97. Event</Filter>
     </ClCompile>
-    <ClCompile Include="InstancingManager.cpp" />
     <ClCompile Include="InstancingBuffer.cpp" />
     <ClCompile Include="Light.cpp">
       <Filter>04. Component</Filter>
@@ -354,6 +358,12 @@
       <Filter>02. Managers</Filter>
     </ClCompile>
     <ClCompile Include="Scene.cpp">
+      <Filter>02. Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelRegistry.cpp">
+      <Filter>02. Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="InstancingManager.cpp">
       <Filter>02. Managers</Filter>
     </ClCompile>
   </ItemGroup>

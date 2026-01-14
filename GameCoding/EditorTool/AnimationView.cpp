@@ -1,9 +1,7 @@
 ﻿#include "pch.h"
 #include "imgui_internal.h"
 #include "AnimationView.h"
-
 #include <filesystem>
-
 #include "Model.h"
 #include "ModelAnimation.h"
 #include "ImSequencer.h"
@@ -21,10 +19,8 @@ void AnimSequence::Get(int index, int** start, int** end, int* type, unsigned* c
 
     static int animStart = 0;
     static int animEnd = 100;
-
     static int notifyStart = 0;
     static int notifyEnd = 100;
-
     static int stateStart = 0;
     static int stateEnd = 100;
 
@@ -37,16 +33,13 @@ void AnimSequence::Get(int index, int** start, int** end, int* type, unsigned* c
     case 0:
         *start = &animStart;
         *end = &animEnd;
-
         if (color)
             *color = 0xFF4488AA; // 파란색 계열
         break;
-
     case 1:
         *start = &notifyStart;
         *end = &notifyEnd;
         break;
-
     case 2:
         *start = &stateStart;
         *end = &stateEnd;
@@ -55,7 +48,6 @@ void AnimSequence::Get(int index, int** start, int** end, int* type, unsigned* c
 
     if (type)
         *type = 0;
-
 }
 
 const char* AnimSequence::GetItemLabel(int index) const
@@ -70,7 +62,7 @@ const char* AnimSequence::GetItemLabel(int index) const
 }
 
 void AnimSequence::CustomDraw(int index, ImDrawList* draw_list, const ImRect& rc, const ImRect& legendRect,
-                              const ImRect& clippingRect, const ImRect& legendClippingRect)
+    const ImRect& clippingRect, const ImRect& legendClippingRect)
 {
     if (!notifyContainer)
         return;
@@ -95,7 +87,7 @@ void AnimSequence::CustomDraw(int index, ImDrawList* draw_list, const ImRect& rc
         for (int i = 0; i < notifyContainer->notifies.size(); i++)
         {
             auto& notify = notifyContainer->notifies[i];
-                
+
             float x = rc.Min.x + (notify.frame - frameMin) * pixelPerFrame;
             float markerWidth = 40.f;
             float markerHeight = rc.Max.y - rc.Min.y - 4.f;
@@ -105,22 +97,19 @@ void AnimSequence::CustomDraw(int index, ImDrawList* draw_list, const ImRect& rc
                 ImVec2(x, rc.Min.y + 2),
                 ImVec2(x + markerWidth, rc.Min.y + 2 + markerHeight),
                 0xFF33CC33); // 연한 초록?
-
             unsigned int borderColor = (i == selectedNotifyIndex) ? 0xFF000000 : 0xFFFFFFFF;
 
             // 테두리
             draw_list->AddRect(
                 ImVec2(x, rc.Min.y + 2),
                 ImVec2(x + markerWidth, rc.Min.y + 2 + markerHeight),
-                borderColor); 
-
+                borderColor);
             string name = Utils::ToString(notify.name);
             ImVec2 textPos(x + 2.f, rc.Min.y + 2);
             draw_list->AddText(textPos, 0xFFFFFFFF, name.c_str());
         }
         return;
     }
-
     // ─────────────────────────────────────────────
     // index == 2: States 트랙
     // ─────────────────────────────────────────────
@@ -129,7 +118,6 @@ void AnimSequence::CustomDraw(int index, ImDrawList* draw_list, const ImRect& rc
         for (int i = 0; i < notifyContainer->notifyStates.size(); i++)
         {
             auto& state = notifyContainer->notifyStates[i];
-
             float x1 = rc.Min.x + (state.startFrame - frameMin) * pixelPerFrame;
             float x2 = rc.Min.x + (state.endFrame - frameMin) * pixelPerFrame;
 
@@ -145,11 +133,10 @@ void AnimSequence::CustomDraw(int index, ImDrawList* draw_list, const ImRect& rc
             draw_list->AddRect(
                 ImVec2(x1, rc.Min.y + 2),
                 ImVec2(x2, rc.Max.y - 2),
-                borderColor); 
+                borderColor);
         }
         return;
     }
-
 }
 
 AnimationView::AnimationView()
@@ -167,7 +154,7 @@ void AnimationView::Init()
     // ─────────────────────────────────────────────
     // 셰이더 로드 (ModelAnimator에 필요)
     // ─────────────────────────────────────────────
-    _shader = make_shared<Shader>(L"23. RenderDemo.fx");
+    _shader = GET_SINGLE(RenderManager)->GetShader();
 
     // 프리뷰용 RenderTarget 생성
     _previewRenderTarget = make_shared<RenderTarget>();
@@ -175,9 +162,15 @@ void AnimationView::Init()
 
     // 프리뷰 카메라 설정
     _previewCamera = make_shared<GameObject>();
-    _previewCamera->GetOrAddTransform()->SetPosition(Vec3(0, 3, -15));
+    _previewCamera->GetOrAddTransform()->SetPosition(Vec3(0, 1, -5));
+    _previewCamera->GetOrAddTransform()->LookAt(Vec3(0.f, 1.0f, 0.f));
     _previewCamera->AddComponent(make_shared<Camera>());
 
+    _previewCharacter = make_shared<GameObject>();
+    _previewCharacter->GetOrAddTransform();
+    _previewCharacter->AddComponent(make_shared<ModelAnimator>(_shader));
+
+    _previewAnimator = _previewCharacter->GetModelAnimator();
 
 }
 
@@ -192,22 +185,18 @@ void AnimationView::Update()
     if (_isFocused)
         UpdateCameraInput();
 
-    if (_isPlaying && _model)
+    if (_isPlaying && _previewModel)
     {
         _playbackTime += DT;
-
         // 프레임 계산 (30fps 기준)
         _currentFrame = (int)(_playbackTime * 30.f);
-
         if (_currentFrame > _frameMax)
         {
             _currentFrame = _frameMin;
             _playbackTime = 0.f;
         }
     }
-
 }
-
 void AnimationView::OnGui()
 {
     if (!ImGui::Begin("Animation", &_isActive, ImGuiWindowFlags_MenuBar))
@@ -227,43 +216,44 @@ void AnimationView::OnGui()
         // 프리뷰 영역
         DrawPreview();
         ImGui::Separator();
-
         DrawControls();
         DrawSequencer();
         DrawNotifyPanel();
     }
     ImGui::EndGroup();
-
     ImGui::End();
 }
-
 void AnimationView::SetAnimation(shared_ptr<Model> model, int animIndex, vector<wstring>& animPaths)
 {
-    _model = model;  // 원본 참조용
+    _previewModel = model;  // 모델 저장
     _animIndex = animIndex;
     _currentFrame = 0;
     _playbackTime = 0.f;
     _animPaths = animPaths;
-
     _isPlaying = true;
+
+    if (_previewAnimator)
+    {
+        _previewAnimator->SetModel(_previewModel);
+        _previewAnimator->SetPass(2);
+    }
 
     // 애니메이션 정보 가져오기
     _animNames.clear();
+
     for (const auto& path : _animPaths)
     {
         _animNames.push_back(FileUtils::PathToAnimName(path));
     }
-    if (_model && _model->GetAnimations().size() > animIndex)
+    if (_previewModel && _previewModel->GetAnimations().size() > animIndex)
     {
-        auto& anim = _model->GetAnimations()[animIndex];
+        auto& anim = _previewModel->GetAnimations()[animIndex];
         _frameMax = anim->frameCount;
     }
-
     if (_animNames.size() > _animIndex)
     {
         wstring animName = _animNames[_animIndex];
         wstring filePath = L"../Resources/Notifies/" + animName + L".json";
-
         // 파일이 존재하면 로드
         if (std::filesystem::exists(filePath))
         {
@@ -271,10 +261,9 @@ void AnimationView::SetAnimation(shared_ptr<Model> model, int animIndex, vector<
         }
     }
 }
-
 void AnimationView::DrawPreview()
 {
-    if (!_previewRenderTarget || !_modelAnimator || !_model)
+    if (!_previewRenderTarget || !_previewAnimator || !_previewModel)
     {
         ImGui::Text("No animation to preview");
         return;
@@ -282,7 +271,6 @@ void AnimationView::DrawPreview()
 
     ImVec2 previewSize = ImVec2(1000, 400);
     _previewRenderTarget->Resize((uint32)previewSize.x, (uint32)previewSize.y);
-
     _previewRenderTarget->BindAsTarget();
     _previewRenderTarget->Clear(Color(0.15f, 0.15f, 0.15f, 1.f));
 
@@ -302,38 +290,42 @@ void AnimationView::DrawPreview()
     lightDesc.direction = Vec3(1.f, -1.f, 1.f);
     RENDER->PushLightData(lightDesc);
 
-    auto owner = _modelAnimator->GetGameObject();
+    auto owner = _previewCharacter;
     if (owner)
     {
         auto originalPos = owner->GetTransform()->GetPosition();
+
+        owner->GetTransform()->SetScale(Vec3(0.01f));
         owner->GetTransform()->SetPosition(Vec3(0, 0, 0));
+        owner->GetTransform()->SetRotation(Vec3(0, 0, 0));
         owner->GetTransform()->UpdateTransform();
 
-        TweenDesc tweenDesc;
+        TweenDesc tweenDesc = {};
         tweenDesc.curr.animIndex = _animIndex;
         tweenDesc.curr.currFrame = min(_currentFrame, max(0, _frameMax - 1));
         tweenDesc.curr.nextFrame = tweenDesc.curr.currFrame;
         tweenDesc.curr.ratio = 0.f;
-        tweenDesc.curr.sumTime = 0.f; 
-        tweenDesc.curr.speed = 0.f;
+        tweenDesc.curr.sumTime = 0.f;
+        tweenDesc.curr.speed = 1.f;
+        tweenDesc.next.animIndex = -1;
 
-        _modelAnimator->SetTweenDesc(tweenDesc);
-        // _modelAnimator->Update();
+        _previewAnimator->SetTweenDesc(tweenDesc);
+        _previewAnimator->UpdateTweenData();
 
         // 단일 오브젝트 렌더링
         vector<shared_ptr<GameObject>> vec;
         vec.push_back(owner);
         INSTANCING->Render(vec);
 
-        owner->GetTransform()->SetPosition(originalPos);
+        //owner->GetTransform()->SetPosition(originalPos);
     }
 
     RenderTarget::UnbindAll();
 
     ImGui::Text("Preview");
     ImGui::Image(_previewRenderTarget->GetSRV(), previewSize);
-}
 
+}
 void AnimationView::DrawControls()
 {
     // 재생 컨트롤
@@ -363,14 +355,11 @@ void AnimationView::DrawControls()
         _playbackTime = _currentFrame / 30.f;
         _isPlaying = false;
     }
-
     ImGui::Text("Animation Index : %d", _animIndex);
-
 }
-
 void AnimationView::DrawSequencer()
 {
-    if (!_model)
+    if (!_previewModel)
         return;
 
     ImGui::Separator();
@@ -381,10 +370,8 @@ void AnimationView::DrawSequencer()
 
     wstring animName = (_animNames.size() > _animIndex) ? _animNames[_animIndex] : L"";
     _sequence.notifyContainer = GET_SINGLE(AnimNotifyManager)->GetContainer(animName);
-
     _sequence.selectedNotifyIndex = _selectedNotifyIndex;
     _sequence.selectedNotifyStateIndex = _selectedNotifyStateIndex;
-
     _firstFrame = 0;
 
     // ImSequencer 그리기
@@ -396,38 +383,39 @@ void AnimationView::DrawSequencer()
         &_firstFrame,
         ImSequencer::SEQUENCER_EDIT_STARTEND | ImSequencer::SEQUENCER_CHANGE_FRAME
     );
-
 }
 
 void AnimationView::DrawAnimationList()
 {
     ImGui::BeginChild("AnimList", ImVec2(200, 0), true);
-
     ImGui::Text("Animations");
     ImGui::Separator();
 
-    for (int i = 0; i < _animNames.size(); i++)
+    auto& entries = GET_SINGLE(ModelRegistry)->GetAll();
+
+    for (auto& [modelName, entry] : entries)
     {
-        string name = Utils::ToString(_animNames[i]);
+        string modelNameStr = Utils::ToString(modelName);
 
-        // 이름이 비어있으면 인덱스로 대체
-        if (name.empty())
-            name = "Animation_" + to_string(i);
+        ImGui::SetNextItemOpen(true, ImGuiCond_FirstUseEver);
 
-        bool isSelected = (_animIndex == i);
-
-        if (ImGui::Selectable(name.c_str(), isSelected))
+        if (ImGui::TreeNode(modelNameStr.c_str()))
         {
-            _animIndex = i;
-            _currentFrame = 0;
-            _playbackTime = 0.f;
+            auto& animations = entry.model->GetAnimations();
 
-            // 프레임 범위 업데이트
-            if (_model && _model->GetAnimations().size() > i)
+            for (size_t i = 0; i < animations.size(); i++)
             {
-                auto& anim = _model->GetAnimations()[i];
-                _frameMax = anim->frameCount;
+                wstring animNameW = FileUtils::PathToAnimName(entry.animPaths[i]);
+                string animName = Utils::ToString(animNameW);
+
+                bool isSelected = (_previewModel == entry.model) && (_animIndex == (int)i);
+                if (ImGui::Selectable(animName.c_str(), isSelected))
+                {
+                    // 클릭 시 해당 애니메이션으로 즉시 전환 (SetAnimation 재활용)
+                    SetAnimation(entry.model, (int)i, entry.animPaths);
+                }
             }
+            ImGui::TreePop();
         }
     }
 
@@ -436,7 +424,7 @@ void AnimationView::DrawAnimationList()
 
 void AnimationView::DrawNotifyPanel()
 {
-    if (!_model)
+    if (!_previewModel)
         return;
 
     ImGui::Separator();
@@ -456,7 +444,6 @@ void AnimationView::DrawNotifyPanel()
     // Notify 목록
     // ─────────────────────────────────────────────
     ImGui::Text("Single Frame Notifies :");
-
     if (container)
     {
         for (int i = 0; i < (int)container->notifies.size(); i++)
@@ -464,7 +451,6 @@ void AnimationView::DrawNotifyPanel()
             auto& notify = container->notifies[i];
             string label = Utils::ToString(notify.name) + " (Frame : " +
                 to_string(notify.frame) + ")";
-
             bool isSelected = (_selectedNotifyIndex == i);
             if (ImGui::Selectable(label.c_str(), isSelected))
             {
@@ -477,7 +463,6 @@ void AnimationView::DrawNotifyPanel()
     // Notify 추가 UI
     ImGui::InputText("Name##Notify", _newNotifyName, 128);
     ImGui::InputInt("Frame##Notify", &_newNotifyFrame);
-
     if (ImGui::Button("Add Notify"))
     {
         if (strlen(_newNotifyName) > 0)
@@ -485,33 +470,29 @@ void AnimationView::DrawNotifyPanel()
             AnimNotifyData notify;
             notify.name = Utils::ToWString(string(_newNotifyName));
             notify.frame = _newNotifyFrame;
-
             GET_SINGLE(AnimNotifyManager)->AddNotify(animName, notify);
             memset(_newNotifyName, 0, 128);
         }
     }
-
     ImGui::SameLine();
+
     if (ImGui::Button("Remove Notify") && _selectedNotifyIndex >= 0)
     {
         GET_SINGLE(AnimNotifyManager)->RemoveNotify(animName, _selectedNotifyIndex);
         _selectedNotifyIndex = -1;
     }
-
     ImGui::Separator();
 
     // ─────────────────────────────────────────────
     // NotifyState 목록
     // ─────────────────────────────────────────────
     ImGui::Text("Notify States:");
-
     if (container)
     {
         for (int i = 0; i < (int)container->notifyStates.size(); i++)
         {
             auto& state = container->notifyStates[i];
             string label = Utils::ToString(state.name) + " (" + to_string(state.startFrame) + " - " + to_string(state.endFrame) + ")";
-
             bool isSelected = (_selectedNotifyStateIndex == i);
             if (ImGui::Selectable(label.c_str(), isSelected))
             {
@@ -535,10 +516,10 @@ void AnimationView::DrawNotifyPanel()
             state.startFrame = _newNotifyStateStartFrame;
             state.endFrame = _newNotifyStateEndFrame;
             GET_SINGLE(AnimNotifyManager)->AddNotifyState(animName, state);
-
             memset(_newNotifyStateName, 0, 128);
         }
     }
+
     ImGui::SameLine();
     if (ImGui::Button("Remove State") && _selectedNotifyStateIndex >= 0)
     {
@@ -555,14 +536,14 @@ void AnimationView::DrawNotifyPanel()
         wstring filePath = L"../Resources/Notifies/" + animName + L".json";
         GET_SINGLE(AnimNotifyManager)->SaveToJson(animName, filePath);
     }
-
 }
-
 void AnimationView::UpdateCameraInput()
 {
     if (!_previewCamera)
         return;
+
     auto transform = _previewCamera->GetTransform();
+
     Vec3 pos = transform->GetPosition();
     Vec3 rot = transform->GetRotation();
 
@@ -603,5 +584,3 @@ void AnimationView::UpdateCameraInput()
     transform->SetPosition(pos);
     transform->SetRotation(rot);
 }
-
-

@@ -1,6 +1,6 @@
 ﻿#include "pch.h"
 #include "GameObject.h"
-#include "MonoBehaviour.h"
+#include "MonoBehavior.h"
 #include "Transform.h"
 #include "Camera.h"
 #include "MeshRenderer.h"
@@ -26,7 +26,7 @@ void GameObject::Awake()
 			component->Awake();
 	}
 
-	for (shared_ptr<MonoBehaviour>& script : _scripts)
+	for (shared_ptr<MonoBehavior>& script : _scripts)
 	{
 		script->Awake();
 	}
@@ -40,7 +40,7 @@ void GameObject::Start()
 			component->Start();
 	}
 
-	for (shared_ptr<MonoBehaviour>& script : _scripts)
+	for (shared_ptr<MonoBehavior>& script : _scripts)
 	{
 		script->Start();
 	}
@@ -54,7 +54,7 @@ void GameObject::Update()
 			component->Update();
 	}
 
-	for (shared_ptr<MonoBehaviour>& script : _scripts)
+	for (shared_ptr<MonoBehavior>& script : _scripts)
 	{
 		script->Update();
 	}
@@ -68,7 +68,7 @@ void GameObject::LateUpdate()
 			component->LateUpdate();
 	}
 
-	for (shared_ptr<MonoBehaviour>& script : _scripts)
+	for (shared_ptr<MonoBehavior>& script : _scripts)
 	{
 		script->LateUpdate();
 	}
@@ -82,7 +82,7 @@ void GameObject::FixedUpdate()
 			component->FixedUpdate();
 	}
 
-	for (shared_ptr<MonoBehaviour>& script : _scripts)
+	for (shared_ptr<MonoBehavior>& script : _scripts)
 	{
 		script->FixedUpdate();
 	}
@@ -153,7 +153,7 @@ void GameObject::AddComponent(shared_ptr<Component> component)
 	}
 	else
 	{
-		_scripts.push_back(dynamic_pointer_cast<MonoBehaviour>(component));
+		_scripts.push_back(dynamic_pointer_cast<MonoBehavior>(component));
 	}
 }
 

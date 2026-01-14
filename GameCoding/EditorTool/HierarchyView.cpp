@@ -4,6 +4,7 @@
 #include "InspectorView.h"
 #include "EditorManager.h"
 #include "SceneView.h"
+#include "Utils.h"
 
 HierarchyView::HierarchyView()
     : EditorWindow("Hierarchy")
@@ -358,9 +359,8 @@ void HierarchyView::DrawObjectList()
         if (isSelected)
             flags |= ImGuiTreeNodeFlags_Selected;
 
-        // 오브젝트 이름 (없으면 인덱스로 표시)
-        string name = "GameObject_" + to_string(i);
-
+        //string name = "GameObject_" + to_string(i);
+        string name = Utils::ToString(obj->GetName());
         ImGui::TreeNodeEx((void*)(intptr_t)i, flags, name.c_str());
 
         // 클릭하면 선택

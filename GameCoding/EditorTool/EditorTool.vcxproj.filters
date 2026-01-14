@@ -30,9 +30,6 @@
     <ClCompile Include="pch.cpp">
       <Filter>99. Default</Filter>
     </ClCompile>
-    <ClCompile Include="EditorToolApp.cpp">
-      <Filter>00. Main</Filter>
-    </ClCompile>
     <ClCompile Include="EditorWindow.cpp">
       <Filter>01. Editor</Filter>
     </ClCompile>
@@ -68,9 +65,6 @@
   <ItemGroup>
     <ClInclude Include="pch.h">
       <Filter>99. Default</Filter>
-    </ClInclude>
-    <ClInclude Include="EditorToolApp.h">
-      <Filter>00. Main</Filter>
     </ClInclude>
     <ClInclude Include="EditorWindow.h">
       <Filter>01. Editor</Filter>

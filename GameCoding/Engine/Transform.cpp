@@ -21,24 +21,24 @@ void Transform::Update()
 
 Vec3 ToEulerAngles(Quaternion q)
 {
-	Vec3 angles;
+    Vec3 angles;
+    // X -> Y -> Z 순서 (Rx * Ry * Rz)
 
-	// roll (x-axis rotation)
-	double sinr_cosp = 2 * (q.w * q.x + q.y * q.z);
-	double cosr_cosp = 1 - 2 * (q.x * q.x + q.y * q.y);
-	angles.x = std::atan2(sinr_cosp, cosr_cosp);
-
-	// pitch (y-axis rotation)
-	double sinp = std::sqrt(1 + 2 * (q.w * q.y - q.x * q.z));
-	double cosp = std::sqrt(1 - 2 * (q.w * q.y - q.x * q.z));
-	angles.y = 2 * std::atan2(sinp, cosp) - 3.14159f / 2;
-
-	// yaw (z-axis rotation)
-	double siny_cosp = 2 * (q.w * q.z + q.x * q.y);
-	double cosy_cosp = 1 - 2 * (q.y * q.y + q.z * q.z);
-	angles.z = std::atan2(siny_cosp, cosy_cosp);
-
-	return angles;
+    // x (Pitch)
+    double sinx = -2 * (q.y * q.z - q.w * q.x);
+    if (std::abs(sinx) >= 1)
+        angles.x = std::copysign(3.141592f / 2, sinx);
+    else
+        angles.x = std::asin(sinx);
+    // y (Yaw)
+    double siny_cosx = 2 * (q.x * q.z + q.w * q.y);
+    double cosy_cosx = 1 - 2 * (q.x * q.x + q.y * q.y);
+    angles.y = std::atan2(siny_cosx, cosy_cosx);
+    // z (Roll)
+    double sinz_cosx = 2 * (q.x * q.y + q.w * q.z);
+    double cosz_cosx = 1 - 2 * (q.x * q.x + q.z * q.z);
+    angles.z = std::atan2(sinz_cosx, cosz_cosx);
+    return angles;
 }
 
 void Transform::UpdateTransform()

@@ -27,6 +27,8 @@ public:
 public:
     //virtual void Update() override;
 
+    shared_ptr<Model> GetModel() { return _model; }
+
     void SetModel(shared_ptr<Model> model);
     void SetPass(uint8 pass) { _pass = pass; }
 
@@ -35,6 +37,7 @@ public:
 
     void RenderInstancing(shared_ptr<class InstancingBuffer>& buffer);
     InstanceID GetInstanceID();
+
 
 public:
     int32 GetCurrentAnimIndex() { return _tweenDesc.curr.animIndex; }

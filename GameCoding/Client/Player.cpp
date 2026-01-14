@@ -5,13 +5,19 @@
 #include "Camera.h"
 
 Player::Player()
-{ }
+{
+    SetName(L"Player");
+}
 
 Player::~Player()
 { }
 
-void Player::Init(shared_ptr<Shader> shader)
+void Player::Start()
 {
+    GameObject::Start();
+
+    auto shader = GET_SINGLE(RenderManager)->GetShader();
+
     // 모델 로드
     auto model = make_shared<Model>();
     model->ReadModel(L"Kachujin/Kachujin");
@@ -28,11 +34,19 @@ void Player::Init(shared_ptr<Shader> shader)
     GetModelAnimator()->SetModel(model);
     GetModelAnimator()->SetPass(2);
 
-    // 카메라 추가
-    _camera = make_shared<GameObject>();
-    _camera->GetOrAddTransform()->SetPosition(Vec3(0, 5, -10));
-    _camera->AddComponent(make_shared<Camera>());
+    vector<wstring> animPaths =
+    {
+    L"Kachujin/Idle",
+    L"Kachujin/Run",
+    L"Kachujin/Slash"
+    };
 
+    GET_SINGLE(ModelRegistry)->RegisterModel(
+        L"Kachujin",
+        model,
+        GetModelAnimator(),
+        animPaths
+    );
 }
 
 void Player::Update()
@@ -44,46 +58,34 @@ void Player::Update()
 
     GameObject::Update();
 
-    Vec3 playerPos = GetTransform()->GetPosition();
-
-    _camera->GetTransform()->SetPosition(playerPos + _cameraOffset);
-    _camera->GetTransform()->LookAt(playerPos);
-    _camera->GetTransform()->UpdateTransform();
-    _camera->Update();
-
-}
-
-void Player::Render()
-{
-
 }
 
 void Player::UpdateInput()
 {
     auto transform = GetTransform();
-    Vec3 pos = transform->GetPosition();
-    Vec3 rot = transform->GetRotation();
+    Vec3 pos = transform->GetLocalPosition();
+    Vec3 rot = transform->GetLocalRotation();
 
     bool isMoving = false;
 
     // WASD 이동
     if (INPUT->GetButton(KEY_TYPE::W))
     {
-        pos += transform->GetLook() * _moveSpeed * DT;
+        pos += transform->GetForward() * _moveSpeed * DT;
         isMoving = true;
     }
     if (INPUT->GetButton(KEY_TYPE::S))
     {
-        pos -= transform->GetLook() * _moveSpeed * DT;
+        pos -= transform->GetForward() * _moveSpeed * DT;
         isMoving = true;
     }
     if (INPUT->GetButton(KEY_TYPE::A))
     {
-        rot.y -= _rotSpeed * DT;
+        pos += transform->GetRight() * DT;
     }
     if (INPUT->GetButton(KEY_TYPE::D))
     {
-        rot.y += _rotSpeed * DT;
+        pos -= transform->GetRight() * DT;
     }
 
     // 공격
@@ -91,7 +93,8 @@ void Player::UpdateInput()
     {
         _currentState = AnimState::ATTACK;
     }
-    else if (isMoving) {
+    else if (isMoving)
+    {
         _currentState = AnimState::RUN;
     }
     else if (_currentState != AnimState::ATTACK)
@@ -106,14 +109,16 @@ void Player::UpdateInput()
             _currentState = AnimState::IDLE;
     }
 
-    transform->SetPosition(pos);
-    transform->SetRotation(rot);
+    transform->SetLocalPosition(pos);
+    transform->SetLocalRotation(rot);
 }
 
-void Player::UpdateAnimation() {
+void Player::UpdateAnimation()
+{
     if (_currentState == _prevState)
         return;
 
     GetModelAnimator()->SetNextAnimation((int32)_currentState);
+
     _prevState = _currentState;
 }

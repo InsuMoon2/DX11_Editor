@@ -145,7 +145,6 @@
     <ClCompile Include="EditorTool.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="EditorToolApp.cpp" />
     <ClCompile Include="EditorWindow.cpp" />
     <ClCompile Include="GameView.cpp" />
     <ClCompile Include="HierarchyView.cpp" />
@@ -167,7 +166,6 @@
     <ClInclude Include="ConsoleView.h" />
     <ClInclude Include="ContentBrowserView.h" />
     <ClInclude Include="EditorManager.h" />
-    <ClInclude Include="EditorToolApp.h" />
     <ClInclude Include="EditorWindow.h" />
     <ClInclude Include="GameView.h" />
     <ClInclude Include="HierarchyView.h" />
