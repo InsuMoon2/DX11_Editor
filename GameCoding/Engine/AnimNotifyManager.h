@@ -16,8 +16,8 @@ public:
     // ─────────────────────────────────────────────
     // 노티파이 추가/삭제
     // ─────────────────────────────────────────────
-    void AddNotify(const wstring& animName, const AnimNotifyData& notify);
-    void AddNotifyState(const wstring& animName, const AnimNotifyStateData& notifyState);
+    void AddNotify(const wstring& animName, const shared_ptr<AnimNotify>& notify);
+    void AddNotifyState(const wstring& animName, const shared_ptr<AnimNotifyState>& notifyState);
 
     void RemoveNotify(const wstring& animName, int index);
     void RemoveNotifyState(const wstring& animName, int index);
@@ -27,6 +27,9 @@ public:
     // ─────────────────────────────────────────────
     void SaveToJson(const wstring& animName, const wstring& filePath);
     void LoadFromJson(const wstring& filePath);
+
+    // 임시
+    shared_ptr<AnimNotify> CreateNotifyByType(const string& type);
 
 private:
     unordered_map<wstring, AnimNotifyContainer> _containers;

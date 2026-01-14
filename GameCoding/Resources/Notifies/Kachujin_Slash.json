@@ -2,19 +2,9 @@
     "animationName": "Kachujin_Slash",
     "notifies": [
         {
-            "frame": 15,
-            "name": "TestAnim2"
-        },
-        {
-            "frame": 97,
-            "name": "Player_EndState"
+            "frame": 100,
+            "type": "End_State"
         }
     ],
-    "notifyStates": [
-        {
-            "endFrame": 20,
-            "name": "TestAnimState",
-            "startFrame": 15
-        }
-    ]
+    "notifyStates": []
 }

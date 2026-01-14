@@ -457,48 +457,47 @@ void ModelAnimator::CheckNotifies(int prevFrame, int currFrame)
     for (auto& notify : container->notifies)
     {
         bool triggered = false;
+
         if (prevFrame <= currFrame)
-        {
-            // 일반 진행
-            triggered = (notify.frame > prevFrame && notify.frame <= currFrame);
-        }
+            triggered = (notify->GetFrame() > prevFrame && notify->GetFrame() <= currFrame);
         else
         {
             // 루프 : prevFrame -> 끝 -> 0 -> currFrame
-            triggered = (notify.frame > prevFrame || notify.frame <= currFrame);
+            triggered = (notify->GetFrame() > prevFrame || notify->GetFrame() <= currFrame);
         }
 
-        if (triggered && _notifyCallback)
+        if (triggered)
         {
-            _notifyCallback(notify.name);
+            // 콜백 대신, 객체 실행
+            notify->OnNotify(this);
         }
     }
 
     // ─────────────────────────────────────────────
     // NotifyState 체크 (시작/종료)
     // ─────────────────────────────────────────────
-    for (int i = 0; i < (int)container->notifyStates.size(); i++)
-    {
-        auto& state = container->notifyStates[i];
-        bool wasActive = _activeNotifyStates.count(i) > 0;
-        bool isActive = (currFrame >= state.startFrame && currFrame <= state.endFrame);
-
-        if (isActive && !wasActive)
-        {
-            // 시작
-            _activeNotifyStates.insert(i);
-            if (_notifyStateCallback)
-                _notifyStateCallback(state.name, true);
-        }
-        else if (!isActive && wasActive)
-        {
-            // 종료
-            _activeNotifyStates.erase(i);
-            if (_notifyStateCallback)
-                _notifyStateCallback(state.name, false);
-        }
-
-    }
+    //for (int i = 0; i < (int)container->notifyStates.size(); i++)
+    //{
+    //    auto& state = container->notifyStates[i];
+    //    bool wasActive = _activeNotifyStates.count(i) > 0;
+    //    bool isActive = (currFrame >= state.startFrame && currFrame <= state.endFrame);
+    //
+    //    if (isActive && !wasActive)
+    //    {
+    //        // 시작
+    //        _activeNotifyStates.insert(i);
+    //        if (_notifyStateCallback)
+    //            _notifyStateCallback(state.name, true);
+    //    }
+    //    else if (!isActive && wasActive)
+    //    {
+    //        // 종료
+    //        _activeNotifyStates.erase(i);
+    //        if (_notifyStateCallback)
+    //            _notifyStateCallback(state.name, false);
+    //    }
+    //
+    //}
 
 }
 

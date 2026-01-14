@@ -37,6 +37,9 @@
     <Filter Include="04. Components">
       <UniqueIdentifier>{79a3b705-68c4-4b9f-af6b-92e71490a52d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="98. Notify">
+      <UniqueIdentifier>{eb62cc61-da0f-40dc-bca8-e5924c3a33dd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -81,6 +84,8 @@
     <ClCompile Include="FollowCamera.cpp">
       <Filter>04. Components</Filter>
     </ClCompile>
+    <ClCompile Include="StateComponent.cpp" />
+    <ClCompile Include="AnimNotify_EndState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -125,6 +130,8 @@
     <ClInclude Include="FollowCamera.h">
       <Filter>04. Components</Filter>
     </ClInclude>
+    <ClInclude Include="StateComponent.h" />
+    <ClInclude Include="AnimNotify_EndState.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Shaders\00. Global.fx">

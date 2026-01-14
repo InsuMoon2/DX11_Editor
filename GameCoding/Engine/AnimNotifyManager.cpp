@@ -2,6 +2,7 @@
 #include "AnimNotifyManager.h"
 #include <fstream>
 #include <filesystem>
+#include "AnimNotifyState.h"
 #include "Utils.h"
 
 namespace fs = std::filesystem;
@@ -29,13 +30,13 @@ AnimNotifyContainer* AnimNotifyManager::GetContainer(const wstring& animName)
     return nullptr;
 }
 
-void AnimNotifyManager::AddNotify(const wstring& animName, const AnimNotifyData& notify)
+void AnimNotifyManager::AddNotify(const wstring& animName, const shared_ptr<AnimNotify>& notify)
 {
     auto& container = GetOrCreateContainer(animName);
     container.notifies.push_back(notify);
 }
 
-void AnimNotifyManager::AddNotifyState(const wstring& animName, const AnimNotifyStateData& notifyState)
+void AnimNotifyManager::AddNotifyState(const wstring& animName, const shared_ptr<AnimNotifyState>& notifyState)
 {
     auto& container = GetOrCreateContainer(animName);
     container.notifyStates.push_back(notifyState);
@@ -73,8 +74,9 @@ void AnimNotifyManager::SaveToJson(const wstring& animName, const wstring& fileP
     for (auto& notify : container->notifies)
     {
         json notifyJson;
-        notifyJson["name"] = Utils::ToString(notify.name);
-        notifyJson["frame"] = notify.frame;
+        notifyJson["type"] = Utils::ToString(notify->GetDisplayName());
+        notifyJson["frame"] = notify->GetFrame();
+
         j["notifies"].push_back(notifyJson);
     }
 
@@ -83,9 +85,10 @@ void AnimNotifyManager::SaveToJson(const wstring& animName, const wstring& fileP
     for (auto& state : container->notifyStates)
     {
         json stateJson;
-        stateJson["name"] = Utils::ToString(state.name);
-        stateJson["startFrame"] = state.startFrame;
-        stateJson["endFrame"] = state.endFrame;
+        stateJson["name"] = Utils::ToString(state->GetDisplayName());
+        stateJson["startFrame"] = state->GetStartFrame();
+        stateJson["endFrame"] = state->GetEndFrame();
+
         j["notifyStates"].push_back(stateJson);
     }
 
@@ -118,10 +121,14 @@ void AnimNotifyManager::LoadFromJson(const wstring& filePath)
     {
         for (auto& notifyJson : j["notifies"])
         {
-            AnimNotifyData notify;
-            notify.name = Utils::ToWString(notifyJson["name"].get<string>());
-            notify.frame = notifyJson["frame"].get<int>();
-            container.notifies.push_back(notify);
+            string type = notifyJson["name"].get<string>();
+            auto notify = AnimNotifyFactory::CreateNotify(type);
+
+            if (notify)
+            {
+                notify->SetFrame(notifyJson["frame"].get<int>());
+                container.notifies.push_back(notify);
+            }
         }
     }
 
@@ -130,11 +137,13 @@ void AnimNotifyManager::LoadFromJson(const wstring& filePath)
     {
         for (auto& stateJson : j["notifyStates"])
         {
-            AnimNotifyStateData state;
-            state.name = Utils::ToWString(stateJson["name"].get<string>());
-            state.startFrame = stateJson["startFrame"].get<int>();
-            state.endFrame = stateJson["endFrame"].get<int>();
-            container.notifyStates.push_back(state);
+            string type = stateJson["name"].get<string>();
+
+            // CreateNotifyStateBtType
+            // SetStartFrame, SetEndFrame
+
+            //container.notifyStates.push_back(state)
+            
         }
     }
     _containers[container.animationName] = container;

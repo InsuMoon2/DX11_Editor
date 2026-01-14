@@ -36,7 +36,7 @@ void HierarchyView::Init()
             auto& event = static_cast<GameObjectDestroyedEvent&>(e);
 
             CUR_SCENE->Remove_Scene(event.GetGameObject());
-            LOG_WARNING("GameObject Destroyed!");
+            LOG_WARNING("GameObject Destroyed !");
         });
 }
 

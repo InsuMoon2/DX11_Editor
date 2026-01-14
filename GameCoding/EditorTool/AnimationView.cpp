@@ -11,6 +11,7 @@
 #include "Utils.h"
 #include "FileUtils.h"
 #include "AnimNotifyManager.h"
+#include "AnimNotifyState.h"
 
 void AnimSequence::Get(int index, int** start, int** end, int* type, unsigned* color)
 {
@@ -88,7 +89,7 @@ void AnimSequence::CustomDraw(int index, ImDrawList* draw_list, const ImRect& rc
         {
             auto& notify = notifyContainer->notifies[i];
 
-            float x = rc.Min.x + (notify.frame - frameMin) * pixelPerFrame;
+            float x = rc.Min.x + (notify->GetFrame() - frameMin) * pixelPerFrame;
             float markerWidth = 40.f;
             float markerHeight = rc.Max.y - rc.Min.y - 4.f;
 
@@ -104,7 +105,7 @@ void AnimSequence::CustomDraw(int index, ImDrawList* draw_list, const ImRect& rc
                 ImVec2(x, rc.Min.y + 2),
                 ImVec2(x + markerWidth, rc.Min.y + 2 + markerHeight),
                 borderColor);
-            string name = Utils::ToString(notify.name);
+            string name = Utils::ToString(notify->GetDisplayName());
             ImVec2 textPos(x + 2.f, rc.Min.y + 2);
             draw_list->AddText(textPos, 0xFFFFFFFF, name.c_str());
         }
@@ -118,8 +119,8 @@ void AnimSequence::CustomDraw(int index, ImDrawList* draw_list, const ImRect& rc
         for (int i = 0; i < notifyContainer->notifyStates.size(); i++)
         {
             auto& state = notifyContainer->notifyStates[i];
-            float x1 = rc.Min.x + (state.startFrame - frameMin) * pixelPerFrame;
-            float x2 = rc.Min.x + (state.endFrame - frameMin) * pixelPerFrame;
+            float x1 = rc.Min.x + (state->GetStartFrame() - frameMin) * pixelPerFrame;
+            float x2 = rc.Min.x + (state->GetEndFrame() - frameMin) * pixelPerFrame;
 
             // 구간 배경 (트랙 전체 높이 사용)
             draw_list->AddRectFilled(
@@ -443,92 +444,98 @@ void AnimationView::DrawNotifyPanel()
     // ─────────────────────────────────────────────
     // Notify 목록
     // ─────────────────────────────────────────────
-    ImGui::Text("Single Frame Notifies :");
+    ImGui::Text("Notify List :");
     if (container)
     {
         for (int i = 0; i < (int)container->notifies.size(); i++)
         {
             auto& notify = container->notifies[i];
-            string label = Utils::ToString(notify.name) + " (Frame : " +
-                to_string(notify.frame) + ")";
+
+            string label = Utils::ToString(notify->GetDisplayName()) + " (Frame : " + to_string(notify->GetFrame()) + ")";
+
             bool isSelected = (_selectedNotifyIndex == i);
             if (ImGui::Selectable(label.c_str(), isSelected))
             {
                 _selectedNotifyIndex = i;
-                _currentFrame = notify.frame; // 해당 프레임으로 이동
+                _currentFrame = notify->GetFrame(); // 해당 프레임으로 이동
             }
         }
     }
 
-    // Notify 추가 UI
-    ImGui::InputText("Name##Notify", _newNotifyName, 128);
-    ImGui::InputInt("Frame##Notify", &_newNotifyFrame);
-    if (ImGui::Button("Add Notify"))
+    // 선택된 Notify 편집
+    if (container && _selectedNotifyIndex >= 0 && _selectedNotifyIndex < (int)container->notifies.size())
     {
-        if (strlen(_newNotifyName) > 0)
-        {
-            AnimNotifyData notify;
-            notify.name = Utils::ToWString(string(_newNotifyName));
-            notify.frame = _newNotifyFrame;
-            GET_SINGLE(AnimNotifyManager)->AddNotify(animName, notify);
-            memset(_newNotifyName, 0, 128);
-        }
-    }
-    ImGui::SameLine();
+        ImGui::Dummy(ImVec2(0, 10)); // 여백
+        ImGui::BeginGroup();
+        ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), "[ Inspector ]"); // 노란색 제목?
 
-    if (ImGui::Button("Remove Notify") && _selectedNotifyIndex >= 0)
-    {
-        GET_SINGLE(AnimNotifyManager)->RemoveNotify(animName, _selectedNotifyIndex);
-        _selectedNotifyIndex = -1;
+        auto& notify = container->notifies[_selectedNotifyIndex];
+
+        // 각 노티파이가 자신의 Gui 렌더
+        notify->OnGui();
+
+        ImGui::Dummy(ImVec2(0, 5));
+
+        // 삭제 버튼
+        if (ImGui::Button("Remove Selected Notify"))
+        {
+            GET_SINGLE(AnimNotifyManager)->RemoveNotify(animName, _selectedNotifyIndex);
+            _selectedNotifyIndex = -1;
+        }
+
+        ImGui::EndGroup();
     }
+
     ImGui::Separator();
 
-    // ─────────────────────────────────────────────
-    // NotifyState 목록
-    // ─────────────────────────────────────────────
-    ImGui::Text("Notify States:");
-    if (container)
+    // Notify 추가 Factory + Combo Box
+    auto& creators = AnimNotifyFactory::GetCreators();
+    vector<string> typeNames;
+
+    for (auto& pair : creators)
+        typeNames.push_back(pair.first);
+
+    if (!typeNames.empty())
     {
-        for (int i = 0; i < (int)container->notifyStates.size(); i++)
+        static int selectedTypeIndex = 0;
+
+        // 인덱스 안전장치
+        if (selectedTypeIndex >= typeNames.size())
+            selectedTypeIndex = 0;
+
+        // COmbo Box
+        if (ImGui::BeginCombo("Notify Type", typeNames[selectedTypeIndex].c_str()))
         {
-            auto& state = container->notifyStates[i];
-            string label = Utils::ToString(state.name) + " (" + to_string(state.startFrame) + " - " + to_string(state.endFrame) + ")";
-            bool isSelected = (_selectedNotifyStateIndex == i);
-            if (ImGui::Selectable(label.c_str(), isSelected))
+            for (int i = 0; i < typeNames.size(); i++)
             {
-                _selectedNotifyStateIndex = i;
-                _currentFrame = state.startFrame;
+                bool isSelected = (selectedTypeIndex == i);
+                if (ImGui::Selectable(typeNames[i].c_str(), isSelected))
+                    selectedTypeIndex = i;
+
+                if (isSelected)
+                    ImGui::SetItemDefaultFocus();
+            }
+            ImGui::EndCombo();
+        }
+
+        ImGui::InputInt("Frame##New", &_newNotifyFrame);
+
+        if (ImGui::Button("Add Notify"))
+        {
+            // 선택된 타입 이름으로 객체 생성
+            string typeName = typeNames[selectedTypeIndex];
+            auto notify = AnimNotifyFactory::CreateNotify(typeName);
+
+            if (notify)
+            {
+                notify->SetFrame(_newNotifyFrame);
+                GET_SINGLE(AnimNotifyManager)->AddNotify(animName, notify);
             }
         }
     }
 
-    // NotifyState 추가 UI
-    ImGui::InputText("Name##State", _newNotifyStateName, 128);
-    ImGui::InputInt("Start##State", &_newNotifyStateStartFrame);
-    ImGui::InputInt("End##State", &_newNotifyStateEndFrame);
-
-    if (ImGui::Button("Add NotifyState"))
-    {
-        if (strlen(_newNotifyStateName) > 0)
-        {
-            AnimNotifyStateData state;
-            state.name = Utils::ToWString(string(_newNotifyStateName));
-            state.startFrame = _newNotifyStateStartFrame;
-            state.endFrame = _newNotifyStateEndFrame;
-            GET_SINGLE(AnimNotifyManager)->AddNotifyState(animName, state);
-            memset(_newNotifyStateName, 0, 128);
-        }
-    }
-
-    ImGui::SameLine();
-    if (ImGui::Button("Remove State") && _selectedNotifyStateIndex >= 0)
-    {
-        GET_SINGLE(AnimNotifyManager)->RemoveNotifyState(animName, _selectedNotifyStateIndex);
-        _selectedNotifyStateIndex = -1;
-    }
-
     // ─────────────────────────────────────────────
-    // 저장 버튼
+    // 저장
     // ─────────────────────────────────────────────
     ImGui::Separator();
     if (ImGui::Button("Save Notifies"))
@@ -536,6 +543,7 @@ void AnimationView::DrawNotifyPanel()
         wstring filePath = L"../Resources/Notifies/" + animName + L".json";
         GET_SINGLE(AnimNotifyManager)->SaveToJson(animName, filePath);
     }
+    
 }
 void AnimationView::UpdateCameraInput()
 {

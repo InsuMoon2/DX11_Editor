@@ -166,6 +166,7 @@ xcopy /Y "$(SolutionDir)Engine\*.inl" "$(SolutionDir)Libraries\Include\Engine"</
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AnimNotifyData.h" />
+    <ClInclude Include="AnimNotifyFactory.h" />
     <ClInclude Include="AnimNotifyManager.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Component.h" />
@@ -184,8 +185,8 @@ xcopy /Y "$(SolutionDir)Engine\*.inl" "$(SolutionDir)Libraries\Include\Engine"</
     <ClInclude Include="Geometry.h" />
     <ClInclude Include="GeometryHelper.h" />
     <ClInclude Include="Graphics.h" />
-    <ClInclude Include="IAnimNotify.h" />
-    <ClInclude Include="IAnimNotifyState.h" />
+    <ClInclude Include="AnimNotify.h" />
+    <ClInclude Include="AnimNotifyState.h" />
     <ClInclude Include="IExecute.h" />
     <ClInclude Include="ImGuiManager.h" />
     <ClInclude Include="IndexBuffer.h" />
@@ -226,6 +227,7 @@ xcopy /Y "$(SolutionDir)Engine\*.inl" "$(SolutionDir)Libraries\Include\Engine"</
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnimNotifyData.cpp" />
+    <ClCompile Include="AnimNotifyFactory.cpp" />
     <ClCompile Include="AnimNotifyManager.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Component.cpp" />
@@ -242,8 +244,8 @@ xcopy /Y "$(SolutionDir)Engine\*.inl" "$(SolutionDir)Libraries\Include\Engine"</
     <ClCompile Include="Geometry.cpp" />
     <ClCompile Include="GeometryHelper.cpp" />
     <ClCompile Include="Graphics.cpp" />
-    <ClCompile Include="IAnimNotify.cpp" />
-    <ClCompile Include="IAnimNotifyState.cpp" />
+    <ClCompile Include="AnimNotify.cpp" />
+    <ClCompile Include="AnimNotifyState.cpp" />
     <ClCompile Include="IExecute.cpp" />
     <ClCompile Include="ImGuiManager.cpp" />
     <ClCompile Include="IndexBuffer.cpp" />

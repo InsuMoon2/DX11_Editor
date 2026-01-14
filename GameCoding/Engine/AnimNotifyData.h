@@ -1,5 +1,8 @@
 ﻿#pragma once
 
+class AnimNotifyState;
+class AnimNotify;
+
 // ─────────────────────────────────────────────
 // 단일 프레임 노티파이 데이터
 // ─────────────────────────────────────────────
@@ -29,6 +32,7 @@ struct AnimNotifyStateData
 struct AnimNotifyContainer
 {
     wstring animationName;
-    vector<AnimNotifyData> notifies;
-    vector<AnimNotifyStateData> notifyStates;
+
+    vector<shared_ptr<AnimNotify>> notifies;
+    vector<shared_ptr<AnimNotifyState>> notifyStates;
 };

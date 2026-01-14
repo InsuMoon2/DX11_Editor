@@ -87,6 +87,7 @@ using json = nlohmann::json;
 // Engine
 #include "GameObjectFactory.h"
 #include "ComponentFactory.h"
+#include "AnimNotifyFactory.h"
 
 #include "VertexData.h"
 #include "VertexBuffer.h"
@@ -101,5 +102,5 @@ using json = nlohmann::json;
 #include "Mesh.h"
 
 #include "AnimNotifyData.h"
-#include "IAnimNotify.h"
+#include "AnimNotify.h"
 

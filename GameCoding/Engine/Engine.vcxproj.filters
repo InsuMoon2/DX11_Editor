@@ -43,6 +43,9 @@
     <Filter Include="97. Event">
       <UniqueIdentifier>{25349056-f3fa-43c3-8f64-38479c0078bd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="98. Utils\Factory">
+      <UniqueIdentifier>{6fa28fbd-4edd-46eb-8926-65837d45db39}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -172,10 +175,10 @@
     <ClInclude Include="AnimNotifyData.h">
       <Filter>05. Notify</Filter>
     </ClInclude>
-    <ClInclude Include="IAnimNotify.h">
+    <ClInclude Include="AnimNotify.h">
       <Filter>05. Notify</Filter>
     </ClInclude>
-    <ClInclude Include="IAnimNotifyState.h">
+    <ClInclude Include="AnimNotifyState.h">
       <Filter>05. Notify</Filter>
     </ClInclude>
     <ClInclude Include="AnimNotifyManager.h">
@@ -210,9 +213,14 @@
       <Filter>02. Managers</Filter>
     </ClInclude>
     <ClInclude Include="GameObjectFactory.h">
-      <Filter>98. Utils</Filter>
+      <Filter>98. Utils\Factory</Filter>
     </ClInclude>
-    <ClInclude Include="ComponentFactory.h" />
+    <ClInclude Include="ComponentFactory.h">
+      <Filter>98. Utils\Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimNotifyFactory.h">
+      <Filter>98. Utils\Factory</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -333,10 +341,10 @@
     <ClCompile Include="AnimNotifyData.cpp">
       <Filter>05. Notify</Filter>
     </ClCompile>
-    <ClCompile Include="IAnimNotify.cpp">
+    <ClCompile Include="AnimNotify.cpp">
       <Filter>05. Notify</Filter>
     </ClCompile>
-    <ClCompile Include="IAnimNotifyState.cpp">
+    <ClCompile Include="AnimNotifyState.cpp">
       <Filter>05. Notify</Filter>
     </ClCompile>
     <ClCompile Include="AnimNotifyManager.cpp">
@@ -371,9 +379,14 @@
       <Filter>02. Managers</Filter>
     </ClCompile>
     <ClCompile Include="GameObjectFactory.cpp">
-      <Filter>98. Utils</Filter>
+      <Filter>98. Utils\Factory</Filter>
     </ClCompile>
-    <ClCompile Include="ComponentFactory.cpp" />
+    <ClCompile Include="ComponentFactory.cpp">
+      <Filter>98. Utils\Factory</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimNotifyFactory.cpp">
+      <Filter>98. Utils\Factory</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">

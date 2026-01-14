@@ -4,8 +4,8 @@
 #include <set>
 
 class Model;
-class IAnimNotify;
-class IAnimNotifyState;
+class AnimNotify;
+class AnimNotifyState;
 
 struct AnimTransform
 {
@@ -53,15 +53,6 @@ public:
     // 현재 애니메이션이 마지막 프레임에 도달했는지
     bool IsAnimationEnd();
 
-    // ─────────────────────────────────────────────
-    // 노티파이 콜백
-    // ─────────────────────────────────────────────
-    using NotifyCallback = function<void(const wstring& notifyName)>;
-    using NotifyStateCallback = function<void(const wstring& notifyName, bool isBegin)>;
-
-    void SetNotifyCallback(NotifyCallback callback) { _notifyCallback = callback; }
-    void SetNotifyStateCallback(NotifyStateCallback callback) { _notifyStateCallback = callback; }
-
     wstring GetCurrentAnimationName();
 
 private:
@@ -87,8 +78,6 @@ private:
     // ─────────────────────────────────────────────
     // 노티파이 콜백
     // ─────────────────────────────────────────────
-    NotifyCallback      _notifyCallback;
-    NotifyStateCallback _notifyStateCallback;
     set<int>            _activeNotifyStates; // 현재 활성화된 NotifyState 인덱스
 
 };
