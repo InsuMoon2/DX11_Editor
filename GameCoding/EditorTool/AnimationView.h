@@ -10,22 +10,22 @@ class ModelAnimator;
 namespace SeqColors
 {
     // Notify (이벤트) - 초록 계열
-    constexpr unsigned int NotifyBg = 0xFF22AA44;  // 진한 초록
-    constexpr unsigned int NotifyBgHover = 0xFF33CC55;  // 밝은 초록
-    constexpr unsigned int NotifyBorder = 0xFF115522;  // 어두운 초록
+    constexpr unsigned int NotifyBg = 0xFF22AA44;        // 진한 초록
+    constexpr unsigned int NotifyBgHover = 0xFF33CC55;   // 밝은 초록
+    constexpr unsigned int NotifyBorder = 0xFF115522;    // 어두운 초록
 
     // NotifyState (구간) - 주황 계열
-    constexpr unsigned int StateBg = 0xFF4488DD;  // 주황
-    constexpr unsigned int StateBgHover = 0xFF55AAEE;  // 밝은 주황
-    constexpr unsigned int StateBorder = 0xFF336699;  // 어두운 주황
+    constexpr unsigned int StateBg = 0xFF4488DD;         // 주황
+    constexpr unsigned int StateBgHover = 0xFF55AAEE;    // 밝은 주황
+    constexpr unsigned int StateBorder = 0xFF336699;     // 어두운 주황
 
     // 핸들
-    constexpr unsigned int HandleBg = 0xFF225588;  // 핸들 기본
-    constexpr unsigned int HandleBgHover = 0xFF3377AA;  // 핸들 호버
+    constexpr unsigned int HandleBg = 0xFF225588;        // 핸들 기본
+    constexpr unsigned int HandleBgHover = 0xFF3377AA;   // 핸들 호버
 
     // 선택
-    constexpr unsigned int Selected = 0xFF00FFFF;  // 시안 (선택 테두리)
-    constexpr unsigned int Text = 0xFFFFFFFF;  // 흰색 텍스트
+    constexpr unsigned int Selected = 0xFF00FFFF;        // 시안 (선택 테두리)
+    constexpr unsigned int Text = 0xFFFFFFFF;            // 흰색 텍스트
 }
 
 // ─────────────────────────────────────────────
@@ -55,9 +55,6 @@ struct AnimSequence : public ImSequencer::SequenceInterface
 		const ImRect& clippingRect, const ImRect& legendClippingRect);
 
     size_t GetCustomHeight(int) override { return 20; }
-
-    void NotifySetting();
-    void NotifyStateSetting();
 
     bool    clickedOnNotify = false;
     int     draggingNotifyIndex = -1;

@@ -7,5 +7,12 @@
             "state": 0
         }
     ],
-    "notifyStates": []
+    "notifyStates": [
+        {
+            "endFrame": 23,
+            "name": "CollisionEnable",
+            "startFrame": 13,
+            "testInt": 2
+        }
+    ]
 }

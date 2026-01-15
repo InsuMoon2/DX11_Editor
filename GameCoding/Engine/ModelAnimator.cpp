@@ -477,28 +477,31 @@ void ModelAnimator::CheckNotifies(int prevFrame, int currFrame)
     // ─────────────────────────────────────────────
     // NotifyState 체크 (시작/종료)
     // ─────────────────────────────────────────────
-    //for (int i = 0; i < (int)container->notifyStates.size(); i++)
-    //{
-    //    auto& state = container->notifyStates[i];
-    //    bool wasActive = _activeNotifyStates.count(i) > 0;
-    //    bool isActive = (currFrame >= state.startFrame && currFrame <= state.endFrame);
-    //
-    //    if (isActive && !wasActive)
-    //    {
-    //        // 시작
-    //        _activeNotifyStates.insert(i);
-    //        if (_notifyStateCallback)
-    //            _notifyStateCallback(state.name, true);
-    //    }
-    //    else if (!isActive && wasActive)
-    //    {
-    //        // 종료
-    //        _activeNotifyStates.erase(i);
-    //        if (_notifyStateCallback)
-    //            _notifyStateCallback(state.name, false);
-    //    }
-    //
-    //}
+    for (int i = 0; i < (int)container->notifyStates.size(); i++)
+    {
+        auto& state = container->notifyStates[i];
+        bool wasActive = _activeNotifyStates.count(i) > 0;
+        bool isActive = (currFrame >= state->GetStartFrame() && currFrame <= state->GetEndFrame());
+    
+        if (isActive && !wasActive)
+        {
+            // 시작
+            _activeNotifyStates.insert(i);
+            state->OnNotifyBegin(this); 
+        }
+        else if (!isActive && wasActive)
+        {
+            // 종료
+            _activeNotifyStates.erase(i);
+            state->OnNotifyEnd(this);   
+        }
+        else if (isActive && wasActive)
+        {
+            // 진행 중 (매 프레임 호출)
+            state->OnNotifyTick(this, DT);  
+        }
+    
+    }
 
 }
 
