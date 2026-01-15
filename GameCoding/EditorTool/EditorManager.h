@@ -18,6 +18,12 @@ public:
 
     void UpdateHierarchy();
 
+    template<typename T>
+    shared_ptr<T> GetWindow(const wstring& name)
+    {
+        return dynamic_pointer_cast<T>(GetWindow(name));
+    }
+
 private:
     void BeginDockSpace();
     void EndDockSpace();

@@ -37,3 +37,19 @@ public:										\
 
 #define GUI                 GET_SINGLE(ImGuiManager)
 #define EVENTS              GET_SINGLE(EventManager)
+
+// ==== 에디터 윈도우 매크로 ====
+#define GET_EDITOR_WINDOW(TYPE, NAME) \
+    dynamic_pointer_cast<TYPE>(GET_SINGLE(EditorManager)->GetWindow(NAME))
+// Scene & Game
+#define GET_SCENE_VIEW()            GET_EDITOR_WINDOW(SceneView, L"Scene")
+#define GET_GAME_VIEW()             GET_EDITOR_WINDOW(GameView, L"Game")
+// Hierarchy & Inspector
+#define GET_HIERARCHY_VIEW()        GET_EDITOR_WINDOW(HierarchyView, L"Hierarchy")
+#define GET_INSPECTOR_VIEW()        GET_EDITOR_WINDOW(InspectorView, L"Inspector")
+// Content Browser & Console
+#define GET_CONTENT_BROWSER()       GET_EDITOR_WINDOW(ContentBrowserView, L"Content Browser")
+#define GET_CONSOLE_VIEW()          GET_EDITOR_WINDOW(ConsoleView, L"Console")
+// Animation
+#define GET_ANIMATION_VIEW()        GET_EDITOR_WINDOW(AnimationView, L"Animation")
+#define GET_ANIMATION_DETAILS()     GET_EDITOR_WINDOW(AnimationDetailView, L"Animation Details")
