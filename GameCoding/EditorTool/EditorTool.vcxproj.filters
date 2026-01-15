@@ -61,6 +61,7 @@
     <ClCompile Include="SceneSerializer.cpp">
       <Filter>97. Save/Load</Filter>
     </ClCompile>
+    <ClCompile Include="AnimationDetailView.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -97,5 +98,6 @@
     <ClInclude Include="SceneSerializer.h">
       <Filter>97. Save/Load</Filter>
     </ClInclude>
+    <ClInclude Include="AnimationDetailView.h" />
   </ItemGroup>
 </Project>

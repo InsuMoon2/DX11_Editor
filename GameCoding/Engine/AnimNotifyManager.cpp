@@ -45,10 +45,13 @@ void AnimNotifyManager::AddNotifyState(const wstring& animName, const shared_ptr
 void AnimNotifyManager::RemoveNotify(const wstring& animName, int index)
 {
     auto* container = GetContainer(animName);
+
     if (container && index >= 0 && index < (int)container->notifies.size())
     {
         container->notifies.erase(container->notifies.begin() + index);
     }
+
+
 }
 
 void AnimNotifyManager::RemoveNotifyState(const wstring& animName, int index)
@@ -74,8 +77,8 @@ void AnimNotifyManager::SaveToJson(const wstring& animName, const wstring& fileP
     for (auto& notify : container->notifies)
     {
         json notifyJson;
-        notifyJson["type"] = Utils::ToString(notify->GetDisplayName());
-        notifyJson["frame"] = notify->GetFrame();
+        notifyJson["name"] = Utils::ToString(notify->GetDisplayName());
+        notify->Serialize(notifyJson);
 
         j["notifies"].push_back(notifyJson);
     }
@@ -86,8 +89,7 @@ void AnimNotifyManager::SaveToJson(const wstring& animName, const wstring& fileP
     {
         json stateJson;
         stateJson["name"] = Utils::ToString(state->GetDisplayName());
-        stateJson["startFrame"] = state->GetStartFrame();
-        stateJson["endFrame"] = state->GetEndFrame();
+        state->Serialize(stateJson);
 
         j["notifyStates"].push_back(stateJson);
     }
@@ -121,12 +123,13 @@ void AnimNotifyManager::LoadFromJson(const wstring& filePath)
     {
         for (auto& notifyJson : j["notifies"])
         {
-            string type = notifyJson["name"].get<string>();
-            auto notify = AnimNotifyFactory::CreateNotify(type);
+            string name = notifyJson["name"].get<string>();
+
+            auto notify = AnimNotifyFactory::CreateNotify(name);
 
             if (notify)
             {
-                notify->SetFrame(notifyJson["frame"].get<int>());
+                notify->Deserialize(notifyJson);
                 container.notifies.push_back(notify);
             }
         }
@@ -137,14 +140,34 @@ void AnimNotifyManager::LoadFromJson(const wstring& filePath)
     {
         for (auto& stateJson : j["notifyStates"])
         {
-            string type = stateJson["name"].get<string>();
+            string name = stateJson["name"].get<string>();
 
-            // CreateNotifyStateBtType
-            // SetStartFrame, SetEndFrame
+            auto state = AnimNotifyFactory::CreateNotifyState(name);
+            if (state)
+            {
+                state->Deserialize(stateJson);
 
-            //container.notifyStates.push_back(state)
-            
+                container.notifyStates.push_back(state);
+            }
         }
     }
+
     _containers[container.animationName] = container;
+}
+
+void AnimNotifyManager::LoadAllFromJson(const wstring& folderPath)
+{
+    if (!filesystem::exists(folderPath))
+        return;
+
+    for (const auto& entry : filesystem::directory_iterator(folderPath))
+    {
+        if (entry.path().extension() == L".json")
+        {
+            wstring filePath = entry.path().wstring();
+            LoadFromJson(filePath);
+        }
+    }
+
+    LOG_INFO("Notify Load Clear!");
 }

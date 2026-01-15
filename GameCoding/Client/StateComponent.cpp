@@ -15,3 +15,12 @@ void StateComponent::Update()
 
 
 }
+
+void StateComponent::ChangeState(CharacterState newState)
+{
+    if (_state == newState)
+        return; 
+
+    _prevState = _state;
+    _state = newState;
+}

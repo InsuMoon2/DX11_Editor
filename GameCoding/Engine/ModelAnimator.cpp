@@ -5,6 +5,7 @@
 #include "Model.h"
 #include "ModelAnimation.h"
 #include "AnimNotifyManager.h"
+#include "Utils.h"
 
 REGISTER_COMPONENT(ModelAnimator, ComponentType::Animator);
 

@@ -7,6 +7,27 @@ class RenderTarget;
 class Model;
 class ModelAnimator;
 
+namespace SeqColors
+{
+    // Notify (이벤트) - 초록 계열
+    constexpr unsigned int NotifyBg = 0xFF22AA44;  // 진한 초록
+    constexpr unsigned int NotifyBgHover = 0xFF33CC55;  // 밝은 초록
+    constexpr unsigned int NotifyBorder = 0xFF115522;  // 어두운 초록
+
+    // NotifyState (구간) - 주황 계열
+    constexpr unsigned int StateBg = 0xFF4488DD;  // 주황
+    constexpr unsigned int StateBgHover = 0xFF55AAEE;  // 밝은 주황
+    constexpr unsigned int StateBorder = 0xFF336699;  // 어두운 주황
+
+    // 핸들
+    constexpr unsigned int HandleBg = 0xFF225588;  // 핸들 기본
+    constexpr unsigned int HandleBgHover = 0xFF3377AA;  // 핸들 호버
+
+    // 선택
+    constexpr unsigned int Selected = 0xFF00FFFF;  // 시안 (선택 테두리)
+    constexpr unsigned int Text = 0xFFFFFFFF;  // 흰색 텍스트
+}
+
 // ─────────────────────────────────────────────
 // 시퀀서 인터페이스 구현
 // ─────────────────────────────────────────────
@@ -35,6 +56,16 @@ struct AnimSequence : public ImSequencer::SequenceInterface
 
     size_t GetCustomHeight(int) override { return 20; }
 
+    void NotifySetting();
+    void NotifyStateSetting();
+
+    bool    clickedOnNotify = false;
+    int     draggingNotifyIndex = -1;
+    float   dragOffset = 0.f;
+
+    int     draggingStateIndex = -1;
+    int     stateDragMode = 0; // 0 : 없음, 1 : 전체 이동, 2 : 왼쪽 핸들, 3 : 오른쪽 핸들
+    float   stateDragOffset = 0.f;
 };
 
 /// <summary>
@@ -57,6 +88,10 @@ public:
     void SetAnimation(shared_ptr<Model> model, int animIndex, vector<wstring>& animPaths);
     void SetModelAnimator(shared_ptr<ModelAnimator> animator) { _previewAnimator = animator; };
 
+public:
+    void SetCurrentFrame(int frame) { _currentFrame = frame; _playbackTime = frame / 30.f; }
+    void ClearSelection();
+
 private:
     void UpdateCameraInput();
 
@@ -64,7 +99,9 @@ private:
     void DrawControls();
     void DrawSequencer();
     void DrawAnimationList();
-	void DrawNotifyPanel();
+
+    void NotifyDetailView();
+    void CloseDetailView();
 
 private:
     vector<wstring> _animNames;
@@ -109,13 +146,6 @@ private:
 	// Notify
 	int _selectedNotifyIndex = -1;
 	int _selectedNotifyStateIndex = -1;
-	char _newNotifyName[128] = "";
-	int _newNotifyFrame = 0;
-
-    // Notify State
-    char _newNotifyStateName[128] = "";
-	int _newNotifyStateStartFrame = 0;
-	int _newNotifyStateEndFrame = 0;
 
 };
 

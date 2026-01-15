@@ -17,6 +17,7 @@ public:										\
         } \
     } helper_##TYPE;
 
+#define U8(str) reinterpret_cast<const char*>(u8##str)
 
 #define GET_SINGLE(classname)	classname::GetInstance()
 

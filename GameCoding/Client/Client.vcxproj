@@ -20,7 +20,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimInstancingDemo.h" />
-    <ClInclude Include="AnimNotify_EndState.h" />
+    <ClInclude Include="ANS_CollisionEnable.h" />
+    <ClInclude Include="AN_EndState.h" />
     <ClInclude Include="CameraScript.h" />
     <ClInclude Include="FollowCamera.h" />
     <ClInclude Include="GameDemo.h" />
@@ -38,7 +39,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnimInstancingDemo.cpp" />
-    <ClCompile Include="AnimNotify_EndState.cpp" />
+    <ClCompile Include="ANS_CollisionEnable.cpp" />
+    <ClCompile Include="AN_EndState.cpp" />
     <ClCompile Include="CameraScript.cpp" />
     <ClCompile Include="FollowCamera.cpp" />
     <ClCompile Include="GameDemo.cpp" />

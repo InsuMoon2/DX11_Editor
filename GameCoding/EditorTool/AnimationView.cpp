@@ -2,6 +2,8 @@
 #include "imgui_internal.h"
 #include "AnimationView.h"
 #include <filesystem>
+#include "EditorManager.h"
+#include "AnimationDetailView.h"
 #include "Model.h"
 #include "ModelAnimation.h"
 #include "ImSequencer.h"
@@ -12,6 +14,7 @@
 #include "FileUtils.h"
 #include "AnimNotifyManager.h"
 #include "AnimNotifyState.h"
+#include "AnimNotifyFactory.h"
 
 void AnimSequence::Get(int index, int** start, int** end, int* type, unsigned* color)
 {
@@ -85,6 +88,8 @@ void AnimSequence::CustomDraw(int index, ImDrawList* draw_list, const ImRect& rc
     // ─────────────────────────────────────────────
     if (index == 1)
     {
+        auto& io = ImGui::GetIO();
+
         for (int i = 0; i < notifyContainer->notifies.size(); i++)
         {
             auto& notify = notifyContainer->notifies[i];
@@ -93,22 +98,66 @@ void AnimSequence::CustomDraw(int index, ImDrawList* draw_list, const ImRect& rc
             float markerWidth = 40.f;
             float markerHeight = rc.Max.y - rc.Min.y - 4.f;
 
-            // 배경 사각형
-            draw_list->AddRectFilled(
-                ImVec2(x, rc.Min.y + 2),
-                ImVec2(x + markerWidth, rc.Min.y + 2 + markerHeight),
-                0xFF33CC33); // 연한 초록?
-            unsigned int borderColor = (i == selectedNotifyIndex) ? 0xFF000000 : 0xFFFFFFFF;
+            ImVec2 rectMin(x, rc.Min.y + 2);
+            ImVec2 rectMax(x + markerWidth, rc.Min.y + 2 + markerHeight);
+            ImRect notifyRect(rectMin, rectMax);
+
+            // Hover Check
+            bool isHovered = notifyRect.Contains(io.MousePos);
+            bool isSelected = (i == selectedNotifyIndex);
+
+            // 배경 색상
+            unsigned int bgColor = isHovered ? SeqColors::NotifyBgHover : SeqColors::NotifyBg;
+            draw_list->AddRectFilled(rectMin, rectMax, bgColor);
+
+            draw_list->AddRectFilled(rectMin, rectMax, 0xFF33CC33);
 
             // 테두리
-            draw_list->AddRect(
-                ImVec2(x, rc.Min.y + 2),
-                ImVec2(x + markerWidth, rc.Min.y + 2 + markerHeight),
-                borderColor);
+            unsigned int borderColor = isSelected ? SeqColors::Selected : SeqColors::NotifyBorder;
+            float borderThickness = isSelected ? 2.f : 1.f;
+            draw_list->AddRect(rectMin, rectMax, borderColor, 0.f, 0, borderThickness);
+
+            // 이름
             string name = Utils::ToString(notify->GetDisplayName());
-            ImVec2 textPos(x + 2.f, rc.Min.y + 2);
-            draw_list->AddText(textPos, 0xFFFFFFFF, name.c_str());
+            ImVec2 textSize = ImGui::CalcTextSize(name.c_str());
+
+            // 가운데 좌표 계산
+            float centerX = rectMin.x + (markerWidth - textSize.x) / 2.f;
+            float centerY = rectMin.y + (markerHeight - textSize.y) / 2.f;
+
+            draw_list->AddText(ImVec2(centerX, centerY), SeqColors::Text, name.c_str());
+
+            if (notifyRect.Contains(io.MousePos) && ImGui::IsMouseClicked(0))
+            {
+                // 클릭 시작
+                selectedNotifyIndex = i;
+                draggingNotifyIndex = i;
+                clickedOnNotify = true;
+
+                dragOffset = io.MousePos.x - rectMin.x;
+            }
+
+            // 드래그 중
+            if (draggingNotifyIndex == i && ImGui::IsMouseDown(0))
+            {
+                float relativeX = (io.MousePos.x - dragOffset) - rc.Min.x;
+                int newFrame = frameMin + (int)(relativeX / pixelPerFrame);
+                newFrame = max(frameMin, min(frameMax, newFrame));
+                notifyContainer->notifies[i]->SetFrame(newFrame);
+            }
+
+            if (notifyRect.Contains(io.MousePos) && ImGui::IsMouseClicked(0))
+            {
+                selectedNotifyIndex = i;
+                clickedOnNotify = true;
+            }
         }
+
+        if (!ImGui::IsMouseDown(0))
+        {
+            draggingNotifyIndex = -1;
+        }
+
         return;
     }
     // ─────────────────────────────────────────────
@@ -116,26 +165,112 @@ void AnimSequence::CustomDraw(int index, ImDrawList* draw_list, const ImRect& rc
     // ─────────────────────────────────────────────
     if (index == 2)
     {
+        auto& io = ImGui::GetIO();
+        float handleWidth = 10.f;  
+
         for (int i = 0; i < notifyContainer->notifyStates.size(); i++)
         {
             auto& state = notifyContainer->notifyStates[i];
+
             float x1 = rc.Min.x + (state->GetStartFrame() - frameMin) * pixelPerFrame;
             float x2 = rc.Min.x + (state->GetEndFrame() - frameMin) * pixelPerFrame;
+            float y1 = rc.Min.y + 2;
+            float y2 = rc.Max.y - 2;
 
-            // 구간 배경 (트랙 전체 높이 사용)
-            draw_list->AddRectFilled(
-                ImVec2(x1, rc.Min.y + 2),
-                ImVec2(x2, rc.Max.y - 2),
-                0xFFFFAA44);  // 하늘색
+            ImRect fullRect(ImVec2(x1, y1), ImVec2(x2, y2));
+            ImRect leftHandle(ImVec2(x1, y1), ImVec2(x1 + handleWidth, y2));
+            ImRect rightHandle(ImVec2(x2 - handleWidth, y1), ImVec2(x2, y2));
 
-            unsigned int borderColor = (i == selectedNotifyIndex) ? 0xFF000000 : 0xFFFFFFFF;
+            bool isHovered = fullRect.Contains(io.MousePos);
+            bool isSelected = (i == selectedNotifyStateIndex);
+            bool leftHandleHovered = leftHandle.Contains(io.MousePos);
+            bool rightHandleHovered = rightHandle.Contains(io.MousePos);
+
+            // 메인 배경
+            unsigned int bgColor = isHovered ? SeqColors::StateBgHover : SeqColors::StateBg;
+            draw_list->AddRectFilled(ImVec2(x1, y1), ImVec2(x2, y2), bgColor);
+
+            // 핸들 배경
+            unsigned int leftHandleColor = leftHandleHovered ? SeqColors::HandleBgHover : SeqColors::HandleBg;
+            unsigned int rightHandleColor = rightHandleHovered ? SeqColors::HandleBgHover : SeqColors::HandleBg;
+            draw_list->AddRectFilled(leftHandle.Min, leftHandle.Max, leftHandleColor);
+            draw_list->AddRectFilled(rightHandle.Min, rightHandle.Max, rightHandleColor);
 
             // 테두리
-            draw_list->AddRect(
-                ImVec2(x1, rc.Min.y + 2),
-                ImVec2(x2, rc.Max.y - 2),
-                borderColor);
+            unsigned int borderColor = isSelected ? SeqColors::Selected : SeqColors::StateBorder;
+            float borderThickness = isSelected ? 2.f : 1.f;
+            draw_list->AddRect(ImVec2(x1, y1), ImVec2(x2, y2), borderColor, 0.f, 0, borderThickness);
+
+            // 이름 (가운데 정렬)
+            string name = Utils::ToString(state->GetDisplayName());
+
+            float textWidth = ImGui::CalcTextSize(name.c_str()).x;
+            float centerX = x1 + (x2 - x1 - textWidth) / 2.f;
+            draw_list->AddText(ImVec2(centerX, y1 + 2), SeqColors::Text, name.c_str());
+
+            // ============ 클릭 ===================
+            ImRect centerRect(ImVec2(x1 + handleWidth, y1), ImVec2(x2 - handleWidth, y2));
+
+            if (ImGui::IsMouseClicked(0))
+            {
+                if (leftHandle.Contains(io.MousePos))
+                {
+                    draggingStateIndex = i;
+                    stateDragMode = 2;  // 왼쪽 핸들
+                    selectedNotifyStateIndex = i;
+                    clickedOnNotify = true;
+                }
+                else if (rightHandle.Contains(io.MousePos))
+                {
+                    draggingStateIndex = i;
+                    stateDragMode = 3;  // 오른쪽 핸들
+                    selectedNotifyStateIndex = i;
+                    clickedOnNotify = true;
+                }
+                else if (centerRect.Contains(io.MousePos))
+                {
+                    draggingStateIndex = i;
+                    stateDragMode = 1;  // 전체 이동
+                    stateDragOffset = io.MousePos.x - x1;
+                    selectedNotifyStateIndex = i;
+                    clickedOnNotify = true;
+                }
+            }
+
+            // ==== 드래그 중 ====
+            if (draggingStateIndex == i && ImGui::IsMouseDown(0))
+            {
+                float relativeX = io.MousePos.x - rc.Min.x;
+                int newFrame = frameMin + (int)(relativeX / pixelPerFrame);
+                newFrame = max(frameMin, min(frameMax, newFrame));
+
+                if (stateDragMode == 1)  // 전체 이동
+                {
+                    int duration = state->GetEndFrame() - state->GetStartFrame();
+                    int startFrame = frameMin + (int)((io.MousePos.x - stateDragOffset - rc.Min.x) / pixelPerFrame);
+                    startFrame = max(frameMin, min(frameMax - duration, startFrame));
+                    state->SetStartFrame(startFrame);
+                    state->SetEndFrame(startFrame + duration);
+                }
+                else if (stateDragMode == 2)  // 왼쪽 핸들 (시작)
+                {
+                    newFrame = min(newFrame, state->GetEndFrame() - 1);
+                    state->SetStartFrame(newFrame);
+                }
+                else if (stateDragMode == 3)  // 오른쪽 핸들 (끝)
+                {
+                    newFrame = max(newFrame, state->GetStartFrame() + 1);
+                    state->SetEndFrame(newFrame);
+                }
+            }
         }
+
+        if (!ImGui::IsMouseDown(0))
+        {
+            draggingStateIndex = -1;
+            stateDragMode = 0;
+        }
+
         return;
     }
 }
@@ -200,6 +335,8 @@ void AnimationView::Update()
 }
 void AnimationView::OnGui()
 {
+    bool wasActive = _isActive;
+
     if (!ImGui::Begin("Animation", &_isActive, ImGuiWindowFlags_MenuBar))
     {
         ImGui::End();
@@ -219,19 +356,36 @@ void AnimationView::OnGui()
         ImGui::Separator();
         DrawControls();
         DrawSequencer();
-        DrawNotifyPanel();
     }
     ImGui::EndGroup();
     ImGui::End();
+
+    if (wasActive && !_isActive)
+        CloseDetailView();
 }
+
 void AnimationView::SetAnimation(shared_ptr<Model> model, int animIndex, vector<wstring>& animPaths)
 {
+    if (_previewModel == model && _animIndex == animIndex)
+        return;
+
+    if (_previewModel && !_animNames.empty() && _animIndex < _animNames.size())
+    {
+        wstring oldAnimName = _animNames[_animIndex];
+        wstring oldFilePath = L"../Resources/Notifies/" + oldAnimName + L".json";
+        // 기존에 작업하던 내용을 파일에 덮어쓰기
+        GET_SINGLE(AnimNotifyManager)->SaveToJson(oldAnimName, oldFilePath);
+    }
+
     _previewModel = model;  // 모델 저장
     _animIndex = animIndex;
     _currentFrame = 0;
     _playbackTime = 0.f;
     _animPaths = animPaths;
     _isPlaying = true;
+
+    _selectedNotifyIndex = -1;
+    _selectedNotifyStateIndex = -1;
 
     if (_previewAnimator)
     {
@@ -261,7 +415,10 @@ void AnimationView::SetAnimation(shared_ptr<Model> model, int animIndex, vector<
             GET_SINGLE(AnimNotifyManager)->LoadFromJson(filePath);
         }
     }
+
+    NotifyDetailView();
 }
+
 void AnimationView::DrawPreview()
 {
     if (!_previewRenderTarget || !_previewAnimator || !_previewModel)
@@ -327,6 +484,7 @@ void AnimationView::DrawPreview()
     ImGui::Image(_previewRenderTarget->GetSRV(), previewSize);
 
 }
+
 void AnimationView::DrawControls()
 {
     // 재생 컨트롤
@@ -375,6 +533,8 @@ void AnimationView::DrawSequencer()
     _sequence.selectedNotifyStateIndex = _selectedNotifyStateIndex;
     _firstFrame = 0;
 
+    _sequence.clickedOnNotify = false;
+
     // ImSequencer 그리기
     ImSequencer::Sequencer(
         &_sequence,
@@ -384,167 +544,167 @@ void AnimationView::DrawSequencer()
         &_firstFrame,
         ImSequencer::SEQUENCER_EDIT_STARTEND | ImSequencer::SEQUENCER_CHANGE_FRAME
     );
+
+    if (_selectedNotifyIndex != _sequence.selectedNotifyIndex)
+    {
+        _selectedNotifyIndex = _sequence.selectedNotifyIndex;
+        NotifyDetailView();
+    }
+
+    if (_selectedNotifyStateIndex != _sequence.selectedNotifyStateIndex)
+    {
+        _selectedNotifyStateIndex = _sequence.selectedNotifyStateIndex;
+        NotifyDetailView();
+    }
+
+    // 허공 클릭
+    if (ImGui::IsMouseClicked(0) && !_sequence.clickedOnNotify)
+    {
+        if (ImGui::IsWindowHovered(ImGuiHoveredFlags_ChildWindows))
+        {
+            _selectedNotifyIndex = -1;
+            _selectedNotifyStateIndex = -1;
+            NotifyDetailView();
+        }
+    }
 }
 
 void AnimationView::DrawAnimationList()
 {
     ImGui::BeginChild("AnimList", ImVec2(200, 0), true);
+
     ImGui::Text("Animations");
     ImGui::Separator();
-
-    auto& entries = GET_SINGLE(ModelRegistry)->GetAll();
-
-    for (auto& [modelName, entry] : entries)
+    ImGui::BeginChild("AnimScroll", ImVec2(0, 325), false);
     {
-        string modelNameStr = Utils::ToString(modelName);
+        auto& entries = GET_SINGLE(ModelRegistry)->GetAll();
 
-        ImGui::SetNextItemOpen(true, ImGuiCond_FirstUseEver);
-
-        if (ImGui::TreeNode(modelNameStr.c_str()))
+        for (auto& [modelName, entry] : entries)
         {
-            auto& animations = entry.model->GetAnimations();
+            string modelNameStr = Utils::ToString(modelName);
 
-            for (size_t i = 0; i < animations.size(); i++)
+            ImGui::SetNextItemOpen(true, ImGuiCond_FirstUseEver);
+
+            if (ImGui::TreeNode(modelNameStr.c_str()))
             {
-                wstring animNameW = FileUtils::PathToAnimName(entry.animPaths[i]);
-                string animName = Utils::ToString(animNameW);
+                auto& animations = entry.model->GetAnimations();
 
-                bool isSelected = (_previewModel == entry.model) && (_animIndex == (int)i);
-                if (ImGui::Selectable(animName.c_str(), isSelected))
+                for (size_t i = 0; i < animations.size(); i++)
                 {
-                    // 클릭 시 해당 애니메이션으로 즉시 전환 (SetAnimation 재활용)
-                    SetAnimation(entry.model, (int)i, entry.animPaths);
+                    wstring animNameW = FileUtils::PathToAnimName(entry.animPaths[i]);
+                    string animName = Utils::ToString(animNameW);
+
+                    bool isSelected = (_previewModel == entry.model) && (_animIndex == (int)i);
+                    if (ImGui::Selectable(animName.c_str(), isSelected))
+                    {
+                        // 클릭 시 해당 애니메이션으로 즉시 전환 (SetAnimation 재활용)
+                        SetAnimation(entry.model, (int)i, entry.animPaths);
+                    }
                 }
+                ImGui::TreePop();
             }
-            ImGui::TreePop();
         }
     }
+    ImGui::EndChild();
+
+    // Notify List
+    ImGui::Separator();
+
+    wstring animName = (_animNames.size() > _animIndex) ? _animNames[_animIndex] : L"";
+    auto* container = GET_SINGLE(AnimNotifyManager)->GetContainer(animName);
+
+    // Notify List
+    ImGui::Text("[ Notify List ]");
+    ImGui::BeginChild("NotifyScroll", ImVec2(0, 150), true);
+    {
+        if (container)
+        {
+            for (int i = 0; i < (int)container->notifies.size(); i++)
+            {
+                auto& notify = container->notifies[i];
+                string label = Utils::ToString(notify->GetDisplayName())
+                    + " (" + to_string(notify->GetFrame()) + ")";
+
+                bool isSelected = (_selectedNotifyIndex == i);
+                if (ImGui::Selectable(label.c_str(), isSelected))
+                {
+                    _selectedNotifyIndex = i;
+                    _selectedNotifyStateIndex = -1;  // State 선택 해제
+                    NotifyDetailView();
+                }
+            }
+        }
+        else
+        {
+            ImGui::TextDisabled("No notifies");
+        }
+    }
+    ImGui::EndChild();
+
+    // Notify State List
+    ImGui::Text("[ NotifyState List ]");
+    ImGui::BeginChild("StateScroll", ImVec2(0, 150), true);
+    {
+        if (container)
+        {
+            for (int i = 0; i < (int)container->notifyStates.size(); i++)
+            {
+                auto& state = container->notifyStates[i];
+                string label = Utils::ToString(state->GetDisplayName())
+                    + " (" + to_string(state->GetStartFrame())
+                    + "~" + to_string(state->GetEndFrame()) + ")";
+
+                bool isSelected = (_selectedNotifyStateIndex == i);
+                if (ImGui::Selectable(label.c_str(), isSelected))
+                {
+                    _selectedNotifyStateIndex = i;
+                    _selectedNotifyIndex = -1;  // Notify 선택 해제
+                    NotifyDetailView();
+                }
+            }
+        }
+        else
+        {
+            ImGui::TextDisabled("No states");
+        }
+
+    }
+    ImGui::EndChild();
 
     ImGui::EndChild();
 }
 
-void AnimationView::DrawNotifyPanel()
+void AnimationView::NotifyDetailView()
 {
-    if (!_previewModel)
+    auto detailView = dynamic_pointer_cast<AnimationDetailView>(
+        GET_SINGLE(EditorManager)->GetWindow(L"Animation Details"));
+
+    if (!detailView)
         return;
 
-    ImGui::Separator();
-    ImGui::Text("Notifies");
-
-    // 현재 애니메이션 이름 가져오기
+    // 현재 애니메이션 이름
     wstring animName = L"";
     if (_animNames.size() > _animIndex)
         animName = _animNames[_animIndex];
 
-    if (animName.empty())
-        return;
-
-    auto* container = GET_SINGLE(AnimNotifyManager)->GetContainer(animName);
-
-    // ─────────────────────────────────────────────
-    // Notify 목록
-    // ─────────────────────────────────────────────
-    ImGui::Text("Notify List :");
-    if (container)
-    {
-        for (int i = 0; i < (int)container->notifies.size(); i++)
-        {
-            auto& notify = container->notifies[i];
-
-            string label = Utils::ToString(notify->GetDisplayName()) + " (Frame : " + to_string(notify->GetFrame()) + ")";
-
-            bool isSelected = (_selectedNotifyIndex == i);
-            if (ImGui::Selectable(label.c_str(), isSelected))
-            {
-                _selectedNotifyIndex = i;
-                _currentFrame = notify->GetFrame(); // 해당 프레임으로 이동
-            }
-        }
-    }
-
-    // 선택된 Notify 편집
-    if (container && _selectedNotifyIndex >= 0 && _selectedNotifyIndex < (int)container->notifies.size())
-    {
-        ImGui::Dummy(ImVec2(0, 10)); // 여백
-        ImGui::BeginGroup();
-        ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), "[ Inspector ]"); // 노란색 제목?
-
-        auto& notify = container->notifies[_selectedNotifyIndex];
-
-        // 각 노티파이가 자신의 Gui 렌더
-        notify->OnGui();
-
-        ImGui::Dummy(ImVec2(0, 5));
-
-        // 삭제 버튼
-        if (ImGui::Button("Remove Selected Notify"))
-        {
-            GET_SINGLE(AnimNotifyManager)->RemoveNotify(animName, _selectedNotifyIndex);
-            _selectedNotifyIndex = -1;
-        }
-
-        ImGui::EndGroup();
-    }
-
-    ImGui::Separator();
-
-    // Notify 추가 Factory + Combo Box
-    auto& creators = AnimNotifyFactory::GetCreators();
-    vector<string> typeNames;
-
-    for (auto& pair : creators)
-        typeNames.push_back(pair.first);
-
-    if (!typeNames.empty())
-    {
-        static int selectedTypeIndex = 0;
-
-        // 인덱스 안전장치
-        if (selectedTypeIndex >= typeNames.size())
-            selectedTypeIndex = 0;
-
-        // COmbo Box
-        if (ImGui::BeginCombo("Notify Type", typeNames[selectedTypeIndex].c_str()))
-        {
-            for (int i = 0; i < typeNames.size(); i++)
-            {
-                bool isSelected = (selectedTypeIndex == i);
-                if (ImGui::Selectable(typeNames[i].c_str(), isSelected))
-                    selectedTypeIndex = i;
-
-                if (isSelected)
-                    ImGui::SetItemDefaultFocus();
-            }
-            ImGui::EndCombo();
-        }
-
-        ImGui::InputInt("Frame##New", &_newNotifyFrame);
-
-        if (ImGui::Button("Add Notify"))
-        {
-            // 선택된 타입 이름으로 객체 생성
-            string typeName = typeNames[selectedTypeIndex];
-            auto notify = AnimNotifyFactory::CreateNotify(typeName);
-
-            if (notify)
-            {
-                notify->SetFrame(_newNotifyFrame);
-                GET_SINGLE(AnimNotifyManager)->AddNotify(animName, notify);
-            }
-        }
-    }
-
-    // ─────────────────────────────────────────────
-    // 저장
-    // ─────────────────────────────────────────────
-    ImGui::Separator();
-    if (ImGui::Button("Save Notifies"))
-    {
-        wstring filePath = L"../Resources/Notifies/" + animName + L".json";
-        GET_SINGLE(AnimNotifyManager)->SaveToJson(animName, filePath);
-    }
-    
+    // Context 전달
+    detailView->SetContext(animName, _selectedNotifyIndex, _selectedNotifyStateIndex);
 }
+
+void AnimationView::CloseDetailView()
+{
+    auto detailView = GET_SINGLE(EditorManager)->GetWindow(L"Animation Details");
+
+    if (detailView)
+        detailView->SetActive(false);
+}
+
+void AnimationView::ClearSelection()
+{
+    _selectedNotifyIndex = -1;
+    _selectedNotifyStateIndex = 1;
+}
+
 void AnimationView::UpdateCameraInput()
 {
     if (!_previewCamera)

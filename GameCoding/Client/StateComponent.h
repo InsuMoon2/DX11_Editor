@@ -20,10 +20,15 @@ public:
 public:
     virtual void Update() override;
 
-    void SetState(CharacterState state) { _state = state; }
+    void ChangeState(CharacterState newState);
     CharacterState GetState() { return _state; }
+
+    void ClearStateChanged() { _prevState = _state; }
+
+    bool IsStateChanged() { return _state != _prevState; }
 
 private:
     CharacterState _state = CharacterState::Idle;
+    CharacterState _prevState = CharacterState::Idle;
 
 };

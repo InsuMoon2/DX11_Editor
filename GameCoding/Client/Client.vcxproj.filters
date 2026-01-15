@@ -40,6 +40,12 @@
     <Filter Include="98. Notify">
       <UniqueIdentifier>{eb62cc61-da0f-40dc-bca8-e5924c3a33dd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="98. Notify\AnimNotify">
+      <UniqueIdentifier>{a914dffd-e27c-4814-a293-f0b76d88c20d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98. Notify\AnimNotifyState">
+      <UniqueIdentifier>{60545e82-dc8b-466b-aeac-d4bcef89acc7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -85,7 +91,12 @@
       <Filter>04. Components</Filter>
     </ClCompile>
     <ClCompile Include="StateComponent.cpp" />
-    <ClCompile Include="AnimNotify_EndState.cpp" />
+    <ClCompile Include="AN_EndState.cpp">
+      <Filter>98. Notify\AnimNotify</Filter>
+    </ClCompile>
+    <ClCompile Include="ANS_CollisionEnable.cpp">
+      <Filter>98. Notify\AnimNotifyState</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -131,7 +142,12 @@
       <Filter>04. Components</Filter>
     </ClInclude>
     <ClInclude Include="StateComponent.h" />
-    <ClInclude Include="AnimNotify_EndState.h" />
+    <ClInclude Include="AN_EndState.h">
+      <Filter>98. Notify\AnimNotify</Filter>
+    </ClInclude>
+    <ClInclude Include="ANS_CollisionEnable.h">
+      <Filter>98. Notify\AnimNotifyState</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Shaders\00. Global.fx">

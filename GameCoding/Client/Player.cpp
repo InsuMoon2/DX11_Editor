@@ -3,6 +3,7 @@
 #include "Model.h"
 #include "ModelAnimator.h"
 #include "Camera.h"
+#include "StateComponent.h"
 
 REGISTER_GAMEOBJECT(Player)
 
@@ -49,13 +50,18 @@ void Player::Awake()
         GetModelAnimator(),
         animPaths
     );
+
+    // State Component
+    AddComponent(make_shared<StateComponent>());
+
 }
 
 void Player::Start()
 {
     GameObject::Start();
 
-    
+    _state = GetScriptComponent<StateComponent>();
+    if (!_state) return;
 }
 
 void Player::Update()
@@ -67,7 +73,7 @@ void Player::Update()
 
     GameObject::Update();
 
-    LOG_INFO("playerState : " + string(magic_enum::enum_name(_currentState)), 1);
+    LOG_INFO("playerState : " + string(magic_enum::enum_name(_state->GetState())), 1);
 }
 
 void Player::UpdateInput()
@@ -75,6 +81,9 @@ void Player::UpdateInput()
     auto transform = GetTransform();
     Vec3 pos = transform->GetLocalPosition();
     Vec3 rot = transform->GetLocalRotation();
+
+    if (_state->GetState() == CharacterState::Attack)
+        return;
 
     bool isMoving = false;
 
@@ -91,33 +100,27 @@ void Player::UpdateInput()
     }
     if (INPUT->GetButton(KEY_TYPE::A))
     {
-        pos += transform->GetRight() * DT;
+        pos += transform->GetRight() * _moveSpeed * DT;
+        isMoving = true;
     }
     if (INPUT->GetButton(KEY_TYPE::D))
     {
-        pos -= transform->GetRight() * DT;
+        pos -= transform->GetRight() * _moveSpeed * DT;
+        isMoving = true;
     }
 
     // 공격
     if (INPUT->GetButtonDown(KEY_TYPE::SPACE))
     {
-        _currentState = AnimState::ATTACK;
+        _state->ChangeState(CharacterState::Attack);
     }
     else if (isMoving)
     {
-        _currentState = AnimState::RUN;
+        _state->ChangeState(CharacterState::Run);
     }
-    else if (_currentState != AnimState::ATTACK)
+    else if (_state->GetState() != CharacterState::Attack)
     {
-        _currentState = AnimState::IDLE;
-    }
-
-    // 공격 애니메이션 종료 체크 -> 이 부분을 노티파이로 변경시켜줘야함
-    // End_State 하고 디테일 창 추가해서 파싱으로 음.. 해결할 수 있으려나
-    if (_currentState == AnimState::ATTACK)
-    {
-        if (GetModelAnimator()->IsAnimationEnd())
-            _currentState = AnimState::IDLE;
+        _state->ChangeState(CharacterState::Idle);
     }
 
     transform->SetLocalPosition(pos);
@@ -126,15 +129,10 @@ void Player::UpdateInput()
 
 void Player::UpdateAnimation()
 {
-    if (_currentState == _prevState)
+    if (!_state->IsStateChanged())
         return;
 
-    GetModelAnimator()->SetNextAnimation((int32)_currentState);
+    GetModelAnimator()->SetNextAnimation((int32)_state->GetState());
 
-    _prevState = _currentState;
-}
-
-void Player::OnAnimNotify(const wstring& name)
-{
-
+    _state->ClearStateChanged();
 }

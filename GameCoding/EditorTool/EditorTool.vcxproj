@@ -138,6 +138,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AnimationDetailView.cpp" />
     <ClCompile Include="AnimationView.cpp" />
     <ClCompile Include="ConsoleView.cpp" />
     <ClCompile Include="ContentBrowserView.cpp" />
@@ -162,6 +163,7 @@
     <ClCompile Include="SceneView.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AnimationDetailView.h" />
     <ClInclude Include="AnimationView.h" />
     <ClInclude Include="ConsoleView.h" />
     <ClInclude Include="ContentBrowserView.h" />

@@ -39,9 +39,10 @@ public:
         int animIndex);
 
 private:
-
     vector<AnimationEntry> _animations;
     int _selectedIndex = -1;
+
+    shared_ptr<Texture> _folderIcon;
 
 };
 

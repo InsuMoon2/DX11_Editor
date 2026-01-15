@@ -217,7 +217,9 @@ void Model::ReadAnimation(wstring filename)
 
     shared_ptr<ModelAnimation> animation = make_shared<ModelAnimation>();
 
-    animation->name = Utils::ToWString(file->Read<string>());
+    //animation->name = Utils::ToWString(file->Read<string>());
+    file->Read<string>();
+    animation->name = FileUtils::PathToAnimName(filename);
     animation->duration = file->Read<float>();
     animation->frameRate = file->Read<float>();
     animation->frameCount = file->Read<uint32>();

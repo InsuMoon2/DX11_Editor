@@ -28,8 +28,7 @@ public:
     void SaveToJson(const wstring& animName, const wstring& filePath);
     void LoadFromJson(const wstring& filePath);
 
-    // 임시
-    shared_ptr<AnimNotify> CreateNotifyByType(const string& type);
+    void LoadAllFromJson(const wstring& folderPath);
 
 private:
     unordered_map<wstring, AnimNotifyContainer> _containers;

@@ -1,5 +1,7 @@
 ﻿#include "pch.h"
 #include "EditorManager.h"
+
+#include "AnimationDetailView.h"
 #include "ContentBrowserView.h"
 #include "GameView.h"
 #include "SceneView.h"
@@ -22,8 +24,9 @@ void EditorManager::Init()
     AddWindow(L"Hierarchy", make_shared<HierarchyView>());
     AddWindow(L"Inspector", make_shared<InspectorView>());
     AddWindow(L"ContentBrowser", make_shared<ContentBrowserView>());
-    AddWindow(L"Animation", make_shared<AnimationView>());
     AddWindow(L"Console", make_shared<ConsoleView>());
+    AddWindow(L"Animation Details", make_shared<AnimationDetailView>());
+    AddWindow(L"Animation", make_shared<AnimationView>());
 
 }
 
@@ -135,6 +138,7 @@ void EditorManager::Release()
 void EditorManager::AddWindow(const wstring& key, shared_ptr<EditorWindow> window)
 {
     _editorWindows[key] = window;
+
     if (window)
         window->Init();
 }

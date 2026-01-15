@@ -23,6 +23,8 @@ void GameDemo::Init()
     _shader = make_shared<Shader>(L"23. RenderDemo.fx");
     RENDER->Init(_shader);
 
+    GET_SINGLE(AnimNotifyManager)->LoadAllFromJson(L"../Resources/Notifies/");
+
     _startScene = make_shared<Stage01>();
     SCENE->ChangeScene(_startScene);
 

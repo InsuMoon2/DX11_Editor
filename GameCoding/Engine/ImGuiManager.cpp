@@ -13,6 +13,12 @@ void ImGuiManager::Init()
     io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
     io.ConfigFlags |= ImGuiConfigFlags_DpiEnableScaleViewports;
 
+    io.Fonts->AddFontFromFileTTF(
+        "C:/Windows/Fonts/malgun.ttf",
+        18.0f,
+        nullptr,
+        io.Fonts->GetGlyphRangesKorean());
+
     ImGuiStyle& style = ImGui::GetStyle();
     style.FramePadding = ImVec2(6, 4);      // 기본 (4, 3)에서 늘리기
     style.ItemSpacing = ImVec2(10, 6);      // 아이템 간격
@@ -20,7 +26,7 @@ void ImGuiManager::Init()
 
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
-    //ImGui::StyleColorsLight();
+    //ImGui::StyleColorsClassic();
 
     // Setup Platform/Renderer backends
     ImGui_ImplWin32_Init(GAME->GetGameDesc().hWnd);
