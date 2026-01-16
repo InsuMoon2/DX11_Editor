@@ -14,6 +14,7 @@ enum class KEY_TYPE
 
     F8 = VK_F8,
     F9 = VK_F9,
+    F11 = VK_F11,
 
 	W = 'W',
 	A = 'A',
@@ -68,6 +69,13 @@ public:
 	
 	const POINT& GetMousePos() { return _mousePos; }
 
+    // 마우스 캡처
+    void LockMouse();
+    void UnlockMouse();
+    bool IsMouseLocked() const { return _mouseLocked; }
+
+    Vec2 GetMouseDelta() const { return _mouseDelta; }
+
 private:
 	inline KEY_STATE GetState(KEY_TYPE key) { return _states[static_cast<uint8>(key)]; }
 
@@ -75,5 +83,10 @@ private:
 	HWND _hwnd;
 	vector<KEY_STATE> _states;
 	POINT _mousePos = {};
+
+    // 마우스 캡처
+    bool    _mouseLocked = false;
+    POINT   _screenCenter = { };
+    Vec2    _mouseDelta = { };
 };
 

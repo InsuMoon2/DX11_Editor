@@ -9,9 +9,9 @@
     ],
     "notifyStates": [
         {
-            "endFrame": 23,
+            "endFrame": 63,
             "name": "CollisionEnable",
-            "startFrame": 13,
+            "startFrame": 21,
             "testInt": 2
         }
     ]

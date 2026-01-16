@@ -25,7 +25,7 @@ void Converter::ReadAssetFile(wstring file)
     _scene = _importer->ReadFile(
         Utils::ToString(fileStr),       // 1. 읽어올 파일의 경로
 
-        // ▼ 모델 데이터 후처리 옵션들 (비트 OR 연산으로 조합)
+        // 모델 데이터 후처리 옵션들 (비트 OR 연산으로 조합)
         aiProcess_ConvertToLeftHanded | // 2. 좌표계를 DirectX용(왼손 좌표계)으로 변환
         aiProcess_Triangulate |         // 3. 모든 면(Face)을 삼각형으로 쪼갬 (사각형 등 -> 삼각형)
         aiProcess_GenUVCoords |         // 4. 매핑 방식이 다른 텍스처 좌표를 UV 좌표로 변환

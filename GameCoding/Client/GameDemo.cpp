@@ -62,6 +62,9 @@ void GameDemo::Init()
         }
     }
 
+    // 카메라 가두기
+    INPUT->LockMouse();
+
 }
 
 void GameDemo::Update()

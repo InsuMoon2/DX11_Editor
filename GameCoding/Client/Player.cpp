@@ -21,13 +21,28 @@ void Player::Awake()
 
     auto shader = GET_SINGLE(RenderManager)->GetShader();
 
-    // 모델 로드
     auto model = make_shared<Model>();
-    model->ReadModel(L"Kachujin/Kachujin");
-    model->ReadMaterial(L"Kachujin/Kachujin");
-    model->ReadAnimation(L"Kachujin/Idle");
-    model->ReadAnimation(L"Kachujin/Run");
-    model->ReadAnimation(L"Kachujin/Slash");
+
+    // Kachujin
+    {
+        //model->ReadModel(L"Kachujin/Kachujin");
+        //model->ReadMaterial(L"Kachujin/Kachujin");
+        //model->ReadAnimation(L"Kachujin/Idle");
+        //model->ReadAnimation(L"Kachujin/Run");
+        //model->ReadAnimation(L"Kachujin/Slash");
+    }
+
+    // Deidara
+    {
+        model->ReadModel(L"Deidara/Deidara");
+        model->ReadMaterial(L"Deidara/Deidara");
+        model->ReadAnimation(L"Deidara/aerial");
+        model->ReadAnimation(L"Deidara/aerial2");
+        model->ReadAnimation(L"Deidara/atk");
+        model->ReadAnimation(L"Deidara/dragon");
+        model->ReadAnimation(L"Deidara/dragon2");
+
+    }
 
     // Transform 설정
     GetOrAddTransform()->SetScale(Vec3(0.01f));
@@ -37,15 +52,30 @@ void Player::Awake()
     GetModelAnimator()->SetModel(model);
     GetModelAnimator()->SetPass(2);
 
-    vector<wstring> animPaths =
-    {
-    L"Kachujin/Idle",
-    L"Kachujin/Run",
-    L"Kachujin/Slash"
+    //vector<wstring> animPaths =
+    //{
+    //L"Kachujin/Idle",
+    //L"Kachujin/Run",
+    //L"Kachujin/Slash"
+    //};
+
+    //GET_SINGLE(ModelRegistry)->RegisterModel(
+    //    L"Kachujin",
+    //    model,
+    //    GetModelAnimator(),
+    //    animPaths
+    //);
+
+    vector<wstring> animPaths = {
+    L"Deidara/aerial",
+    L"Deidara/aerial2",
+    L"Deidara/atk",
+    L"Deidara/dragon",
+    L"Deidara/dragon2"
     };
 
     GET_SINGLE(ModelRegistry)->RegisterModel(
-        L"Kachujin",
+        L"Deidara",
         model,
         GetModelAnimator(),
         animPaths
@@ -69,7 +99,7 @@ void Player::Update()
     UpdateInput();
     UpdateAnimation();
 
-    GetTransform()->UpdateTransform();
+    //GetTransform()->UpdateTransform();
 
     GameObject::Update();
 
@@ -87,25 +117,35 @@ void Player::UpdateInput()
 
     bool isMoving = false;
 
-    // WASD 이동
-    if (INPUT->GetButton(KEY_TYPE::W))
+    // 입력 방향 계산
+    Vec3 inputDir = Vec3::Zero;
+    if (INPUT->GetButton(KEY_TYPE::W)) inputDir.z += 1.f;
+    if (INPUT->GetButton(KEY_TYPE::S)) inputDir.z -= 1.f;
+    if (INPUT->GetButton(KEY_TYPE::A)) inputDir.x -= 1.f;
+    if (INPUT->GetButton(KEY_TYPE::D)) inputDir.x += 1.f;
+
+    // 이동 입력이 있으면
+    if (inputDir.LengthSquared() > 0.f)
     {
+        inputDir.Normalize();
+
+        // 목표 회전각 계산
+        float targetYaw = atan2f(inputDir.x, inputDir.z);
+
+        // 최단 경로 계산
+        float angleDiff = targetYaw - rot.y;
+
+        while (angleDiff > XM_PI)
+            angleDiff -= XM_2PI;
+
+        while (angleDiff < -XM_PI)
+            angleDiff += XM_2PI;
+
+        // Lerp
+        rot.y = rot.y + angleDiff * _rotSpeed * DT;
+        transform->SetLocalRotation(rot);
+
         pos += transform->GetForward() * _moveSpeed * DT;
-        isMoving = true;
-    }
-    if (INPUT->GetButton(KEY_TYPE::S))
-    {
-        pos -= transform->GetForward() * _moveSpeed * DT;
-        isMoving = true;
-    }
-    if (INPUT->GetButton(KEY_TYPE::A))
-    {
-        pos += transform->GetRight() * _moveSpeed * DT;
-        isMoving = true;
-    }
-    if (INPUT->GetButton(KEY_TYPE::D))
-    {
-        pos -= transform->GetRight() * _moveSpeed * DT;
         isMoving = true;
     }
 
@@ -124,7 +164,6 @@ void Player::UpdateInput()
     }
 
     transform->SetLocalPosition(pos);
-    transform->SetLocalRotation(rot);
 }
 
 void Player::UpdateAnimation()
@@ -136,3 +175,4 @@ void Player::UpdateAnimation()
 
     _state->ClearStateChanged();
 }
+

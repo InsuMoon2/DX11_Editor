@@ -29,9 +29,13 @@ public:
     void FocusOnPosition(const Vec3& targetPos);
     void UpdateCameraLerp();
 
+    bool IsFullScreen() { return _isFullScreen; }
+
 private:
     void UpdateCameraInput();
     void UpdateImGuiZmo();
+
+    void ToggleFullScreen();
 
 private:
     // ─────────────────────────────────────────────
@@ -76,5 +80,15 @@ private:
     // - WORLD: 월드 기준 (항상 XYZ 축 고정)
     ImGuizmo::MODE _gizmoMode = ImGuizmo::LOCAL;
 
+    // 전체화면
+    bool _isFullScreen = false;
+    RECT _windowedRect = {};
+
+    bool _shouldRestoreWindow = false;
+    LONG    _savedStyle = 0;
+    ImVec2  _savedWindowPos;
+    ImVec2  _savedWindowSize;
+
+    ImGuiID _savedDockId = 0;
 };
 

@@ -1,5 +1,8 @@
 ﻿#include "pch.h"
 #include "SceneView.h"
+
+#include <imgui_internal.h>
+
 #include "Camera.h"
 #include "Engine/RenderTarget.h"
 #include "Transform.h"
@@ -42,12 +45,41 @@ void SceneView::Update()
         _editorCamera->Update();
 
     UpdateCameraLerp();
+
+    if (INPUT->GetButtonDown(KEY_TYPE::F11))
+    {
+        ToggleFullScreen();
+    }
 }
 
 void SceneView::OnGui()
 {
+    ImGuiWindowFlags flags = ImGuiWindowFlags_None;
+
+    if (_shouldRestoreWindow && _savedDockId != 0)
+    {
+        ImGui::SetNextWindowDockID(_savedDockId, ImGuiCond_Always);
+        _shouldRestoreWindow = false;
+    }
+
+    if (_isFullScreen)
+    {
+        flags |= ImGuiWindowFlags_NoDecoration;  // 타이틀바 제거
+        flags |= ImGuiWindowFlags_NoMove;
+        flags |= ImGuiWindowFlags_NoResize;
+
+        ImGui::SetNextWindowPos(ImVec2(0, 0));
+        ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize);
+    }
+
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
-    ImGui::Begin("Scene");
+    ImGui::Begin("Scene", nullptr, flags);
+
+    // 전체화면이 아닐 때, 스크린 위치 저장
+    if (!_isFullScreen)
+    {
+        _savedDockId = ImGui::GetWindowDockID();
+    }
 
     // ─────────────────────────────────────────────
     // Play/Pause/Stop 컨트롤 바
@@ -264,4 +296,47 @@ void SceneView::UpdateImGuiZmo()
 
     }
 
+}
+
+void SceneView::ToggleFullScreen()
+{
+    HWND hWnd = GAME->GetGameDesc().hWnd;
+
+    _isFullScreen = !_isFullScreen;
+
+    if (_isFullScreen)
+    {
+        // 현재 윈도우 크기/스타일 저장
+        GetWindowRect(hWnd, &_windowedRect);
+        _savedStyle = GetWindowLongPtr(hWnd, GWL_STYLE);
+
+        // 모니터 해상도 가져오기
+        int screenWidth = GetSystemMetrics(SM_CXSCREEN);
+        int screenHeight = GetSystemMetrics(SM_CYSCREEN);
+
+        // Borderless 전체화면
+        SetWindowLongPtr(hWnd, GWL_STYLE, WS_POPUP | WS_VISIBLE);
+        SetWindowPos(hWnd, HWND_TOP, 0, 0, screenWidth, screenHeight,
+            SWP_FRAMECHANGED);
+
+        // Graphics 리사이즈
+        GRAPHICS->Resize(screenWidth, screenHeight);
+    }
+    else
+    {
+        // 원래 윈도우 스타일/크기 복원
+        SetWindowLongPtr(hWnd, GWL_STYLE, _savedStyle);
+        SetWindowPos(hWnd, HWND_TOP,
+            _windowedRect.left, _windowedRect.top,
+            _windowedRect.right - _windowedRect.left,
+            _windowedRect.bottom - _windowedRect.top,
+            SWP_FRAMECHANGED);
+
+        // Graphics 리사이즈
+        RECT clientRect;
+        GetClientRect(hWnd, &clientRect);
+        GRAPHICS->Resize(clientRect.right, clientRect.bottom);
+
+        _shouldRestoreWindow = true;
+    }
 }

@@ -20,8 +20,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	desc.height = 720;
 	desc.clearColor = Color(0.2f, 0.2f, 0.2f, 0.2f);
 
-	//desc.app = make_shared<AssimpTool>();
-	desc.app = make_shared<EditorDemo>();
+	desc.app = make_shared<AssimpTool>();
+	//desc.app = make_shared<EditorDemo>();
 
 	GAME->Run(desc);
 

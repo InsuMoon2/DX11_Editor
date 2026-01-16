@@ -23,12 +23,13 @@ public:
     void ChangeState(CharacterState newState);
     CharacterState GetState() { return _state; }
 
-    void ClearStateChanged() { _prevState = _state; }
-
-    bool IsStateChanged() { return _state != _prevState; }
+    void ClearStateChanged() { _stateChanged = false; }
+    bool IsStateChanged() { return _stateChanged; }
 
 private:
     CharacterState _state = CharacterState::Idle;
     CharacterState _prevState = CharacterState::Idle;
+
+    bool _stateChanged = false;
 
 };

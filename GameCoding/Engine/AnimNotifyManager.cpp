@@ -169,5 +169,5 @@ void AnimNotifyManager::LoadAllFromJson(const wstring& folderPath)
         }
     }
 
-    LOG_INFO("Notify Load Clear!");
+    LOG_WARNING("[ Notify Load Clear! ]");
 }

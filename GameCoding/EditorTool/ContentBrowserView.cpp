@@ -91,9 +91,11 @@ void ContentBrowserView::OnGui()
 
                 if (fs::path(filePath).extension() != L".clip")
                     continue;
+
                 wstring fileName = fs::path(filePath).filename().wstring();
                 wstring fileNameNoExt = fs::path(filePath).stem().wstring();  // 확장자 제거
                 string fileNameStr = Utils::ToString(fileNameNoExt);
+
                 ImGui::PushID(fileNameStr.c_str());
 
                 // 썸네일 버튼

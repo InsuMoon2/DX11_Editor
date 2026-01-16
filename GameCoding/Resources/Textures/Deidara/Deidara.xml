@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Materials>
+    <Material>
+        <Name>MI_CHR_Deidara</Name>
+        <DiffuseFile>T_CHR_Deidara_BC.tga</DiffuseFile>
+        <SpecularFile>T_CHR_Deidara_BC.tga</SpecularFile>
+        <NormalFile>T_CHR_Deidara_N.tga</NormalFile>
+        <Ambient R="0" G="0" B="0" A="1"/>
+        <Diffuse R="0.80000001" G="0.80000001" B="0.80000001" A="1"/>
+        <Specular R="0" G="0" B="0" A="1"/>
+        <Emissive R="0.80000001" G="0.80000001" B="0.80000001" A="1"/>
+    </Material>
+    <Material>
+        <Name>MI_CHR_Deidara.1</Name>
+        <DiffuseFile>T_CHR_Deidara_BC.tga</DiffuseFile>
+        <SpecularFile>T_CHR_Deidara_BC.tga</SpecularFile>
+        <NormalFile>T_CHR_Deidara_N.tga</NormalFile>
+        <Ambient R="0" G="0" B="0" A="1"/>
+        <Diffuse R="0.80000001" G="0.80000001" B="0.80000001" A="1"/>
+        <Specular R="0" G="0" B="0" A="1"/>
+        <Emissive R="0.80000001" G="0.80000001" B="0.80000001" A="1"/>
+    </Material>
+    <Material>
+        <Name>MI_CHR_Deidara_EyeL</Name>
+        <DiffuseFile>T_CHR_DeidaraEye_BC.tga</DiffuseFile>
+        <SpecularFile>T_CHR_DeidaraEye_BC.tga</SpecularFile>
+        <NormalFile>T_CHR_DeidaraEye_BC.tga</NormalFile>
+        <Ambient R="0" G="0" B="0" A="1"/>
+        <Diffuse R="0" G="0" B="0" A="1"/>
+        <Specular R="0.79000002" G="0.79000002" B="0.79000002" A="85"/>
+        <Emissive R="0" G="0" B="0" A="1"/>
+    </Material>
+    <Material>
+        <Name>MI_CHR_Deidara_EyeL.1</Name>
+        <DiffuseFile>T_CHR_DeidaraEye_BC.tga</DiffuseFile>
+        <SpecularFile>T_CHR_DeidaraEye_BC.tga</SpecularFile>
+        <NormalFile>T_CHR_DeidaraEye_BC.tga</NormalFile>
+        <Ambient R="0" G="0" B="0" A="1"/>
+        <Diffuse R="0" G="0" B="0" A="1"/>
+        <Specular R="0.79000002" G="0.79000002" B="0.79000002" A="85"/>
+        <Emissive R="0" G="0" B="0" A="1"/>
+    </Material>
+    <Material>
+        <Name>M_Line</Name>
+        <DiffuseFile></DiffuseFile>
+        <SpecularFile></SpecularFile>
+        <NormalFile></NormalFile>
+        <Ambient R="0" G="0" B="0" A="1"/>
+        <Diffuse R="0" G="0" B="0" A="1"/>
+        <Specular R="0" G="0" B="0" A="1"/>
+        <Emissive R="0" G="0" B="0" A="1"/>
+    </Material>
+</Materials>

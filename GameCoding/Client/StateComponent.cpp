@@ -22,5 +22,7 @@ void StateComponent::ChangeState(CharacterState newState)
         return; 
 
     _prevState = _state;
+
     _state = newState;
+    _stateChanged = true;
 }

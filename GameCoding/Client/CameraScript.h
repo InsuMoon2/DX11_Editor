@@ -20,12 +20,21 @@ private:
     void UpdateFreeMode();
 
 private:
+    shared_ptr<GameObject> _target;
     CameraMode _mode = CameraMode::Follow;
 
-    shared_ptr<GameObject> _target;
-    Vec3 _offset = Vec3(-0.5f, 5.1f, 5.5f);
+    Vec3    _offset = Vec3(-0.5f, 5.1f, 5.5f);
+    Vec3    _lastMousePos = {};
     
-    float _speed = 20.f;
-    Vec3 _lastMousePos = {};
+    float   _speed = 20.f;
+
+private:
+    // 카메라 회전
+    float _yaw = 0.f;
+    float _pitch = 0.f;
+    float _distance = 5.f;
+    float _sensivity = 0.003f;
+
+
 };
 

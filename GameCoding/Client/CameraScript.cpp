@@ -25,17 +25,19 @@ void CameraScript::LateUpdate()
 
     if (_target == nullptr) return;
 
-    // F8
+    // F8 -> FreeMode
     if (INPUT->GetButtonDown(KEY_TYPE::F8))
     {
         if (_mode == CameraMode::Follow)
         {
             _mode = CameraMode::Free;
+            INPUT->UnlockMouse();
             _lastMousePos = Vec3(INPUT->GetMousePos().x, INPUT->GetMousePos().y, 0);
         }
         else
         {
             _mode = CameraMode::Follow;
+            INPUT->LockMouse();
         }
     }
 
@@ -59,11 +61,30 @@ void CameraScript::UpdateFollowMode()
     auto target = _target;
     if (target == nullptr) return;
 
-    Vec3 targetPos = target->GetTransform()->GetPosition();
-    Vec3 finalPos = targetPos + _offset;
+    // 마우스 잠금일 때에만, 카메라 회전
+    if (INPUT->IsMouseLocked())
+    {
+        Vec2 mouseDelta = INPUT->GetMouseDelta();
 
-    GetTransform()->SetPosition(finalPos);
-    GetTransform()->LookAt(targetPos);
+        _yaw += mouseDelta.x * _sensivity;
+        _pitch += mouseDelta.y * _sensivity;
+
+        // Pitch Clamp : 일단은 45도로 제한
+        _pitch = std::clamp(_pitch, XMConvertToRadians(-45.f), XMConvertToRadians(70.f));
+    }
+
+    // 카메라 위치 계산
+    Vec3 targetPos = target->GetTransform()->GetPosition();
+
+    // 플레이어 뒤쪽 위치 계산
+    float camX = sinf(_yaw) * cosf(_pitch) * _distance;
+    float camY = sinf(_pitch) * _distance + 2.f; 
+    float camZ = cosf(_yaw) * cosf(_pitch) * _distance;
+
+    Vec3 cameraPos = targetPos + Vec3(camX, camY, camZ);
+
+    GetTransform()->SetPosition(cameraPos);
+    GetTransform()->LookAt(targetPos + Vec3(0, 1.5f, 0));
 }
 
 void CameraScript::UpdateFreeMode()

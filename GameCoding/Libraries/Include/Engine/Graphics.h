@@ -15,6 +15,8 @@ public:
 
     void BindBackBuffer();
 
+    void Resize(uint32 width, uint32 height);
+
 private:
 	void CreateDeviceAndSwapChain();
 	void CreateRenderTargetView();
@@ -38,5 +40,8 @@ private:
 
 	// Misc
 	D3D11_VIEWPORT _viewport = { 0 };
+
+    uint32 _width;
+    uint32 _height;
 };
 

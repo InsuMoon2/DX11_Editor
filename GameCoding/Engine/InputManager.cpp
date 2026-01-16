@@ -1,10 +1,17 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "InputManager.h"
 
 void InputManager::Init(HWND hwnd)
 {
 	_hwnd = hwnd;
 	_states.resize(KEY_TYPE_COUNT, KEY_STATE::NONE);
+
+    // í™”ë©´ ì¤‘ì•™ ì¢Œí‘œ ê³„ì‚°
+    RECT rect;
+    GetClientRect(_hwnd, &rect);
+    _screenCenter.x = (rect.right - rect.left) / 2;
+    _screenCenter.y = (rect.bottom - rect.top) / 2;
+
 }
 
 void InputManager::Update()
@@ -15,21 +22,26 @@ void InputManager::Update()
 		for (uint32 key = 0; key < KEY_TYPE_COUNT; key++)
 			_states[key] = KEY_STATE::NONE;
 
+        // ì°½ ë¹„í™œì„±í™” ì‹œ ë§ˆìš°ìŠ¤ í•´ì œ
+        if (_mouseLocked)
+            UnlockMouse();
+
 		return;
 	}
 
+    // í‚¤ë³´ë“œ ì²˜ë¦¬
 	BYTE asciiKeys[KEY_TYPE_COUNT] = {};
 	if (::GetKeyboardState(asciiKeys) == false)
 		return;
 
 	for (uint32 key = 0; key < KEY_TYPE_COUNT; key++)
 	{
-		// Å°°¡ ´­·Á ÀÖÀ¸¸é true
+		// í‚¤ê°€ ëˆŒë ¤ ìžˆìœ¼ë©´ true
 		if (asciiKeys[key] & 0x80)
 		{
 			KEY_STATE& state = _states[key];
 
-			// ÀÌÀü ÇÁ·¹ÀÓ¿¡ Å°¸¦ ´©¸¥ »óÅÂ¶ó¸é PRESS
+			// ì´ì „ í”„ë ˆìž„ì— í‚¤ë¥¼ ëˆ„ë¥¸ ìƒíƒœë¼ë©´ PRESS
 			if (state == KEY_STATE::PRESS || state == KEY_STATE::DOWN)
 				state = KEY_STATE::PRESS;
 			else
@@ -39,7 +51,7 @@ void InputManager::Update()
 		{
 			KEY_STATE& state = _states[key];
 
-			// ÀÌÀü ÇÁ·¹ÀÓ¿¡ Å°¸¦ ´©¸¥ »óÅÂ¶ó¸é UP
+			// ì´ì „ í”„ë ˆìž„ì— í‚¤ë¥¼ ëˆ„ë¥¸ ìƒíƒœë¼ë©´ UP
 			if (state == KEY_STATE::PRESS || state == KEY_STATE::DOWN)
 				state = KEY_STATE::UP;
 			else
@@ -47,6 +59,57 @@ void InputManager::Update()
 		}
 	}
 
-	::GetCursorPos(&_mousePos);
-	::ScreenToClient(_hwnd, &_mousePos);
+    // ë§ˆìš°ìŠ¤
+    if (_mouseLocked)
+    {
+        POINT currentPos;
+        ::GetCursorPos(&currentPos);
+        ::ScreenToClient(_hwnd, &currentPos);
+
+        _mouseDelta.x = (float)(currentPos.x - _screenCenter.x);
+        _mouseDelta.y = (float)(currentPos.y - _screenCenter.y);
+
+        // ë§ˆìš°ìŠ¤ë¥¼ í™”ë©´ ì¤‘ì•™ìœ¼ë¡œ ë¦¬ì…‹
+        POINT centerScreen = _screenCenter;
+        ::ClientToScreen(_hwnd, &centerScreen);
+        ::SetCursorPos(centerScreen.x, centerScreen.y);
+
+        _mousePos = _screenCenter;
+    }
+    else
+    {
+        ::GetCursorPos(&_mousePos);
+        ::ScreenToClient(_hwnd, &_mousePos);
+    }
+}
+
+void InputManager::LockMouse()
+{
+    if (_mouseLocked)
+        return;
+
+    _mouseLocked = true;
+
+    ::ShowCursor(FALSE);
+
+    POINT centerScreen = _screenCenter;
+    ::ClientToScreen(_hwnd, &centerScreen);
+    ::SetCursorPos(centerScreen.x, centerScreen.y);
+
+    RECT rect;
+    ::GetClientRect(_hwnd, &rect);
+    ::ClientToScreen(_hwnd, (POINT*)&rect.left);
+    ::ClientToScreen(_hwnd, (POINT*)&rect.right);
+    ::ClipCursor(&rect);
+}
+
+void InputManager::UnlockMouse()
+{
+    if (!_mouseLocked)
+        return;
+
+    _mouseLocked = false;
+
+    ::ShowCursor(TRUE);
+    ::ClipCursor(nullptr);
 }

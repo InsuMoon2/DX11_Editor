@@ -4,6 +4,8 @@
 void Graphics::Init(HWND hwnd)
 {
 	_hwnd = hwnd;
+    _width = GAME->GetGameDesc().width;    
+    _height = GAME->GetGameDesc().height;  
 
 	CreateDeviceAndSwapChain();
 	CreateRenderTargetView();
@@ -29,6 +31,32 @@ void Graphics::BindBackBuffer()
 {
     _deviceContext->OMSetRenderTargets(1, _renderTargetView.GetAddressOf(), _depthStencilView.Get());
     _deviceContext->RSSetViewports(1, &_viewport);
+}
+
+void Graphics::Resize(uint32 width, uint32 height)
+{
+    if (width == 0 || height == 0)
+        return;
+
+    _width = width;    
+    _height = height;  
+
+    // 기존 리소스 해제
+    _renderTargetView.Reset();
+    _depthStencilView.Reset();
+    _depthStencilTexture.Reset();
+
+    // SwapChain 리사이즈
+    HRESULT hr = _swapChain->ResizeBuffers(0, width, height,
+        DXGI_FORMAT_UNKNOWN, 0);
+
+    CHECK(hr);
+
+    CreateRenderTargetView();
+    CreateDepthStencilView();
+
+    _viewport.Width = (float)width;
+    _viewport.Height = (float)height;
 }
 
 void Graphics::CreateDeviceAndSwapChain()
@@ -87,8 +115,8 @@ void Graphics::CreateDepthStencilView()
 	{
 		D3D11_TEXTURE2D_DESC desc = { 0 };
 		ZeroMemory(&desc, sizeof(desc));
-		desc.Width = static_cast<uint32>(GAME->GetGameDesc().width);
-		desc.Height = static_cast<uint32>(GAME->GetGameDesc().height);
+        desc.Width = _width;
+        desc.Height = _height;
 		desc.MipLevels = 1;
 		desc.ArraySize = 1;
 		desc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;

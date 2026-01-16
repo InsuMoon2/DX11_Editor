@@ -69,6 +69,11 @@ void Scene::Remove_Scene(shared_ptr<GameObject> object)
 
 }
 
+shared_ptr<GameObject> Scene::GetMainCamera()
+{
+    return _cameras.empty() ? nullptr : *_cameras.begin();
+}
+
 void Scene::Clear()
 {
     _objects.clear();
