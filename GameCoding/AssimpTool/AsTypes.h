@@ -135,6 +135,9 @@ struct asAnimation
     float   duration;
 
     vector<shared_ptr<asKeyframe>> keyframes;
+
+    float playRate = 1.f;
+    bool enableRootMotion = false;
 };
 
 // Cache 임시

@@ -378,6 +378,7 @@ void AnimationView::SetAnimation(shared_ptr<Model> model, int animIndex, vector<
     }
 
     _previewModel = model;  // 모델 저장
+	_currentModel = model;
     _animIndex = animIndex;
     _currentFrame = 0;
     _playbackTime = 0.f;
@@ -697,6 +698,14 @@ void AnimationView::CloseDetailView()
 
     if (detailView)
         detailView->SetActive(false);
+}
+
+wstring AnimationView::GetAnimPath(int index) const
+{
+	if (index >= 0 && index < (int)_animPaths.size())
+		return _animPaths[index];
+
+	return L"";
 }
 
 void AnimationView::ClearSelection()

@@ -243,6 +243,10 @@ void Model::ReadAnimation(wstring filename)
         animation->keyframes[keyframe->boneName] = keyframe;
     }
 
+    // 애니메이션 재생 관련 추가
+    animation->playRate = file->Read<float>();
+    animation->enableRootMotion = (file->Read<uint8>() != 0);
+
     _animations.push_back(animation);
 }
 
@@ -288,6 +292,54 @@ shared_ptr<ModelAnimation> Model::GetAnimationByName(wstring name)
     }
 
     return nullptr;
+}
+
+int32 Model::GetAnimationIndex(const wstring& name)
+{
+    for (uint32 i = 0; i < _animations.size(); ++i)
+    {
+        if (_animations[i]->name == name)
+            return static_cast<int32>(i);
+    }
+    return -1;  // 못 찾음
+}
+
+void Model::SaveAnimation(int32 animIndex, const wstring& filename)
+{
+    if (animIndex < 0 || animIndex >= (int32)_animations.size())
+        return;
+
+    auto& animation = _animations[animIndex];
+
+    wstring fullPath = _modelPath + filename + L".clip";
+    shared_ptr<FileUtils> file = make_shared<FileUtils>();
+
+    file->Open(fullPath, FileMode::Write);
+
+    // ─────────────────────────────────────────────
+    // 기존 데이터 (ReadAnimation 역순)
+    // ─────────────────────────────────────────────
+    file->Write<string>(Utils::ToString(animation->name));
+    file->Write<float>(animation->duration);
+    file->Write<float>(animation->frameRate);
+    file->Write<uint32>(animation->frameCount);
+
+    file->Write<uint32>(animation->keyframes.size());
+
+    for (auto& [boneName, keyframe] : animation->keyframes)
+    {
+        file->Write<string>(Utils::ToString(keyframe->boneName));
+        file->Write<uint32>(keyframe->transforms.size());
+
+        if (keyframe->transforms.size() > 0)
+        {
+            file->Write(&keyframe->transforms[0],
+                sizeof(ModelKeyframeData) * keyframe->transforms.size());
+        }
+    }
+
+    file->Write<float>(animation->playRate);
+    file->Write<uint8>(animation->enableRootMotion ? 1 : 0);
 }
 
 void Model::BindCacheInfo()

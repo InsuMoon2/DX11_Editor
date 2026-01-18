@@ -4,6 +4,7 @@
 #include "ModelAnimator.h"
 #include "Camera.h"
 #include "StateComponent.h"
+#include "BlendSpace1D.h"
 
 REGISTER_GAMEOBJECT(Player)
 
@@ -21,65 +22,11 @@ void Player::Awake()
 
     auto shader = GET_SINGLE(RenderManager)->GetShader();
 
-    auto model = make_shared<Model>();
+    KachujinSetting(shader);
+    //DeidaraSetting(shader);
 
-    // Kachujin
-    {
-        //model->ReadModel(L"Kachujin/Kachujin");
-        //model->ReadMaterial(L"Kachujin/Kachujin");
-        //model->ReadAnimation(L"Kachujin/Idle");
-        //model->ReadAnimation(L"Kachujin/Run");
-        //model->ReadAnimation(L"Kachujin/Slash");
-    }
-
-    // Deidara
-    {
-        model->ReadModel(L"Deidara/Deidara");
-        model->ReadMaterial(L"Deidara/Deidara");
-        model->ReadAnimation(L"Deidara/aerial");
-        model->ReadAnimation(L"Deidara/aerial2");
-        model->ReadAnimation(L"Deidara/atk");
-        model->ReadAnimation(L"Deidara/dragon");
-        model->ReadAnimation(L"Deidara/dragon2");
-
-    }
-
-    // Transform 설정
-    GetOrAddTransform()->SetScale(Vec3(0.01f));
-
-    // ModelAnimator 추가
-    AddComponent(make_shared<ModelAnimator>(shader));
-    GetModelAnimator()->SetModel(model);
-    GetModelAnimator()->SetPass(2);
-
-    //vector<wstring> animPaths =
-    //{
-    //L"Kachujin/Idle",
-    //L"Kachujin/Run",
-    //L"Kachujin/Slash"
-    //};
-
-    //GET_SINGLE(ModelRegistry)->RegisterModel(
-    //    L"Kachujin",
-    //    model,
-    //    GetModelAnimator(),
-    //    animPaths
-    //);
-
-    vector<wstring> animPaths = {
-    L"Deidara/aerial",
-    L"Deidara/aerial2",
-    L"Deidara/atk",
-    L"Deidara/dragon",
-    L"Deidara/dragon2"
-    };
-
-    GET_SINGLE(ModelRegistry)->RegisterModel(
-        L"Deidara",
-        model,
-        GetModelAnimator(),
-        animPaths
-    );
+    // 블렌드 스페이스는 일단 제외
+    //CreateBlendSpace();
 
     // State Component
     AddComponent(make_shared<StateComponent>());
@@ -104,6 +51,7 @@ void Player::Update()
     GameObject::Update();
 
     LOG_INFO("playerState : " + string(magic_enum::enum_name(_state->GetState())), 1);
+    
 }
 
 void Player::UpdateInput()
@@ -164,6 +112,9 @@ void Player::UpdateInput()
     }
 
     transform->SetLocalPosition(pos);
+
+    //float currentSpeed = isMoving ? _moveSpeed : 0.f;
+    //GetModelAnimator()->SetBlendParameter(currentSpeed);
 }
 
 void Player::UpdateAnimation()
@@ -176,3 +127,93 @@ void Player::UpdateAnimation()
     _state->ClearStateChanged();
 }
 
+void Player::KachujinSetting(shared_ptr<Shader> shader)
+{
+    auto model = make_shared<Model>();
+
+    // Kachujin
+    {
+        model->ReadModel(L"Kachujin/Kachujin");
+        model->ReadMaterial(L"Kachujin/Kachujin");
+        model->ReadAnimation(L"Kachujin/Idle");
+        model->ReadAnimation(L"Kachujin/Run");
+        model->ReadAnimation(L"Kachujin/Slash");
+    }
+
+    // Transform 설정
+    GetOrAddTransform()->SetScale(Vec3(0.01f));
+
+    // ModelAnimator 추가
+    AddComponent(make_shared<ModelAnimator>(shader));
+    GetModelAnimator()->SetModel(model);
+    GetModelAnimator()->SetPass(2);
+
+    vector<wstring> animPaths =
+    {
+    L"Kachujin/Idle",
+    L"Kachujin/Run",
+    L"Kachujin/Slash"
+    };
+
+    GET_SINGLE(ModelRegistry)->RegisterModel(
+        L"Kachujin",
+        model,
+        GetModelAnimator(),
+        animPaths
+    );
+}
+
+void Player::DeidaraSetting(shared_ptr<Shader> shader)
+{
+    auto model = make_shared<Model>();
+   
+    // Deidara
+    {
+         model->ReadModel(L"Deidara/Deidara");
+         model->ReadMaterial(L"Deidara/Deidara");
+         model->ReadAnimation(L"Deidara/aerial");
+         model->ReadAnimation(L"Deidara/aerial2");
+         model->ReadAnimation(L"Deidara/atk");
+         model->ReadAnimation(L"Deidara/dragon");
+         model->ReadAnimation(L"Deidara/dragon2");
+    }
+
+    // Transform 설정
+    GetOrAddTransform()->SetScale(Vec3(0.01f));
+
+    // ModelAnimator 추가
+    AddComponent(make_shared<ModelAnimator>(shader));
+    GetModelAnimator()->SetModel(model);
+    GetModelAnimator()->SetPass(2);
+
+    vector<wstring> animPaths = {
+    L"Deidara/aerial",
+    L"Deidara/aerial2",
+    L"Deidara/atk",
+    L"Deidara/dragon",
+    L"Deidara/dragon2"
+    };
+
+    GET_SINGLE(ModelRegistry)->RegisterModel(
+        L"Deidara",
+        model,
+        GetModelAnimator(),
+        animPaths
+    );
+}
+
+void Player::CreateBlendSpace()
+{
+    // 블렌드 스페이스 생성
+    _locomotionBS = make_shared<BlendSpace1D>();
+    _locomotionBS->SetName(TEXT("Locomotion"));
+    _locomotionBS->SetRange(0.f, 5.f); // Value값 범위
+
+    _locomotionBS->AddSample(L"Kachujin_Idle", 0.f);
+    _locomotionBS->AddSample(L"Kachujin_Run", 5.f);
+
+    // ModelAnimator에 세팅
+    auto animator = GetModelAnimator();
+    animator->SetAnimationMode(AnimationMode::BlendSpace1D);
+    animator->SetBlendSpace(_locomotionBS);
+}

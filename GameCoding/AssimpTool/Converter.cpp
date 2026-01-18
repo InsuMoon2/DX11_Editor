@@ -601,6 +601,9 @@ void Converter::WriteAnimationData(shared_ptr<asAnimation> animation, wstring fi
         file->Write<uint32>(keyframe->transforms.size());
         file->Write(&keyframe->transforms[0], sizeof(asKeyframeData) * keyframe->transforms.size());
     }
+
+    file->Write<float>(animation->playRate);
+    file->Write<uint8>(animation->enableRootMotion ? 1 : 0); // bool값 -> uint8로 저장
 }
 
 uint32 Converter::GetBoneIndex(const string& name)

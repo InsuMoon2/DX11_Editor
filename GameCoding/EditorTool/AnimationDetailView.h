@@ -23,6 +23,8 @@ private:
     void DrawNotifyStateInspector();
     void DrawAddNotifyStateSection();
 
+    void DrawAnimationProperties();
+
 private:
     wstring _currentAnimName;
     int     _selectedNotifyIndex = -1;
@@ -32,6 +34,7 @@ private:
     int     _newNotifyFrame = 0;
     int     _newStateStartFrame = 0;
     int     _newStateEndFrame = 10;
+
 
 };
 

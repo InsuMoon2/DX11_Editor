@@ -6,6 +6,7 @@
 class Model;
 class AnimNotify;
 class AnimNotifyState;
+class BlendSpace1D;
 
 struct AnimTransform
 {
@@ -14,6 +15,15 @@ struct AnimTransform
 
     // [ ][ ][ ][ ][ ] ... 500개
     array<TransformArrayType, MAX_MODEL_KEYFRAMES> transforms;
+};
+
+enum class AnimationMode
+{
+    Single,
+    BlendSpace1D,
+    BlendSpace2D, // 추후 확장용
+
+    END
 };
 
 class ModelAnimator : public Component
@@ -39,7 +49,6 @@ public:
     void RenderInstancing(shared_ptr<class InstancingBuffer>& buffer);
     InstanceID GetInstanceID();
 
-
 public:
     int32 GetCurrentAnimIndex() { return _tweenDesc.curr.animIndex; }
     void SetNextAnimation(int32 animIndex);
@@ -54,6 +63,20 @@ public:
     bool IsAnimationEnd();
 
     wstring GetCurrentAnimationName();
+
+public:
+	// 블렌드 스페이스
+	void SetAnimationMode(AnimationMode mode) { _animMode = mode; }
+	AnimationMode GetAnimationMode() const { return _animMode; }
+
+	void SetBlendSpace(shared_ptr<BlendSpace1D> blendSpace);
+	shared_ptr<BlendSpace1D> GetBlendSpace() const { return _blendSpace; }
+
+	// 매 프레임 호출 - 파라미터 설정 (예: 속도값)
+	void SetBlendParameter(float value) { _blendParameter = value; }
+	float GetBlendParameter() const { return _blendParameter; }
+
+	void UpdateBlendSpace();
 
 private:
     void CreateTexture();
@@ -75,10 +98,13 @@ private:
     shared_ptr<Model>    _model;
 
 private:
-    // ─────────────────────────────────────────────
-    // 노티파이 콜백
-    // ─────────────────────────────────────────────
+    // 노티파이
     set<int>            _activeNotifyStates; // 현재 활성화된 NotifyState 인덱스
 
+private:
+    // 블렌드 스페이스
+    AnimationMode _animMode = AnimationMode::Single;
+    shared_ptr<BlendSpace1D> _blendSpace;
+    float _blendParameter = { 0.f };
 };
 

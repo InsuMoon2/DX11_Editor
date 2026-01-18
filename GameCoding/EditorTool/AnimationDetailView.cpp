@@ -5,6 +5,7 @@
 #include "AnimNotifyManager.h"
 #include "AnimNotifyFactory.h"
 #include "Utils.h"
+#include "ModelAnimation.h"
 
 AnimationDetailView::AnimationDetailView()
     : EditorWindow("Animation Details")
@@ -34,6 +35,9 @@ void AnimationDetailView::OnGui()
     }
 
     ImGui::Text("Animation : %s", Utils::ToString(_currentAnimName).c_str());
+    ImGui::Separator();
+
+    DrawAnimationProperties();
     ImGui::Separator();
 
     DrawAddNotifySection();
@@ -225,6 +229,57 @@ void AnimationDetailView::DrawAddNotifyStateSection()
             state->SetEndFrame(_newStateEndFrame);
 
             GET_SINGLE(AnimNotifyManager)->AddNotifyState(_currentAnimName, state);
+        }
+    }
+}
+
+void AnimationDetailView::DrawAnimationProperties()
+{
+    ImGui::Text("Animation Properties");
+    ImGui::Dummy(ImVec2(0, 5));
+
+    auto animView = GET_ANIMATION_VIEW();
+
+    if (!animView)
+        return;
+
+    auto model = animView->GetCurrentModel();
+    if (!model)
+        return;
+
+    auto animation = model->GetAnimationByName(_currentAnimName);
+    if (!animation)
+        return;
+
+    // ─────────────────────────────────────────────
+    // PlayRate 슬라이더
+    // ─────────────────────────────────────────────
+    float playRate = animation->playRate;
+    if (ImGui::SliderFloat("Play Rate", &playRate, 0.1f, 3.0f, "%.2f"))
+    {
+        animation->playRate = playRate;
+    }
+
+    ImGui::Dummy(ImVec2(0, 5));
+
+    // ─────────────────────────────────────────────
+    // 애니메이션 정보 (읽기 전용)
+    // ─────────────────────────────────────────────
+    ImGui::TextDisabled("Duration: %.2f sec", animation->duration);
+    ImGui::TextDisabled("Frame Rate: %.1f fps", animation->frameRate);
+    ImGui::TextDisabled("Frame Count: %d", animation->frameCount);
+
+    ImGui::Dummy(ImVec2(0, 10));
+
+    if (ImGui::Button("Save Animation Settings"))
+    {
+        auto model = animView->GetCurrentModel();
+        int animIndex = animView->GetCurrentAnimIndex();
+
+        if (model && animIndex >= 0)
+        {
+            wstring filePath = animView->GetAnimPath(animIndex);
+            model->SaveAnimation(animIndex, filePath);
         }
     }
 }

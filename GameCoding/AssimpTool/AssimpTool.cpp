@@ -34,7 +34,7 @@ void AssimpTool::Init()
     }
 
     // 데이다라
-    {
+   /* {
         shared_ptr<Converter> converter = make_shared<Converter>();
 
         converter->ReadAssetFile(L"Deidara/SK_CHR_Deidara.fbx");
@@ -66,7 +66,7 @@ void AssimpTool::Init()
         shared_ptr<Converter> converter = make_shared<Converter>();
         converter->ReadAssetFile(L"Deidara/dragon2.fbx");
         converter->ExportAnimationData(L"Deidara/dragon2");
-    }
+    }*/
 }
 
 void AssimpTool::Update()

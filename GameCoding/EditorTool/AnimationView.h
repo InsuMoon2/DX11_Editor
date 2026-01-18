@@ -89,6 +89,8 @@ public:
     void SetCurrentFrame(int frame) { _currentFrame = frame; _playbackTime = frame / 30.f; }
     void ClearSelection();
 
+	shared_ptr<Model> GetCurrentModel() const { return _currentModel; }
+
 private:
     void UpdateCameraInput();
 
@@ -99,6 +101,10 @@ private:
 
     void NotifyDetailView();
     void CloseDetailView();
+
+public:
+	int GetCurrentAnimIndex() const { return _animIndex; }
+	wstring GetAnimPath(int index) const;
 
 private:
     vector<wstring> _animNames;
@@ -144,5 +150,6 @@ private:
 	int _selectedNotifyIndex = -1;
 	int _selectedNotifyStateIndex = -1;
 
+	shared_ptr<Model> _currentModel;
 };
 

@@ -46,6 +46,9 @@
     <Filter Include="98. Utils\Factory">
       <UniqueIdentifier>{6fa28fbd-4edd-46eb-8926-65837d45db39}</UniqueIdentifier>
     </Filter>
+    <Filter Include="06. BlendSpace">
+      <UniqueIdentifier>{9dafe03b-f722-448e-8c79-162ee6f8e369}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -171,7 +174,6 @@
     <ClInclude Include="ModelAnimator.h">
       <Filter>04. Component</Filter>
     </ClInclude>
-    <ClInclude Include="RenderTarget.h" />
     <ClInclude Include="AnimNotifyData.h">
       <Filter>05. Notify</Filter>
     </ClInclude>
@@ -196,7 +198,6 @@
     <ClInclude Include="EventManager.h">
       <Filter>97. Event</Filter>
     </ClInclude>
-    <ClInclude Include="InstancingBuffer.h" />
     <ClInclude Include="Light.h">
       <Filter>04. Component</Filter>
     </ClInclude>
@@ -220,6 +221,15 @@
     </ClInclude>
     <ClInclude Include="AnimNotifyFactory.h">
       <Filter>98. Utils\Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderTarget.h">
+      <Filter>01. Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="InstancingBuffer.h">
+      <Filter>01. Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="BlendSpace1D.h">
+      <Filter>06. BlendSpace</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -337,7 +347,6 @@
     <ClCompile Include="ModelAnimator.cpp">
       <Filter>04. Component</Filter>
     </ClCompile>
-    <ClCompile Include="RenderTarget.cpp" />
     <ClCompile Include="AnimNotifyData.cpp">
       <Filter>05. Notify</Filter>
     </ClCompile>
@@ -362,7 +371,6 @@
     <ClCompile Include="EventManager.cpp">
       <Filter>97. Event</Filter>
     </ClCompile>
-    <ClCompile Include="InstancingBuffer.cpp" />
     <ClCompile Include="Light.cpp">
       <Filter>04. Component</Filter>
     </ClCompile>
@@ -386,6 +394,15 @@
     </ClCompile>
     <ClCompile Include="AnimNotifyFactory.cpp">
       <Filter>98. Utils\Factory</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderTarget.cpp">
+      <Filter>01. Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="InstancingBuffer.cpp">
+      <Filter>01. Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="BlendSpace1D.cpp">
+      <Filter>06. BlendSpace</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

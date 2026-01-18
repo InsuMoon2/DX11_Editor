@@ -37,6 +37,10 @@ public:
 
     wstring GetFileName() const { return _fileName; }
 
+    int32 GetAnimationIndex(const wstring& name);
+
+    void SaveAnimation(int32 animIndex, const wstring& filename);
+
 private:
     void BindCacheInfo();
 

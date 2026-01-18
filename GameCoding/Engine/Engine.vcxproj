@@ -168,6 +168,7 @@ xcopy /Y "$(SolutionDir)Engine\*.inl" "$(SolutionDir)Libraries\Include\Engine"</
     <ClInclude Include="AnimNotifyData.h" />
     <ClInclude Include="AnimNotifyFactory.h" />
     <ClInclude Include="AnimNotifyManager.h" />
+    <ClInclude Include="BlendSpace1D.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentFactory.h" />
@@ -229,6 +230,7 @@ xcopy /Y "$(SolutionDir)Engine\*.inl" "$(SolutionDir)Libraries\Include\Engine"</
     <ClCompile Include="AnimNotifyData.cpp" />
     <ClCompile Include="AnimNotifyFactory.cpp" />
     <ClCompile Include="AnimNotifyManager.cpp" />
+    <ClCompile Include="BlendSpace1D.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="ComponentFactory.cpp" />

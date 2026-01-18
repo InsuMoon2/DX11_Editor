@@ -25,5 +25,9 @@ struct ModelAnimation
     uint32  frameCount = 0;
 
     unordered_map<wstring, shared_ptr<ModelKeyframe>> keyframes;
+
+    // 재생 관련
+    float playRate = 1.f;
+    bool enableRootMotion = false;
 };
 

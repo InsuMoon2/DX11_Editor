@@ -5,6 +5,7 @@
 #include "Model.h"
 #include "ModelAnimation.h"
 #include "AnimNotifyManager.h"
+#include "BlendSpace1D.h"
 #include "Utils.h"
 
 REGISTER_COMPONENT(ModelAnimator, ComponentType::Animator);
@@ -285,11 +286,24 @@ void ModelAnimator::SetModel(shared_ptr<Model> model)
     {
         material->SetShader(_shader);
     }
+
+    // 블렌드 스페이스가 있으면 바인딩
+    if (_blendSpace)
+    {
+        _blendSpace->BindToModel(_model);
+    }
 }
 
 void ModelAnimator::UpdateTweenData()
 {
     TweenDesc& desc = _tweenDesc;
+
+    // 블렌드 스페이스 모드
+    if (_animMode == AnimationMode::BlendSpace1D && _blendSpace)
+    {
+        UpdateBlendSpace();
+        return;
+    }
 
     desc.curr.sumTime += DT;
     // 현재 애니메이션
@@ -297,7 +311,9 @@ void ModelAnimator::UpdateTweenData()
         shared_ptr<ModelAnimation> currentAnim = _model->GetAnimationByIndex(desc.curr.animIndex);
         if (currentAnim)
         {
-            float timePerFrame = 1 / (currentAnim->frameRate * desc.curr.speed);
+            // PlayRate 적용
+            float effectiveSpeed = desc.curr.speed * currentAnim->playRate;
+            float timePerFrame = 1 / (currentAnim->frameRate * effectiveSpeed);
             if (desc.curr.sumTime >= timePerFrame)
             {
                 int prevFrame = desc.curr.currFrame;
@@ -331,7 +347,8 @@ void ModelAnimator::UpdateTweenData()
             shared_ptr<ModelAnimation> nextAnim = _model->GetAnimationByIndex(desc.next.animIndex);
             desc.next.sumTime += DT;
 
-            float timePerFrame = 1.f / (nextAnim->frameRate * desc.next.speed);
+            float effectiveSpeed = desc.next.speed * nextAnim->playRate;
+            float timePerFrame = 1.f / (nextAnim->frameRate * effectiveSpeed);
 
             if (desc.next.ratio >= 1.f)
             {
@@ -442,6 +459,17 @@ wstring ModelAnimator::GetCurrentAnimationName()
     return L"";
 }
 
+void ModelAnimator::SetBlendSpace(shared_ptr<BlendSpace1D> blendSpace)
+{
+    _blendSpace = blendSpace;
+
+    // Model이 있으면 바로 바인딩
+    if (_blendSpace && _model)
+    {
+        _blendSpace->BindToModel(_model);
+    }
+}
+
 void ModelAnimator::CheckNotifies(int prevFrame, int currFrame)
 {
     wstring animName = GetCurrentAnimationName();
@@ -501,6 +529,86 @@ void ModelAnimator::CheckNotifies(int prevFrame, int currFrame)
             state->OnNotifyTick(this, DT);  
         }
     
+    }
+}
+
+void ModelAnimator::UpdateBlendSpace()
+{
+    if (!_blendSpace || !_model)
+        return;
+
+    TweenDesc& desc = _tweenDesc;
+
+    // ─────────────────────────────────────────────
+    // 1. 블렌드 스페이스에서 두 애니메이션과 비율 가져오기
+    // ─────────────────────────────────────────────
+    int32 animA, animB;
+    float blendRatio;
+    _blendSpace->GetBlendInfo(_blendParameter, animA, animB, blendRatio);
+    // 유효하지 않으면 리턴
+    if (animA < 0)
+        return;
+
+    // ─────────────────────────────────────────────
+    // 2. TweenDesc에 매핑
+    // ─────────────────────────────────────────────
+    // curr = 첫 번째 애니메이션 (비율 낮은 쪽)
+    // next = 두 번째 애니메이션 (비율 높은 쪽)
+    // tweenRatio = 블렌드 비율
+    desc.curr.animIndex = animA;
+    desc.next.animIndex = animB;
+    desc.tweenRatio = blendRatio;
+
+    // ─────────────────────────────────────────────
+    // 3. 프레임 진행 (두 애니메이션 동시에!)
+    // ─────────────────────────────────────────────
+    // curr 애니메이션 프레임 진행
+    {
+        auto animCurr = _model->GetAnimationByIndex(desc.curr.animIndex);
+        if (animCurr)
+        {
+            desc.curr.sumTime += DT;
+            float effectiveSpeed = desc.curr.speed * animCurr->playRate;
+            float timePerFrame = 1.f / (animCurr->frameRate * effectiveSpeed);
+
+            if (desc.curr.sumTime >= timePerFrame)
+            {
+                desc.curr.sumTime = 0.f;
+                desc.curr.currFrame = (desc.curr.currFrame + 1) % animCurr->frameCount;
+                desc.curr.nextFrame = (desc.curr.currFrame + 1) % animCurr->frameCount;
+            }
+
+            desc.curr.ratio = desc.curr.sumTime / timePerFrame;
+        }
+    }
+
+    // next 애니메이션 프레임 진행
+    if (animB != animA)
+    {
+        auto animNext = _model->GetAnimationByIndex(desc.next.animIndex);
+        if (animNext)
+        {
+            desc.next.sumTime += DT;
+            float effectiveSpeed = desc.curr.speed * animNext->playRate;  
+            float timePerFrame = 1.f / (animNext->frameRate * effectiveSpeed);
+
+            if (desc.next.sumTime >= timePerFrame)
+            {
+                desc.next.sumTime = 0.f;
+                desc.next.currFrame = (desc.next.currFrame + 1) % animNext->frameCount;
+                desc.next.nextFrame = (desc.next.currFrame + 1) % animNext->frameCount;
+            }
+
+            desc.next.ratio = desc.next.sumTime / timePerFrame;
+        }
+    }
+    else
+    {
+        // animA == animB인 경우 (경 계값), next도 동일하게
+        desc.next.currFrame = desc.curr.currFrame;
+        desc.next.nextFrame = desc.curr.nextFrame;
+        desc.next.ratio = desc.curr.ratio;
+        desc.next.sumTime = desc.curr.sumTime;
     }
 
 }
