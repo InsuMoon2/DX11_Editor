@@ -23,7 +23,7 @@ public:										\
 
 #define CHECK(p)	        assert(SUCCEEDED(p))
 #define GAME		        GET_SINGLE(Game)		
-#define GRAPHICS	        GET_SINGLE(Graphics)
+#define GRAPHICS	        GET_SINGLE(Graphics) 
 #define DEVICE		        GRAPHICS->GetDevice()
 #define ENGINE_DC			GRAPHICS->GetDeviceContext()
 #define INPUT		        GET_SINGLE(InputManager)

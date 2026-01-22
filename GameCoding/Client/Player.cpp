@@ -5,6 +5,7 @@
 #include "Camera.h"
 #include "StateComponent.h"
 #include "BlendSpace1D.h"
+#include "DebugHelper.h"
 
 REGISTER_GAMEOBJECT(Player)
 
@@ -101,6 +102,12 @@ void Player::UpdateInput()
     if (INPUT->GetButtonDown(KEY_TYPE::SPACE))
     {
         _state->ChangeState(CharacterState::Attack);
+
+        Vec3 start = GetTransform()->GetLocalPosition();
+        Vec3 end = start + (GetTransform()->GetForward() * 100.f);
+
+        DEBUG_HELPER->DrawLine(start, end, Color(1, 0, 0, 1), 5.f);
+
     }
     else if (isMoving)
     {

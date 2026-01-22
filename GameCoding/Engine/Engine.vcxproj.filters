@@ -34,9 +34,6 @@
     <Filter Include="00. Engine\Resource\Model">
       <UniqueIdentifier>{5b45d8c7-05be-4515-bbae-bf80a8ddc570}</UniqueIdentifier>
     </Filter>
-    <Filter Include="98. Utils\ImGui">
-      <UniqueIdentifier>{f78ba2dc-5094-47d7-aa38-d2807b4a7b0e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="05. Notify">
       <UniqueIdentifier>{70fe7314-5263-4f87-a776-696b6ea22ba8}</UniqueIdentifier>
     </Filter>
@@ -48,6 +45,9 @@
     </Filter>
     <Filter Include="06. BlendSpace">
       <UniqueIdentifier>{9dafe03b-f722-448e-8c79-162ee6f8e369}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98. Utils\DrawDebug">
+      <UniqueIdentifier>{5b81dbcb-f91a-463f-8e31-3c6e8beae907}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -231,6 +231,7 @@
     <ClInclude Include="BlendSpace1D.h">
       <Filter>06. BlendSpace</Filter>
     </ClInclude>
+    <ClInclude Include="DebugHelper.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -404,6 +405,7 @@
     <ClCompile Include="BlendSpace1D.cpp">
       <Filter>06. BlendSpace</Filter>
     </ClCompile>
+    <ClCompile Include="DebugHelper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">

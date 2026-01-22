@@ -72,6 +72,7 @@
     <FxCompile Include="..\Shaders\21. ModelInstancingDemo.fx" />
     <FxCompile Include="..\Shaders\22. AnimInstancingDemo.fx" />
     <FxCompile Include="..\Shaders\23. RenderDemo.fx" />
+    <FxCompile Include="..\Shaders\99. Debug.fx" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EditorTool\EditorTool.vcxproj">

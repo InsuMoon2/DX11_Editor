@@ -15,6 +15,7 @@ public:
 
 private:
     bool _autoScroll = true;
+    char _searchBuffer[256] = "";
 
 };
 

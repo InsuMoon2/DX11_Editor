@@ -186,5 +186,8 @@
     <FxCompile Include="..\Shaders\00. Render.fx">
       <Filter>99. Shaders\Common</Filter>
     </FxCompile>
+    <FxCompile Include="..\Shaders\99. Debug.fx">
+      <Filter>99. Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

@@ -20,6 +20,8 @@ WPARAM Game::Run(GameDesc& desc)
 	INPUT->Init(_desc.hWnd);
     GUI->Init();
     RESOURCES->Init();
+    
+    DEBUG_HELPER->Init();
 	
 	_desc.app->Init();
 
@@ -125,6 +127,7 @@ void Game::Update()
 {
 	TIME->Update();
 	INPUT->Update();
+    DEBUG_HELPER->Update(DT);
 
     ShowFPS();
 
@@ -140,7 +143,11 @@ void Game::Update()
     GUI->Update();
 	_desc.app->Update();
 	_desc.app->Render();
+
+    //DEBUG_HELPER->Render();
+
     GUI->Render();
+
 
 	GRAPHICS->RenderEnd();
 

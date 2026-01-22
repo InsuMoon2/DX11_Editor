@@ -85,6 +85,8 @@ using json = nlohmann::json;
 #include "GameObjectEvent.h"
 #include "EventManager.h"
 
+#include "DebugHelper.h"
+
 // Engine
 #include "GameObjectFactory.h"
 #include "ComponentFactory.h"

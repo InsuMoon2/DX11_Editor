@@ -91,6 +91,8 @@ void EditorManager::Render()
         // 에디터 모드: Hierarchy에 있는 애들만 직접 렌더링
         UpdateHierarchy();
 
+        DEBUG_HELPER->Render();
+
         RenderTarget::UnbindAll();
     }
 

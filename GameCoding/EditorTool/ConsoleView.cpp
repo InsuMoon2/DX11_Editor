@@ -26,6 +26,11 @@ void ConsoleView::OnGui()
     ImGui::SameLine();
     ImGui::Checkbox("Auto-scroll", &_autoScroll);
 
+    // 검색창
+    ImGui::SameLine();
+    ImGui::SetNextItemWidth(200);
+    ImGui::InputTextWithHint("##Search", "Search...", _searchBuffer, sizeof(_searchBuffer));
+
     ImGui::Separator();
 
     // 로그 목록
@@ -35,6 +40,12 @@ void ConsoleView::OnGui()
 
     for (auto& log : logs)
     {
+        if (strlen(_searchBuffer) > 0)
+        {
+            if (log.message.find(_searchBuffer) == string::npos)
+                continue;  // 검색어가 없으면 스킵
+        }
+
         ImVec4 color;
         switch (log.level)
         {
