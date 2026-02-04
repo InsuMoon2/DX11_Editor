@@ -41,7 +41,6 @@ ipch/
 # Linker and compiler outputs
 *.exe
 *.dll
-*.lib
 *.exp
 *.appx
 *.out

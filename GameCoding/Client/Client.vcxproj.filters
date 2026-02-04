@@ -1,0 +1,193 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="99. Shaders">
+      <UniqueIdentifier>{ec1fc7a4-e083-4ffe-aa6f-9f1c2c16b5c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99. Shaders\Week1">
+      <UniqueIdentifier>{44f4b79a-3579-42dd-8424-868229cbadd8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99. Shaders\Common">
+      <UniqueIdentifier>{88296819-9c84-4939-8e24-8102ffbf384e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99. Shaders\Week2">
+      <UniqueIdentifier>{9c264924-84d8-48b0-8644-af2500675951}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99. Shaders\Week3">
+      <UniqueIdentifier>{7a39aea8-be99-41f9-8c58-b70b562d07d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Scene">
+      <UniqueIdentifier>{0872a94f-e8dc-4c5a-a1e9-4c1c689825e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Objects">
+      <UniqueIdentifier>{f1e54773-e23a-4eb8-8104-857e3e24d12f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Main">
+      <UniqueIdentifier>{7efaf247-0110-432a-9d3a-fb863c368ac6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Main\Camera">
+      <UniqueIdentifier>{31df8a51-3da7-4280-a9ab-313dd1942a27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. Game">
+      <UniqueIdentifier>{d2d0fd71-4d67-48c2-b343-6fdb5782e40f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. Game\Week3">
+      <UniqueIdentifier>{9c7f775e-5a57-42e0-a1f5-274b8abad35a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. Components">
+      <UniqueIdentifier>{79a3b705-68c4-4b9f-af6b-92e71490a52d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98. Notify">
+      <UniqueIdentifier>{eb62cc61-da0f-40dc-bca8-e5924c3a33dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98. Notify\AnimNotify">
+      <UniqueIdentifier>{a914dffd-e27c-4814-a293-f0b76d88c20d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98. Notify\AnimNotifyState">
+      <UniqueIdentifier>{60545e82-dc8b-466b-aeac-d4bcef89acc7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="pch.cpp">
+      <Filter>01. Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>01. Main</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraScript.cpp">
+      <Filter>01. Main\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="InstancingDemo.cpp">
+      <Filter>00. Game\Week3</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshInstancingDemo.cpp">
+      <Filter>00. Game\Week3</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelInstancingDemo.cpp">
+      <Filter>00. Game\Week3</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimInstancingDemo.cpp">
+      <Filter>00. Game\Week3</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderDemo.cpp">
+      <Filter>00. Game\Week3</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneDemo.cpp">
+      <Filter>00. Game\Week3</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>03. Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Stage01.cpp">
+      <Filter>02. Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="GameDemo.cpp">
+      <Filter>00. Game\Week3</Filter>
+    </ClCompile>
+    <ClCompile Include="MainCamera.cpp">
+      <Filter>03. Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="FollowCamera.cpp">
+      <Filter>04. Components</Filter>
+    </ClCompile>
+    <ClCompile Include="StateComponent.cpp" />
+    <ClCompile Include="AN_EndState.cpp">
+      <Filter>98. Notify\AnimNotify</Filter>
+    </ClCompile>
+    <ClCompile Include="ANS_CollisionEnable.cpp">
+      <Filter>98. Notify\AnimNotifyState</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h">
+      <Filter>01. Main</Filter>
+    </ClInclude>
+    <ClInclude Include="Main.h">
+      <Filter>01. Main</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraScript.h">
+      <Filter>01. Main\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="InstancingDemo.h">
+      <Filter>00. Game\Week3</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshInstancingDemo.h">
+      <Filter>00. Game\Week3</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelInstancingDemo.h">
+      <Filter>00. Game\Week3</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimInstancingDemo.h">
+      <Filter>00. Game\Week3</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderDemo.h">
+      <Filter>00. Game\Week3</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneDemo.h">
+      <Filter>00. Game\Week3</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>03. Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Stage01.h">
+      <Filter>02. Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="GameDemo.h">
+      <Filter>00. Game\Week3</Filter>
+    </ClInclude>
+    <ClInclude Include="MainCamera.h">
+      <Filter>03. Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="FollowCamera.h">
+      <Filter>04. Components</Filter>
+    </ClInclude>
+    <ClInclude Include="StateComponent.h" />
+    <ClInclude Include="AN_EndState.h">
+      <Filter>98. Notify\AnimNotify</Filter>
+    </ClInclude>
+    <ClInclude Include="ANS_CollisionEnable.h">
+      <Filter>98. Notify\AnimNotifyState</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\Shaders\00. Global.fx">
+      <Filter>99. Shaders\Common</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Shaders\00. Light.fx">
+      <Filter>99. Shaders\Common</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Shaders\15. ModelDemo.fx">
+      <Filter>99. Shaders\Week3</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Shaders\16. AnimationDemo.fx">
+      <Filter>99. Shaders\Week3</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Shaders\17. TweenDemo.fx">
+      <Filter>99. Shaders\Week3</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Shaders\18. SkyDemo.fx">
+      <Filter>99. Shaders\Week3</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Shaders\19. InstancingDemo.fx">
+      <Filter>99. Shaders\Week3</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Shaders\20. MeshInstancingDemo.fx">
+      <Filter>99. Shaders\Week3</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Shaders\21. ModelInstancingDemo.fx">
+      <Filter>99. Shaders\Week3</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Shaders\22. AnimInstancingDemo.fx">
+      <Filter>99. Shaders\Week3</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Shaders\23. RenderDemo.fx">
+      <Filter>99. Shaders\Week3</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Shaders\00. Render.fx">
+      <Filter>99. Shaders\Common</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Shaders\99. Debug.fx">
+      <Filter>99. Shaders</Filter>
+    </FxCompile>
+  </ItemGroup>
+</Project>

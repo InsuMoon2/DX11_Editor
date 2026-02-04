@@ -1,0 +1,18 @@
+{
+    "animationName": "Kachujin_Slash",
+    "notifies": [
+        {
+            "frame": 93,
+            "name": "EndState",
+            "state": 0
+        }
+    ],
+    "notifyStates": [
+        {
+            "endFrame": 63,
+            "name": "CollisionEnable",
+            "startFrame": 21,
+            "testInt": 2
+        }
+    ]
+}
