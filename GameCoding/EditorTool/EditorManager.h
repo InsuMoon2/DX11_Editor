@@ -32,9 +32,9 @@ private:
 private:
     map<wstring, shared_ptr<EditorWindow>> _editorWindows;
 
-    ImGuiWindowFlags _windowFlags = ImGuiWindowFlags_None;
-    ImGuiDockNodeFlags _dockspaceFlags = ImGuiDockNodeFlags_None;
-    bool _fullScreen = true;
+    //ImGuiWindowFlags _windowFlags = ImGuiWindowFlags_None;
+    //ImGuiDockNodeFlags _dockspaceFlags = ImGuiDockNodeFlags_None;
+    //bool _fullScreen = true;
 
 };
 
